@@ -42,8 +42,36 @@ void Server::setPortAndPass(const char **argv) {
 	}
 }
 
-void Server::init() {}
+void Server::init() {
+	this->server_sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
+	if (this->server_sockfd_ == -1) {
+		exit_error("socket", strerror(errno));
+	}
+	std::cout << "SUCCESS: socket: " << this->server_sockfd_ << std::endl;
+
+	this->server_addr_.sin_family = AF_INET;
+	this->server_addr_.sin_port = htons(PORT);
+	this->server_addr_.sin_addr.s_addr = inet_addr(SERVER_IP);
+	if (bind(this->server_sockfd_,
+			 reinterpret_cast<struct sockaddr *>(&this->server_addr_),
+			 sizeof(this->server_addr_)) < 0) {
+		close(this->server_sockfd_);
+		exit_error("bind", strerror(errno));
+	}
+	std::cout << "SUCCESS: bind" << std::endl;
+
+	if (listen(this->server_sockfd_, SOMAXCONN)) {
+		close(this->server_sockfd_);
+		exit_error("listen", strerror(errno));
+	}
+	std::cout << "SUCCESS: listen" << std::endl;
+}
 
 void Server::run() {}
+
+void Server::exit_error(const std::string &func, const std::string &err_msg) {
+	std::cerr << "ERROR: " << func << ": " << err_msg << std::endl;
+	std::exit(EXIT_FAILURE);
+}
 
 Server::~Server() {}

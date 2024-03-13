@@ -2,6 +2,7 @@
 #define SERVER_HPP
 
 #include <arpa/inet.h>
+#include <cerrno>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -23,14 +24,15 @@ class Server {
 	void checkValidArgc(const int argc) const;
 	void checkValidPort(const char *str) const;
 	void setPortAndPass(const char **argv);
+	void exit_error(const std::string &func, const std::string &err_msg);
 
   private:
 	std::string port_;
 	std::string pass_;
-	// int server_sockfd_;
-	// struct sockaddr_in server_addr;
-	// struct sockaddr_in client_addr;
-	// char recv_msg[BUF_SIZE];
+	int server_sockfd_;
+	struct sockaddr_in server_addr_;
+	// struct sockaddr_in client_addr_;
+	// char recv_msg_[BUF_SIZE];
 };
 
 #endif

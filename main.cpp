@@ -1,10 +1,5 @@
 #include "Server.hpp"
 
-void exit_error(const std::string &msg) {
-	std::cerr << "ERROR: " << msg << std::endl;
-	std::exit(1);
-}
-
 int main(const int argc, const char **argv) {
 	Server server(argc, argv);
 	server.init();
@@ -25,7 +20,8 @@ int main(const int argc, const char **argv) {
 // 	server_addr.sin_port = htons(PORT);
 // 	server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
 // 	if (bind(server_sockfd, (struct sockaddr *)&server_addr,
-// sizeof(server_addr)) < 0) { 		close(server_sockfd); 		exit_error("bind");
+// sizeof(server_addr)) < 0) { 		close(server_sockfd);
+// exit_error("bind");
 // 	}
 // 	std::cout << "SUCCESS: bind" << std::endl;
 //
@@ -62,7 +58,8 @@ int main(const int argc, const char **argv) {
 //
 // 			// char send_msg[BUF_SIZE] = "server received your message";
 // 			int send_size = send(client_sockfd, &recv_msg,
-// std::strlen(recv_msg), 0); 			if (send_size == -1) { 				std::cerr << "ERROR: send"
+// std::strlen(recv_msg), 0); 			if (send_size == -1) {
+// std::cerr << "ERROR: send"
 // << std::endl; 				break ;
 // 			}
 // 		}
