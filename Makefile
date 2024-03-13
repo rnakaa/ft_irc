@@ -1,0 +1,43 @@
+NAME = ircserv
+PORT = 6667
+PASS = password
+CXX = c++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+RM = rm -rf
+SRC_DIR = src
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)	
+INC = include
+OBJ_DIR = obj
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+
+CNAME = client
+CSRC = client.cpp
+
+all: $(NAME)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -c $< -o $@ -I $(INC)
+
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+
+clean:
+	$(RM) $(OBJS)
+	$(RM) $(OBJ_DIR)
+
+fclean: clean
+	$(RM) $(NAME)
+
+re: fclean all
+
+run: all
+	./$(NAME) $(PORT) $(PASS)
+
+client:
+	$(CXX) $(CXXFLAGS) $(CSRC) -o $(CNAME)
+
+cclean:
+	$(RM) $(CNAME)
+
+.PHONY: all fclean clean re run client cclean
