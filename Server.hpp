@@ -31,8 +31,8 @@ class Server {
 	std::string pass_;
 	int server_sockfd_;
 	struct sockaddr_in server_addr_;
-	// struct sockaddr_in client_addr_;
-	// char recv_msg_[BUF_SIZE];
+	struct sockaddr_in client_addr_;
+	std::string recv_msg_;
 };
 
 #endif
