@@ -96,9 +96,10 @@ void Server::handlPollEvents() {
 					this->recv_msg_ = recvCmdFromClient(i);
 					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
 							  << this->recv_msg_ << "\"" << std::endl;
-					int send_size =
-						send(this->pollfd_vec_[i].fd, &this->recv_msg_,
-							 this->recv_msg_.size(), 0);
+					char send_msg[BUF_SIZE];
+					std::strcpy(send_msg, this->recv_msg_.c_str());
+					int send_size = send(this->pollfd_vec_[i].fd, &send_msg,
+										 std::strlen(send_msg), 0);
 					if (send_size == -1) {
 						if (errno == EAGAIN) {
 							continue;
@@ -136,7 +137,11 @@ std::string Server::recvCmdFromClient(const size_t i) {
 	char recv_msg[BUF_SIZE] = {0};
 	ssize_t recv_size =
 		recv(this->pollfd_vec_[i].fd, &recv_msg, BUF_SIZE, MSG_DONTWAIT);
-	if (recv_size == -1) {
+	if (recv_size > MAX_MSG_LEN) {
+		std::cout << "ERROR: received message exceeds 510 characters limit"
+				  << std::endl;
+		return ("ERROR: received message exceeds 510 characters limit");
+	} else if (recv_size == -1) {
 		if (errno == EAGAIN) {
 			throw std::runtime_error("not yet finished sending from client");
 		}
