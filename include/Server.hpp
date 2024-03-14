@@ -8,10 +8,13 @@
 #include <string>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <poll.h>
+#include <vector>
 
 #define PORT 8080
 #define SERVER_IP "127.0.0.1"
 #define BUF_SIZE 1024
+#define POLL_WAIT_FOREVER -1
 
 class Server {
   public:
@@ -33,6 +36,7 @@ class Server {
 	struct sockaddr_in server_addr_;
 	struct sockaddr_in client_addr_;
 	std::string recv_msg_;
+	std::vector<struct pollfd> pollfd_vec_;
 };
 
 #endif
