@@ -37,10 +37,11 @@ int main() {
 
 	while (1) {
 		std::cout << "input message: ";
-		std::string send_msg;
+		// std::string send_msg;
+		char send_msg[BUF_SIZE];
 		std::cin >> send_msg;
 
-		int send_size = send(client_sockfd, &send_msg, send_msg.size(), 0);
+		int send_size = send(client_sockfd, &send_msg, std::strlen(send_msg), 0);
 		if (send_size == -1) {
 			std::cerr << "ERROR: send" << std::endl;
 			break ;

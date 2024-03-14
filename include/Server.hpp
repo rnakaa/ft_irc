@@ -15,6 +15,7 @@
 #define SERVER_IP "127.0.0.1"
 #define BUF_SIZE 1024
 #define POLL_WAIT_FOREVER -1
+#define MAX_MSG_LEN 510
 
 class Server {
   public:
