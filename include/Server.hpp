@@ -4,11 +4,11 @@
 #include <arpa/inet.h>
 #include <cerrno>
 #include <iostream>
+#include <poll.h>
 #include <sstream>
 #include <string>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <poll.h>
 #include <vector>
 
 #define PORT 8080
@@ -29,6 +29,8 @@ class Server {
 	void setPortAndPass(const char **argv);
 	void exit_error(const std::string &func, const std::string &err_msg);
 	std::string recvCmdFromClient(const size_t i);
+	void acceptNewClientConnect();
+	void handlPollEvents();
 
   private:
 	std::string port_;
