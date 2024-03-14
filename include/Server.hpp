@@ -28,6 +28,7 @@ class Server {
 	void checkValidPort(const char *str) const;
 	void setPortAndPass(const char **argv);
 	void exit_error(const std::string &func, const std::string &err_msg);
+	std::string recvCmdFromClient(const size_t i);
 
   private:
 	std::string port_;

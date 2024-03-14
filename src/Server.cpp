@@ -83,7 +83,6 @@ void Server::run() {
 
 		for (size_t i = 0; i < this->pollfd_vec_.size(); ++i) {
 			if (this->pollfd_vec_[i].revents & POLLIN) {
-
 				if (this->pollfd_vec_[i].fd == this->server_sockfd_) {
 					socklen_t client_addr_len = sizeof(this->client_addr_);
 					struct pollfd client_pollfd;
@@ -100,42 +99,45 @@ void Server::run() {
 					client_pollfd.revents = 0;
 					this->pollfd_vec_.push_back(client_pollfd);
 				} else {
-					while (1) {
-						char recv_msg[BUF_SIZE] = {0};
-						ssize_t recv_size = recv(this->pollfd_vec_[i].fd, &recv_msg, BUF_SIZE, MSG_DONTWAIT);
-						if (recv_size == -1) {
-							if (errno == EAGAIN) {
-								break ;
-							}
-							close(this->pollfd_vec_[i].fd);
-							close(this->server_sockfd_);
-							exit_error("recv", strerror(errno));
-						} else if (recv_size == 0) {
-							std::cout << "finish connection from client[" << this->pollfd_vec_[i].fd << "]"<< std::endl;
-							close(this->pollfd_vec_[i].fd);
-							this->pollfd_vec_.erase(this->pollfd_vec_.begin() + i);
-							break;
-						}
-
-						this->recv_msg_ = recv_msg;
-						std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \"" << this->recv_msg_ << "\""
-								  << std::endl;
-
+					try {
+						this->recv_msg_ = recvCmdFromClient(i);
+						std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \"" << this->recv_msg_ << "\"" << std::endl;
 						int send_size = send(this->pollfd_vec_[i].fd, &this->recv_msg_,
 											 this->recv_msg_.size(), 0);
 						if (send_size == -1) {
 							if (errno == EAGAIN) {
-								break ;
+								continue ;
 							}
 							std::cerr << "ERROR: send" << std::endl;
-							break;
+							continue ;
 						}
+					} catch (const std::exception& e) {
+						continue ;
 					}
 				}
 			}
 		}
 	}
 	close(this->server_sockfd_);
+}
+
+std::string Server::recvCmdFromClient(const size_t i) {
+	char recv_msg[BUF_SIZE] = {0};
+	ssize_t recv_size = recv(this->pollfd_vec_[i].fd, &recv_msg, BUF_SIZE, MSG_DONTWAIT);
+	if (recv_size == -1) {
+		if (errno == EAGAIN) {
+			throw std::runtime_error("not yet finished sending from client");
+		}
+		close(this->pollfd_vec_[i].fd);
+		close(this->server_sockfd_);
+		exit_error("recv", strerror(errno));
+	} else if (recv_size == 0) {
+		std::cout << "finish connection from client[" << this->pollfd_vec_[i].fd << "]"<< std::endl;
+		close(this->pollfd_vec_[i].fd);
+		this->pollfd_vec_.erase(this->pollfd_vec_.begin() + i);
+		throw std::runtime_error("finish connection from client");
+	}
+	return (recv_msg);
 }
 
 void Server::exit_error(const std::string &func, const std::string &err_msg) {
