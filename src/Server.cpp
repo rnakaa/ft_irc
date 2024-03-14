@@ -65,47 +65,92 @@ void Server::init() {
 		exit_error("listen", strerror(errno));
 	}
 	std::cout << "SUCCESS: listen" << std::endl;
+
+	struct pollfd server_pollfd;
+	server_pollfd.fd = this->server_sockfd_;
+	server_pollfd.events = POLLIN;
+	server_pollfd.revents = 0;
+	this->pollfd_vec_.push_back(server_pollfd);
 }
 
 void Server::run() {
 	while (1) {
-		socklen_t client_addr_len = sizeof(this->client_addr_);
-		int client_sockfd =
-			accept(this->server_sockfd_,
-				   reinterpret_cast<struct sockaddr *>(&this->client_addr_),
-				   &client_addr_len);
-		if (client_sockfd == -1) {
+		int ret = poll(this->pollfd_vec_.data(), this->pollfd_vec_.size(),
+					   POLL_WAIT_FOREVER);
+		if (ret == -1) {
 			close(this->server_sockfd_);
-			exit_error("accept", strerror(errno));
+			exit_error("poll", strerror(errno));
 		}
-		std::cout << "SUCCESS: connection: " << client_sockfd << std::endl;
-
-		while (1) {
-			char recv_msg[BUF_SIZE] = {0};
-			ssize_t recv_size = recv(client_sockfd, &recv_msg, BUF_SIZE, 0);
-			if (recv_size == -1) {
-				close(client_sockfd);
-				close(this->server_sockfd_);
-				exit_error("recv", strerror(errno));
-			} else if (recv_size == 0) {
-				std::cout << "finish connection" << std::endl;
-				break;
-			}
-
-			this->recv_msg_ = recv_msg;
-			std::cout << "message from client: \"" << this->recv_msg_ << "\""
-					  << std::endl;
-
-			int send_size = send(client_sockfd, &this->recv_msg_,
-								 this->recv_msg_.size(), 0);
-			if (send_size == -1) {
-				std::cerr << "ERROR: send" << std::endl;
-				break;
-			}
-		}
-		close(client_sockfd);
+		handlPollEvents();
 	}
 	close(this->server_sockfd_);
+}
+
+void Server::handlPollEvents() {
+	for (size_t i = 0; i < this->pollfd_vec_.size(); ++i) {
+		if (this->pollfd_vec_[i].revents & POLLIN) {
+			if (this->pollfd_vec_[i].fd == this->server_sockfd_) {
+				acceptNewClientConnect();
+			} else {
+				try {
+					this->recv_msg_ = recvCmdFromClient(i);
+					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
+							  << this->recv_msg_ << "\"" << std::endl;
+					int send_size =
+						send(this->pollfd_vec_[i].fd, &this->recv_msg_,
+							 this->recv_msg_.size(), 0);
+					if (send_size == -1) {
+						if (errno == EAGAIN) {
+							continue;
+						}
+						std::cerr << "ERROR: send" << std::endl;
+						continue;
+					}
+				} catch (const std::exception &e) {
+					continue;
+				}
+			}
+		}
+	}
+}
+
+void Server::acceptNewClientConnect() {
+	socklen_t client_addr_len = sizeof(this->client_addr_);
+	struct pollfd client_pollfd;
+	client_pollfd.fd =
+		accept(this->server_sockfd_,
+			   reinterpret_cast<struct sockaddr *>(&this->client_addr_),
+			   &client_addr_len);
+	if (client_pollfd.fd == -1) {
+		close(this->server_sockfd_);
+		exit_error("accept", strerror(errno));
+	}
+	std::cout << "SUCCESS: connection from client[" << client_pollfd.fd << "]"
+			  << std::endl;
+	client_pollfd.events = POLLIN;
+	client_pollfd.revents = 0;
+	this->pollfd_vec_.push_back(client_pollfd);
+}
+
+std::string Server::recvCmdFromClient(const size_t i) {
+	char recv_msg[BUF_SIZE] = {0};
+	ssize_t recv_size =
+		recv(this->pollfd_vec_[i].fd, &recv_msg, BUF_SIZE, MSG_DONTWAIT);
+	if (recv_size == -1) {
+		if (errno == EAGAIN) {
+			throw std::runtime_error("not yet finished sending from client");
+		}
+		close(this->pollfd_vec_[i].fd);
+		close(this->server_sockfd_);
+		exit_error("recv", strerror(errno));
+	} else if (recv_size == 0) {
+		std::cout << "finish connection from client[" << this->pollfd_vec_[i].fd
+				  << "]" << std::endl;
+		close(this->pollfd_vec_[i].fd);
+		this->pollfd_vec_.erase(this->pollfd_vec_.begin() + i);
+		throw std::runtime_error("finish connection from client");
+	}
+	return (recv_msg);
 }
 
 void Server::exit_error(const std::string &func, const std::string &err_msg) {

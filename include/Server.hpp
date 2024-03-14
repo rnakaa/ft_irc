@@ -4,14 +4,17 @@
 #include <arpa/inet.h>
 #include <cerrno>
 #include <iostream>
+#include <poll.h>
 #include <sstream>
 #include <string>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <vector>
 
 #define PORT 8080
 #define SERVER_IP "127.0.0.1"
 #define BUF_SIZE 1024
+#define POLL_WAIT_FOREVER -1
 
 class Server {
   public:
@@ -25,6 +28,9 @@ class Server {
 	void checkValidPort(const char *str) const;
 	void setPortAndPass(const char **argv);
 	void exit_error(const std::string &func, const std::string &err_msg);
+	std::string recvCmdFromClient(const size_t i);
+	void acceptNewClientConnect();
+	void handlPollEvents();
 
   private:
 	std::string port_;
@@ -33,6 +39,7 @@ class Server {
 	struct sockaddr_in server_addr_;
 	struct sockaddr_in client_addr_;
 	std::string recv_msg_;
+	std::vector<struct pollfd> pollfd_vec_;
 };
 
 #endif
