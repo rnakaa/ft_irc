@@ -37,9 +37,9 @@ int main() {
 
 	while (1) {
 		std::cout << "input message: ";
-		// std::string send_msg;
+		//std::string send_msg;
 		char send_msg[BUF_SIZE];
-		std::cin >> send_msg;
+		std::cin.getline(send_msg,BUF_SIZE);
 
 		int send_size = send(client_sockfd, &send_msg, std::strlen(send_msg), 0);
 		if (send_size == -1) {
