@@ -1,9 +1,11 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "User.hpp"
 #include <arpa/inet.h>
 #include <cerrno>
 #include <iostream>
+#include <map>
 #include <poll.h>
 #include <sstream>
 #include <string>
@@ -41,6 +43,7 @@ class Server {
 	struct sockaddr_in client_addr_;
 	std::string recv_msg_;
 	std::vector<struct pollfd> pollfd_vec_;
+	std::map<int, User> user_map_;
 };
 
 #endif
