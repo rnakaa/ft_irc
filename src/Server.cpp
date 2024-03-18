@@ -96,8 +96,9 @@ void Server::handlPollEvents() {
 					this->recv_msg_ = recvCmdFromClient(i);
 					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
 							  << this->recv_msg_ << "\"" << std::endl;
-					// Command cmd(*this);
-					sendMsgToClient(i);
+					Command cmd(*this);
+					cmd.handleCommand(this->pollfd_vec_[i].fd, this->recv_msg_);
+					// sendMsgToClient(i, this->recv_msg_);
 				} catch (const std::exception &e) {
 					continue;
 				}
@@ -152,13 +153,12 @@ std::string Server::recvCmdFromClient(const size_t i) {
 	return (recv_msg);
 }
 
-void Server::sendMsgToClient(const size_t i) {
+void Server::sendMsgToClient(const int fd, const std::string &send_str) {
+	// std::cout << "start sendMsgToClient" << std::endl;
 	char send_msg[BUF_SIZE];
-	std::strcpy(send_msg, this->recv_msg_.c_str());
-	int send_size =
-		send(this->pollfd_vec_[i].fd, &send_msg, std::strlen(send_msg), 0);
+	std::strcpy(send_msg, send_str.c_str());
+	int send_size = send(fd, &send_msg, std::strlen(send_msg), 0);
 	if (send_size == -1) {
-		std::cerr << "ERROR: send" << std::endl;
 		exit_error("send", strerror(errno));
 	}
 }

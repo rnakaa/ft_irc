@@ -1,8 +1,8 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "User.hpp"
 #include "Command.hpp"
+#include "User.hpp"
 #include <arpa/inet.h>
 #include <cerrno>
 #include <iostream>
@@ -27,6 +27,7 @@ class Server {
 	void init();
 	void run();
 	const std::string &getPass() const;
+	void sendMsgToClient(const int fd, const std::string &send_str);
 
   private:
 	void checkValidArgc(const int argc) const;
@@ -36,7 +37,6 @@ class Server {
 	std::string recvCmdFromClient(const size_t i);
 	void acceptNewClientConnect();
 	void handlPollEvents();
-	void sendMsgToClient(const size_t i);
 
   private:
 	std::string port_;

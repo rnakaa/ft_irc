@@ -56,7 +56,7 @@ int main() {
 			std::cout << "finish connection" << std::endl;
 			break ;
 		}
-		std::cout << "message from server: " << recv_msg << std::endl;
+		std::cout << recv_msg << std::endl;
 	}
 
 	close(client_sockfd);
