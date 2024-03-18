@@ -32,7 +32,7 @@ clean:
 	$(RM) $(OBJS)
 	$(RM) $(OBJ_DIR)
 
-fclean: clean
+fclean: clean cclean
 	$(RM) $(NAME)
 
 re: fclean all

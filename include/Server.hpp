@@ -1,17 +1,17 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "User.hpp"
 #include <arpa/inet.h>
 #include <cerrno>
 #include <iostream>
+#include <map>
 #include <poll.h>
 #include <sstream>
 #include <string>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
-#include <map>
-#include "User.hpp"
 
 #define PORT 8080
 #define SERVER_IP "127.0.0.1"
@@ -44,7 +44,7 @@ class Server {
 	struct sockaddr_in client_addr_;
 	std::string recv_msg_;
 	std::vector<struct pollfd> pollfd_vec_;
-	std::map<ssize_t, User *> UsersMap;
+	std::map<int, User> user_map_;
 };
 
 #endif

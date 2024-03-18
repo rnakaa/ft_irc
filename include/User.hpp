@@ -12,11 +12,13 @@
 #include <vector>
 
 class User {
-	public:
-		bool checkApprovalStatus();
-		void approve();
-	private:
-		bool approval_;
+  public:
+	User(int fd);
+
+  private:
+	const int fd_;
+	int is_auth_;
+	std::string nick_name_;
 };
 
 #endif
