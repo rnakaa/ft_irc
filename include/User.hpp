@@ -13,7 +13,9 @@
 
 class User {
   public:
+	User();
 	User(int fd);
+	int getFd() const;
 
   private:
 	const int fd_;

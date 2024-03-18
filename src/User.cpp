@@ -5,3 +5,7 @@ User::User(const int fd) : fd_(fd), is_auth_(1), nick_name_("") {
 			  << std::endl;
 	(void)nick_name_;
 }
+
+int User::getFd() const { return (this->fd_); }
+
+User::User() : fd_(-1), is_auth_(1), nick_name_("") {}
