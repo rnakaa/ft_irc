@@ -2,6 +2,7 @@
 #define SERVER_HPP
 
 #include "User.hpp"
+#include "Command.hpp"
 #include <arpa/inet.h>
 #include <cerrno>
 #include <iostream>
@@ -25,6 +26,7 @@ class Server {
 	~Server();
 	void init();
 	void run();
+	const std::string &getPass() const;
 
   private:
 	void checkValidArgc(const int argc) const;
@@ -34,6 +36,7 @@ class Server {
 	std::string recvCmdFromClient(const size_t i);
 	void acceptNewClientConnect();
 	void handlPollEvents();
+	void sendMsgToClient(const size_t i);
 
   private:
 	std::string port_;

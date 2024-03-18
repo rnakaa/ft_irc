@@ -96,17 +96,8 @@ void Server::handlPollEvents() {
 					this->recv_msg_ = recvCmdFromClient(i);
 					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
 							  << this->recv_msg_ << "\"" << std::endl;
-					char send_msg[BUF_SIZE];
-					std::strcpy(send_msg, this->recv_msg_.c_str());
-					int send_size = send(this->pollfd_vec_[i].fd, &send_msg,
-										 std::strlen(send_msg), 0);
-					if (send_size == -1) {
-						if (errno == EAGAIN) {
-							continue;
-						}
-						std::cerr << "ERROR: send" << std::endl;
-						continue;
-					}
+					// Command cmd(*this);
+					sendMsgToClient(i);
 				} catch (const std::exception &e) {
 					continue;
 				}
@@ -161,9 +152,22 @@ std::string Server::recvCmdFromClient(const size_t i) {
 	return (recv_msg);
 }
 
+void Server::sendMsgToClient(const size_t i) {
+	char send_msg[BUF_SIZE];
+	std::strcpy(send_msg, this->recv_msg_.c_str());
+	int send_size =
+		send(this->pollfd_vec_[i].fd, &send_msg, std::strlen(send_msg), 0);
+	if (send_size == -1) {
+		std::cerr << "ERROR: send" << std::endl;
+		exit_error("send", strerror(errno));
+	}
+}
+
 void Server::exit_error(const std::string &func, const std::string &err_msg) {
 	std::cerr << "ERROR: " << func << ": " << err_msg << std::endl;
 	std::exit(EXIT_FAILURE);
 }
+
+const std::string &Server::getPass() const { return (this->pass_); }
 
 Server::~Server() {}
