@@ -1,19 +1,24 @@
 #include "Command.hpp"
 
 Command::Command(Server &server) : server_(server) {
-	this->commands_map_["TEST"] = &Command::printTest;
-	this->commands_map_["PASS"] = &Command::pass;
+	this->commands_map_["TEST"] = &Command::TEST;
+	this->commands_map_["PASS"] = &Command::PASS;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
-void Command::handleCommand(const User &user, std::string &message) {
+void Command::handleCommand(User &user, std::string &message) {
 	// std::cout << "start handleCommand" << std::endl;
 	try {
 		parseClientMessage(message);
-		executeCommand(user);
+		CommandFunction func = this->commands_map_[this->command_name_];
+		if (!func) {
+			throw std::runtime_error("ERROR: Unknown Command: " +
+									 this->command_name_);
+		}
+		(this->*func)(user, this->arg_);
 	} catch (const std::exception &e) {
 		std::cerr << e.what() << std::endl;
-		server_.sendMsgToClient(user.getFd(), e.what());
+		this->server_.sendMsgToClient(user.getFd(), e.what());
 	}
 }
 
@@ -36,27 +41,26 @@ void Command::parseClientMessage(const std::string &message) {
 	}
 }
 
-void Command::executeCommand(const User &user) {
-	// std::cout << "start executeCommand" << std::endl;
-	CommandFunction func = this->commands_map_[this->command_name_];
-	if (func) {
-		(this->*func)(user, this->arg_);
-	} else {
-		throw std::runtime_error("ERROR: Unknown Command: " +
-								 this->command_name_);
-	}
-}
-
-void Command::pass(const User &user, std::vector<std::string> &arg) {
+void Command::PASS(User &user, std::vector<std::string> &arg) {
 	std::cout << "start pass " << user.getFd() << std::endl;
-	try {
-		std::cout << "pass is " << arg.at(0) << std::endl;
-	} catch (const std::out_of_range &e) {
-		std::cerr << "Error: " << e.what() << std::endl;
+	if (user.getAuthFlags() != User::NONE_AUTH) {
+		std::cerr << "ERR_ALREADYREGISTRED" << std::endl;
+		server_.sendMsgToClient(user.getFd(), "ERR_ALREADYREGISTRED");
+	} else if (arg.empty()) {
+		std::cerr << "ERR_NEEDMOREPARAMS" << std::endl;
+		server_.sendMsgToClient(user.getFd(), "ERR_NEEDMOREPARAMS");
+	} else if (this->server_.getPass() != arg[0]) {
+		std::cerr << "ERR_PASSNOTCORRECT" << std::endl;
+		server_.sendMsgToClient(user.getFd(), "ERR_PASSNOTCORRECT");
+	} else {
+		user.setAuthFrags(User::PASS_AUTH);
+		std::cout << "SUCCESS: PASS Command client[" << user.getFd()
+				  << "], auth_flag_: " << user.getAuthFlags() << std::endl;
+		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: PASS Command");
 	}
 }
 
-void Command::printTest(const User &user, std::vector<std::string> &arg) {
+void Command::TEST(User &user, std::vector<std::string> &arg) {
 	(void)arg;
 	std::cout << "Command => printTest " << std::endl;
 	server_.sendMsgToClient(user.getFd(), "Command => printTest: Hello world!");
