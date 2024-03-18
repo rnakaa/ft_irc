@@ -163,4 +163,11 @@ void Server::exit_error(const std::string &func, const std::string &err_msg) {
 	std::exit(EXIT_FAILURE);
 }
 
+void Server::createNewUser(ssize_t fd){
+	User * user = new User;
+	if(!user)
+		std::cout << "ERROR" << std::endl;//未完成
+	this->UsersMap[fd] = user;
+}
+
 Server::~Server() {}

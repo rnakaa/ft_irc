@@ -10,6 +10,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
+#include <map>
+#include "User.hpp"
 
 #define PORT 8080
 #define SERVER_IP "127.0.0.1"
@@ -32,6 +34,7 @@ class Server {
 	std::string recvCmdFromClient(const size_t i);
 	void acceptNewClientConnect();
 	void handlPollEvents();
+	void createNewUser(ssize_t fd);
 
   private:
 	std::string port_;
@@ -41,6 +44,7 @@ class Server {
 	struct sockaddr_in client_addr_;
 	std::string recv_msg_;
 	std::vector<struct pollfd> pollfd_vec_;
+	std::map<ssize_t, User *> UsersMap;
 };
 
 #endif
