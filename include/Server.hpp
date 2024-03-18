@@ -34,7 +34,6 @@ class Server {
 	std::string recvCmdFromClient(const size_t i);
 	void acceptNewClientConnect();
 	void handlPollEvents();
-	void createNewUser(ssize_t fd);
 
   private:
 	std::string port_;
