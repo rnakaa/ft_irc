@@ -49,7 +49,7 @@ void Command::PASS(User &user, std::vector<std::string> &arg) {
 	} else if (arg.empty()) {
 		std::cerr << "ERR_NEEDMOREPARAMS" << std::endl;
 		server_.sendMsgToClient(user.getFd(), "ERR_NEEDMOREPARAMS");
-	} else if (this->server_.getPass() != arg[0]) {
+	} else if (this->server_.getPass() != arg.at(0)) {
 		std::cerr << "ERR_PASSNOTCORRECT" << std::endl;
 		server_.sendMsgToClient(user.getFd(), "ERR_PASSNOTCORRECT");
 	} else {
