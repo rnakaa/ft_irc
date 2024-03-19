@@ -1,6 +1,7 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
+#include "Error.hpp"
 #include "Server.hpp"
 #include "User.hpp"
 #include <arpa/inet.h>
@@ -21,6 +22,7 @@ class Command {
 
   private:
 	Server &server_;
+	Error error_;
 	std::string command_name_;
 	std::vector<std::string> arg_;
 	typedef void (Command::*CommandFunction)(User &,

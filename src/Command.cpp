@@ -44,13 +44,13 @@ void Command::parseClientMessage(const std::string &message) {
 void Command::PASS(User &user, std::vector<std::string> &arg) {
 	std::cout << "start pass " << user.getFd() << std::endl;
 	if (user.getAuthFlags() != User::NONE_AUTH) {
-		std::cerr << "ERR_ALREADYREGISTRED" << std::endl;
+		std::cerr << error_.ERR_ALREADYREGISTRED() << std::endl;
 		server_.sendMsgToClient(user.getFd(), "ERR_ALREADYREGISTRED");
 	} else if (arg.empty()) {
-		std::cerr << "ERR_NEEDMOREPARAMS" << std::endl;
+		std::cerr << error_.ERR_NEEDMOREPARAMS("PASS") << std::endl;
 		server_.sendMsgToClient(user.getFd(), "ERR_NEEDMOREPARAMS");
 	} else if (this->server_.getPass() != arg.at(0)) {
-		std::cerr << "ERR_PASSNOTCORRECT" << std::endl;
+		std::cerr << error_.ERR_PASSWDMISMATCH() << std::endl;
 		server_.sendMsgToClient(user.getFd(), "ERR_PASSNOTCORRECT");
 	} else {
 		user.setAuthFrags(User::PASS_AUTH);
