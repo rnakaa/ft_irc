@@ -3,6 +3,8 @@
 #include <string>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <cstdlib> //exit
+#include <cstring> //strlen
 
 #define PORT 8080
 #define SERVER_IP "127.0.0.1"
@@ -12,7 +14,6 @@ void	exit_error(const std::string& msg) {
 	std::cerr << "ERROR: " << msg << std::endl;
 	std::exit(1);
 }
-
 
 int main() {
 	int client_sockfd;

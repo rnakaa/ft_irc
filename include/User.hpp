@@ -3,6 +3,8 @@
 
 #include <arpa/inet.h>
 #include <cerrno>
+#include <cstdlib> //exit, EXIT_FAILURE
+#include <cstring> //strerror, strcpy, strlen
 #include <iostream>
 #include <poll.h>
 #include <sstream>
