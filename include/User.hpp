@@ -27,7 +27,6 @@ class User {
   private:
 	const int fd_;
 	AuthFlags auth_flag_;
-	int is_auth_;
 	std::string nick_name_;
 };
 
