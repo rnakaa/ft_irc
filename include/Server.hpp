@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "Command.hpp"
 #include "User.hpp"
 #include <arpa/inet.h>
 #include <cerrno>
@@ -25,6 +26,8 @@ class Server {
 	~Server();
 	void init();
 	void run();
+	const std::string &getPass() const;
+	void sendMsgToClient(const int fd, const std::string &send_str);
 
   private:
 	void checkValidArgc(const int argc) const;

@@ -37,7 +37,7 @@ fclean: clean cclean
 
 re: fclean all
 
-run: all
+run: all client
 	./$(NAME) $(PORT) $(PASS)
 
 client:

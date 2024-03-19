@@ -96,17 +96,15 @@ void Server::handlPollEvents() {
 					this->recv_msg_ = recvCmdFromClient(i);
 					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
 							  << this->recv_msg_ << "\"" << std::endl;
-					char send_msg[BUF_SIZE];
-					std::strcpy(send_msg, this->recv_msg_.c_str());
-					int send_size = send(this->pollfd_vec_[i].fd, &send_msg,
-										 std::strlen(send_msg), 0);
-					if (send_size == -1) {
-						if (errno == EAGAIN) {
-							continue;
-						}
-						std::cerr << "ERROR: send" << std::endl;
-						continue;
+					Command cmd(*this);
+					if (this->user_map_.find(this->pollfd_vec_[i].fd) ==
+						this->user_map_.end()) {
+						std::cout << "Warning: fd " << this->pollfd_vec_[i].fd
+								  << " not found in user_map_" << std::endl;
 					}
+					cmd.handleCommand(this->user_map_[this->pollfd_vec_[i].fd],
+									  this->recv_msg_);
+					// sendMsgToClient(i, this->recv_msg_);
 				} catch (const std::exception &e) {
 					continue;
 				}
@@ -161,9 +159,21 @@ std::string Server::recvCmdFromClient(const size_t i) {
 	return (recv_msg);
 }
 
+void Server::sendMsgToClient(const int fd, const std::string &send_str) {
+	// std::cout << "start sendMsgToClient" << std::endl;
+	char send_msg[BUF_SIZE];
+	std::strcpy(send_msg, send_str.c_str());
+	int send_size = send(fd, &send_msg, std::strlen(send_msg), 0);
+	if (send_size == -1) {
+		exit_error("send", strerror(errno));
+	}
+}
+
 void Server::exit_error(const std::string &func, const std::string &err_msg) {
 	std::cerr << "ERROR: " << func << ": " << err_msg << std::endl;
 	std::exit(EXIT_FAILURE);
 }
+
+const std::string &Server::getPass() const { return (this->pass_); }
 
 Server::~Server() {}

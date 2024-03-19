@@ -13,10 +13,20 @@
 
 class User {
   public:
+	enum AuthFlags { NONE_AUTH, PASS_AUTH, NICK_AUTH, ALL_AUTH };
+
+  public:
+	User();
 	User(int fd);
+
+	int getFd() const;
+	AuthFlags getAuthFlags() const;
+
+	void setAuthFrags(const AuthFlags &flags);
 
   private:
 	const int fd_;
+	AuthFlags auth_flag_;
 	int is_auth_;
 	std::string nick_name_;
 };
