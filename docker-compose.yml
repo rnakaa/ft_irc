@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  irc-dev:
+    image: irc-dev
+    build:
+      context: .
+      args:
+        USER_HOME: ${HOME}
+    volumes:
+      - ${HOME}/.ssh:/root/.ssh
+      - ${HOME}/.gitconfig:/root/.gitconfig
+      - .:/workspace
+    tty: true
