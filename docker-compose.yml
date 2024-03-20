@@ -10,5 +10,6 @@ services:
     volumes:
       - ${HOME}/.ssh:/root/.ssh
       - ${HOME}/.gitconfig:/root/.gitconfig
+      - ${HOME}/.vimrc:/root/.vimrc
       - .:/workspace
     tty: true
