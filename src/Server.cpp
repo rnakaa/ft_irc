@@ -176,4 +176,16 @@ void Server::exit_error(const std::string &func, const std::string &err_msg) {
 
 const std::string &Server::getPass() const { return (this->pass_); }
 
+void Server::setChannel(const std::string &ch_name, const Channel &ch) {
+	this->ch_map_.insert(std::make_pair(ch_name, ch));
+}
+
+void Server::printChannelName() const {
+	for (std::map<std::string, Channel>::const_iterator it = ch_map_.begin();
+		 it != ch_map_.end(); ++it) {
+		std::cout << "Channel Name: " << it->first
+				  << ", Channel: " << it->second.getName() << std::endl;
+	}
+}
+
 Server::~Server() {}

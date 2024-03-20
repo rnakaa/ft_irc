@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "Channel.hpp"
 #include "Command.hpp"
 #include "User.hpp"
 #include <arpa/inet.h>
@@ -20,13 +21,21 @@
 #define POLL_WAIT_FOREVER -1
 #define MAX_MSG_LEN 510
 
+class User;
+class Channel;
+
 class Server {
   public:
 	Server(const int argc, const char **argv);
 	~Server();
 	void init();
 	void run();
+
 	const std::string &getPass() const;
+	void printChannelName() const;
+
+	void setChannel(const std::string &ch_name, const Channel &ch);
+
 	void sendMsgToClient(const int fd, const std::string &send_str);
 
   private:
@@ -47,6 +56,7 @@ class Server {
 	std::string recv_msg_;
 	std::vector<struct pollfd> pollfd_vec_;
 	std::map<int, User> user_map_;
+	std::map<std::string, Channel> ch_map_;
 };
 
 #endif
