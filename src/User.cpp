@@ -13,8 +13,12 @@ void User::setAuthFrags(const AuthFlags &flags) { this->auth_flag_ = flags; }
 
 User::User() : fd_(-1), auth_flag_(NONE_AUTH), nick_name_("") {}
 
-enum mod User::getMod() { return this->Mod; }
+enum User::UserMod User::getMod() const { return this->mod_; }
 
-bool User::checkMod(enum mod mod) { return (mod & this->Mod) != 0; }
+bool User::hasMod(const enum User::UserMod mod) const {
+	return (mod & this->mod_) != 0;
+}
 
-void User::setMod(enum mod mod) { this->Mod = (enum mod)(this->Mod | mod); }
+void User::setMod(const enum User::UserMod mod) {
+	this->mod_ = (enum UserMod)(this->mod_ | mod);
+}

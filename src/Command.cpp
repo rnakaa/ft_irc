@@ -3,8 +3,8 @@
 Command::Command(Server &server) : server_(server) {
 	this->commands_map_["TEST"] = &Command::TEST;
 	this->commands_map_["PASS"] = &Command::PASS;
-	//this->commands_map_["MOD"] = &Command::MOD;
-	// std::cout << "server pass is" << server_.getPass() << std::endl;
+	// this->commands_map_["MOD"] = &Command::MOD;
+	//  std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
 void Command::handleCommand(User &user, std::string &message) {
@@ -68,7 +68,7 @@ void Command::TEST(User &user, std::vector<std::string> &arg) {
 	server_.sendMsgToClient(user.getFd(), "Command => printTest: Hello world!");
 }
 
-//void Command::MOD(User &user, std::vector<std::string> &arg) {
+// void Command::MOD(User &user, std::vector<std::string> &arg) {
 //	(void)arg;
 //	user.setMod(s);
 //	std::cout << user.getMod() << std::endl;
@@ -76,4 +76,4 @@ void Command::TEST(User &user, std::vector<std::string> &arg) {
 //	std::cout << user.checkMod(w) << std::endl;
 //	user.setMod(w);
 //	std::cout << user.checkMod(w) << std::endl;
-//}
+// }

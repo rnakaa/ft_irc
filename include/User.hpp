@@ -13,12 +13,10 @@
 #include <unistd.h>
 #include <vector>
 
-enum mod { i = 1 << 1, s = 1 << 2, w = 1 << 3, o = 1 << 4 };
-
 class User {
   public:
 	enum AuthFlags { NONE_AUTH, PASS_AUTH, NICK_AUTH, ALL_AUTH };
-	enum mod Mod;
+	enum UserMod { i = 1 << 1, s = 1 << 2, w = 1 << 3, o = 1 << 4 };
 
   public:
 	User();
@@ -27,12 +25,13 @@ class User {
 	int getFd() const;
 	AuthFlags getAuthFlags() const;
 	void setAuthFrags(const AuthFlags &flags);
-	enum mod getMod();
-	void setMod(enum mod mod);
-	bool checkMod(enum mod mod);
+	enum UserMod getMod() const;
+	void setMod(const enum UserMod mod);
+	bool hasMod(const enum UserMod mod) const;
 
   private:
 	const int fd_;
+	enum UserMod mod_;
 	AuthFlags auth_flag_;
 	std::string nick_name_;
 };
