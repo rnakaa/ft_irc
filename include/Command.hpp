@@ -14,6 +14,7 @@
 
 class Server;
 class User;
+class Error;
 
 class Command {
   public:
@@ -31,7 +32,25 @@ class Command {
 
   private:
 	void parseClientMessage(const std::string &message);
+
+	// PASS
 	void PASS(User &user, std::vector<std::string> &arg);
+
+	// JOIN
+	void JOIN(User &user, std::vector<std::string> &arg);
+	void checkValidChannel(std::vector<std::string> &ch_vec,
+						   std::vector<std::string> &key_vec);
+	void setArgToVec(const std::vector<std::string> &arg,
+					 std::vector<std::string> &ch_vec,
+					 std::vector<std::string> &key_vec);
+	bool checkValidChannel(const std::vector<std::string> &ch_vec,
+						   const std::vector<std::string> &key_vec);
+	// void joinChannel(const size_t i, std::vector<std::string> &ch_vec,
+	// 				 std::vector<std::string> &key_vec);
+	void joinChannel(const std::string &ch_name, User &user);
+	void createChannel(const size_t i, std::vector<std::string> &ch_vec,
+					   std::vector<std::string> &key_vec);
+
 	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
 };

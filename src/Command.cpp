@@ -4,7 +4,8 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["TEST"] = &Command::TEST;
 	this->commands_map_["PASS"] = &Command::PASS;
 	// this->commands_map_["MOD"] = &Command::MOD;
-	//   std::cout << "server pass is" << server_.getPass() << std::endl;
+	this->commands_map_["JOIN"] = &Command::JOIN;
+	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
 void Command::handleCommand(User &user, std::string &message) {
@@ -65,6 +66,7 @@ void Command::PASS(User &user, std::vector<std::string> &arg) {
 void Command::TEST(User &user, std::vector<std::string> &arg) {
 	(void)arg;
 	std::cout << "Command => printTest " << std::endl;
+	this->server_.printChannelName();
 	server_.sendMsgToClient(user.getFd(), "Command => printTest: Hello world!");
 }
 

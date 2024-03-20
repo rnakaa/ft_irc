@@ -50,7 +50,7 @@ void Server::init() {
 	std::cout << "SUCCESS: socket: " << this->server_sockfd_ << std::endl;
 
 	this->server_addr_.sin_family = AF_INET;
-	this->server_addr_.sin_port = htons(PORT);
+	this->server_addr_.sin_port = htons(this->port_);
 	this->server_addr_.sin_addr.s_addr = inet_addr(SERVER_IP);
 	if (bind(this->server_sockfd_,
 			 reinterpret_cast<struct sockaddr *>(&this->server_addr_),
@@ -162,7 +162,12 @@ std::string Server::recvCmdFromClient(const size_t i) {
 void Server::sendMsgToClient(const int fd, const std::string &send_str) {
 	// std::cout << "start sendMsgToClient" << std::endl;
 	char send_msg[BUF_SIZE];
-	std::strcpy(send_msg, send_str.c_str());
+	if (send_str.size() + 1 > BUF_SIZE - 1) {
+		std::strcpy(send_msg, "ERROR : send message too long");
+	} else {
+		std::strcpy(send_msg, send_str.c_str());
+	}
+	std::strcat(send_msg, "\n");
 	int send_size = send(fd, &send_msg, std::strlen(send_msg), 0);
 	if (send_size == -1) {
 		exit_error("send", strerror(errno));
@@ -175,5 +180,25 @@ void Server::exit_error(const std::string &func, const std::string &err_msg) {
 }
 
 const std::string &Server::getPass() const { return (this->pass_); }
+
+const Channel &Server::getChannel(const std::string &ch_name) const {
+	return ch_map_.find(ch_name)->second;
+}
+
+void Server::setChannel(const std::string &ch_name, const Channel &ch) {
+	this->ch_map_.insert(std::make_pair(ch_name, ch));
+}
+
+bool Server::hasChannelName(const std::string &ch_name) {
+	return ch_map_.find(ch_name) != ch_map_.end();
+}
+
+void Server::printChannelName() const {
+	for (std::map<std::string, Channel>::const_iterator it = ch_map_.begin();
+		 it != ch_map_.end(); ++it) {
+		std::cout << "Channel Name: " << it->first
+				  << ", Channel: " << it->second.getName() << std::endl;
+	}
+}
 
 Server::~Server() {}

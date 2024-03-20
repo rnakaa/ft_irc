@@ -6,7 +6,7 @@
 #include <cstdlib> //exit
 #include <cstring> //strlen
 
-#define PORT 8080
+#define PORT 6667
 #define SERVER_IP "127.0.0.1"
 #define BUF_SIZE 1024
 
@@ -57,7 +57,7 @@ int main() {
 			std::cout << "finish connection" << std::endl;
 			break ;
 		}
-		std::cout << recv_msg << std::endl;
+		std::cout << recv_msg;
 	}
 
 	close(client_sockfd);
