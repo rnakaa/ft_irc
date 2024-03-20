@@ -12,3 +12,9 @@ User::AuthFlags User::getAuthFlags() const { return (this->auth_flag_); }
 void User::setAuthFrags(const AuthFlags &flags) { this->auth_flag_ = flags; }
 
 User::User() : fd_(-1), auth_flag_(NONE_AUTH), nick_name_("") {}
+
+enum mod User::getMod() { return this->Mod; }
+
+bool User::checkMod(enum mod mod) { return (mod & this->Mod) != 0; }
+
+void User::setMod(enum mod mod) { this->Mod = (enum mod)(this->Mod | mod); }

@@ -33,6 +33,7 @@ class Command {
 	void parseClientMessage(const std::string &message);
 	void PASS(User &user, std::vector<std::string> &arg);
 	void TEST(User &user, std::vector<std::string> &arg);
+	//void MOD(User &user, std::vector<std::string> &arg);
 };
 
 #endif
