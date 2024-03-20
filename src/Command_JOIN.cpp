@@ -12,13 +12,13 @@ void Command::joinChannel(const std::string &ch_name, User &user) {
 			std::cerr << "client already join channel received message"
 					  << std::endl;
 			server_.sendMsgToClient(
-				user.getFd(), "client already join channel received message\n");
+				user.getFd(), "client already join channel received message");
 			return;
 		}
 		user.setChannel(join_ch.getName(), join_ch);
 		std::cout << "finish JOIN command" << std::endl;
 		user.printJoinChannel();
-		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command\n");
+		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 	}
 }
 
@@ -27,7 +27,7 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	// if (user.getAuthFlags() != User::ALL_AUTH) {
 	if (user.getAuthFlags() != User::PASS_AUTH) {
 		std::cerr << "client cannot authenticate" << std::endl;
-		server_.sendMsgToClient(user.getFd(), "client cannot authenticate\n");
+		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");
 		return;
 	} else if (arg.empty()) {
 		std::cerr << error_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
@@ -67,7 +67,7 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 			std::cout << "finish JOIN command" << std::endl;
 			user.printJoinChannel();
 			this->server_.sendMsgToClient(user.getFd(),
-										  "SUCCESS: JOIN Command\n");
+										  "SUCCESS: JOIN Command");
 		}
 	}
 	// std::cout << "finish JOIN command" << std::endl;

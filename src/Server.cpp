@@ -162,7 +162,12 @@ std::string Server::recvCmdFromClient(const size_t i) {
 void Server::sendMsgToClient(const int fd, const std::string &send_str) {
 	// std::cout << "start sendMsgToClient" << std::endl;
 	char send_msg[BUF_SIZE];
-	std::strcpy(send_msg, send_str.c_str());
+	if (send_str.size() + 1 > BUF_SIZE - 1) {
+		std::strcpy(send_msg, "ERROR : send message too long");
+	} else {
+		std::strcpy(send_msg, send_str.c_str());
+	}
+	std::strcat(send_msg, "\n");
 	int send_size = send(fd, &send_msg, std::strlen(send_msg), 0);
 	if (send_size == -1) {
 		exit_error("send", strerror(errno));
