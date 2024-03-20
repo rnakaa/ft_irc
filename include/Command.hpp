@@ -52,6 +52,7 @@ class Command {
 					   std::vector<std::string> &key_vec);
 
 	void TEST(User &user, std::vector<std::string> &arg);
+	// void MOD(User &user, std::vector<std::string> &arg);
 };
 
 #endif

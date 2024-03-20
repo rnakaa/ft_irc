@@ -3,6 +3,7 @@
 Command::Command(Server &server) : server_(server) {
 	this->commands_map_["TEST"] = &Command::TEST;
 	this->commands_map_["PASS"] = &Command::PASS;
+	// this->commands_map_["MOD"] = &Command::MOD;
 	this->commands_map_["JOIN"] = &Command::JOIN;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
@@ -68,3 +69,23 @@ void Command::TEST(User &user, std::vector<std::string> &arg) {
 	this->server_.printChannelName();
 	server_.sendMsgToClient(user.getFd(), "Command => printTest: Hello world!");
 }
+
+// void Command::MOD(User &user, std::vector<std::string> &arg) {
+//	(void)arg;
+//	user.setMode(User::s);
+//	std::cout << user.getMode() << std::endl;
+//	std::cout << user.hasMode(User::s) << std::endl;
+//	std::cout << "check w" << std::endl;
+//	std::cout << user.hasMode(User::w) << std::endl;
+//	std::cout << "+w" << std::endl;
+//	user.setMode(User::w);
+//	std::cout << "check w" << std::endl;
+//	std::cout << user.hasMode(User::w) << std::endl;
+//	std::cout << "check o" << std::endl;
+//	std::cout << user.hasMode(User::o) << std::endl;
+//	std::cout << "check a" << std::endl;
+//	std::cout << user.hasMode(User::a) << std::endl;
+//	std::cout << "+a" << std::endl;
+//	user.setMode(User::a);
+//	std::cout << user.hasMode(User::a) << std::endl;
+// }

@@ -29,3 +29,13 @@ void User::printJoinChannel() const {
 }
 
 User::User() : fd_(-1), auth_flag_(NONE_AUTH), nick_name_("") {}
+
+enum User::UserMode User::getMode() const { return this->mode_; }
+
+bool User::hasMode(const enum User::UserMode mode) const {
+	return (mode & this->mode_) != 0;
+}
+
+void User::setMode(const enum User::UserMode mode) {
+	this->mode_ = (enum UserMode)(this->mode_ | mode);
+}
