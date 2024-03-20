@@ -13,8 +13,8 @@ void Command::handleCommand(User &user, std::string &message) {
 		parseClientMessage(message);
 		CommandFunction func = this->commands_map_[this->command_name_];
 		if (!func) {
-			throw std::runtime_error("ERROR: Unknown Command: " +
-									 this->command_name_);
+			throw std::runtime_error(
+				"ERROR: Unknown Command: " + this->command_name_ + "\n");
 		}
 		(this->*func)(user, this->arg_);
 	} catch (const std::exception &e) {
@@ -31,12 +31,12 @@ void Command::parseClientMessage(const std::string &message) {
 	iss >> this->command_name_;
 	if (iss.fail()) {
 		throw std::runtime_error(
-			"ERROR: cannot parse command name received from client");
+			"ERROR: cannot parse command name received from client\n");
 	}
 	while (iss >> str) {
 		if (iss.fail()) {
 			throw std::runtime_error(
-				"ERROR: cannot parse command arguments received from client");
+				"ERROR: cannot parse command arguments received from client\n");
 		}
 		this->arg_.push_back(str);
 	}
@@ -58,7 +58,7 @@ void Command::PASS(User &user, std::vector<std::string> &arg) {
 		user.setAuthFrags(User::PASS_AUTH);
 		std::cout << "SUCCESS: PASS Command client[" << user.getFd()
 				  << "], auth_flag_: " << user.getAuthFlags() << std::endl;
-		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: PASS Command");
+		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: PASS Command\n");
 	}
 }
 
@@ -66,5 +66,6 @@ void Command::TEST(User &user, std::vector<std::string> &arg) {
 	(void)arg;
 	std::cout << "Command => printTest " << std::endl;
 	this->server_.printChannelName();
-	server_.sendMsgToClient(user.getFd(), "Command => printTest: Hello world!");
+	server_.sendMsgToClient(user.getFd(),
+							"Command => printTest: Hello world!\n");
 }

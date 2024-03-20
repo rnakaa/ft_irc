@@ -5,8 +5,21 @@
 //
 // }
 
-bool Command::isChannelName(const std::string &ch_name) {
-	return this->server_.hasChannelName(ch_name);
+void Command::joinChannel(const std::string &ch_name, User &user) {
+	Channel join_ch;
+	if (this->server_.getChannel(ch_name, join_ch)) {
+		if (user.isMemberOfChannel(join_ch.getName())) {
+			std::cerr << "client already join channel received message"
+					  << std::endl;
+			server_.sendMsgToClient(
+				user.getFd(), "client already join channel received message\n");
+			return;
+		}
+		user.setChannel(join_ch.getName(), join_ch);
+		std::cout << "finish JOIN command" << std::endl;
+		user.printJoinChannel();
+		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command\n");
+	}
 }
 
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
@@ -14,7 +27,7 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	// if (user.getAuthFlags() != User::ALL_AUTH) {
 	if (user.getAuthFlags() != User::PASS_AUTH) {
 		std::cerr << "client cannot authenticate" << std::endl;
-		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");
+		server_.sendMsgToClient(user.getFd(), "client cannot authenticate\n");
 		return;
 	} else if (arg.empty()) {
 		std::cerr << error_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
@@ -42,17 +55,22 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	// // }
 	// for (size_t i = 0; i < ch_vec.size(); ++i) {
 	for (size_t i = 0; i < arg.size(); ++i) {
-		if (isChannelName(arg.at(i))) {
-			std::cout << "TRUE isChannelName()" << std::endl;
+		if (this->server_.hasChannelName(arg.at(i))) {
+			// joinChannel(i, ch_vec, key_vec);
+			joinChannel(arg.at(i), user);
 			// joinChannel(i, ch_vec, key_vec);
 		} else {
-			std::cout << "FALSE isChannelName()" << std::endl;
 			// createChannel(i, ch_vec, key_vec);
 			Channel ch(arg.at(i), "", user);
 			this->server_.setChannel(ch.getName(), ch);
 			user.setChannel(ch.getName(), ch);
+			std::cout << "finish JOIN command" << std::endl;
+			user.printJoinChannel();
+			this->server_.sendMsgToClient(user.getFd(),
+										  "SUCCESS: JOIN Command\n");
 		}
 	}
-	std::cout << "finish JOIN command" << std::endl;
-	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+	// std::cout << "finish JOIN command" << std::endl;
+	// user.printJoinChannel();
+	// this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 }

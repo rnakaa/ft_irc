@@ -12,6 +12,7 @@ class User;
 
 class Channel {
   public:
+	Channel();
 	Channel(const std::string &name);
 	Channel(const std::string &name, const std::string &pass);
 	Channel(const std::string &name, const std::string &pass, const User &user);

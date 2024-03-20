@@ -40,14 +40,14 @@ class Command {
 	void JOIN(User &user, std::vector<std::string> &arg);
 	void chekcValidChannel(std::vector<std::string> &ch_vec,
 						   std::vector<std::string> &key_vec);
-	bool isChannelName(const std::string &ch_name);
 	void setArgToVec(const std::vector<std::string> &arg,
 					 std::vector<std::string> &ch_vec,
 					 std::vector<std::string> &key_vec);
 	bool chekcValidChannel(const std::vector<std::string> &ch_vec,
 						   const std::vector<std::string> &key_vec);
-	void joinChannel(const size_t i, std::vector<std::string> &ch_vec,
-					 std::vector<std::string> &key_vec);
+	// void joinChannel(const size_t i, std::vector<std::string> &ch_vec,
+	// 				 std::vector<std::string> &key_vec);
+	void joinChannel(const std::string &ch_name, User &user);
 	void createChannel(const size_t i, std::vector<std::string> &ch_vec,
 					   std::vector<std::string> &key_vec);
 

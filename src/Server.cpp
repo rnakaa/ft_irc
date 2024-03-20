@@ -50,7 +50,7 @@ void Server::init() {
 	std::cout << "SUCCESS: socket: " << this->server_sockfd_ << std::endl;
 
 	this->server_addr_.sin_family = AF_INET;
-	this->server_addr_.sin_port = htons(PORT);
+	this->server_addr_.sin_port = htons(this->port_);
 	this->server_addr_.sin_addr.s_addr = inet_addr(SERVER_IP);
 	if (bind(this->server_sockfd_,
 			 reinterpret_cast<struct sockaddr *>(&this->server_addr_),
@@ -175,6 +175,15 @@ void Server::exit_error(const std::string &func, const std::string &err_msg) {
 }
 
 const std::string &Server::getPass() const { return (this->pass_); }
+
+bool Server::getChannel(const std::string &ch_name, Channel &ch) const {
+	std::map<std::string, Channel>::const_iterator it = ch_map_.find(ch_name);
+	if (it != ch_map_.end()) {
+		ch = it->second;
+		return (true);
+	}
+	return (false);
+}
 
 void Server::setChannel(const std::string &ch_name, const Channel &ch) {
 	this->ch_map_.insert(std::make_pair(ch_name, ch));

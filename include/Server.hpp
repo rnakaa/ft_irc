@@ -32,6 +32,7 @@ class Server {
 	void run();
 
 	const std::string &getPass() const;
+	bool getChannel(const std::string &ch_name, Channel &ch) const;
 	void printChannelName() const;
 
 	void setChannel(const std::string &ch_name, const Channel &ch);
@@ -50,7 +51,7 @@ class Server {
 	void handlPollEvents();
 
   private:
-	std::string port_;
+	int port_;
 	std::string pass_;
 	int server_sockfd_;
 	struct sockaddr_in server_addr_;

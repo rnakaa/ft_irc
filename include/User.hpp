@@ -32,6 +32,10 @@ class User {
 	void setAuthFrags(const AuthFlags &flags);
 	void setChannel(const std::string &ch_name, const Channel &ch);
 
+	bool isMemberOfChannel(const std::string &ch_name);
+
+	void printJoinChannel() const;
+
   private:
 	const int fd_;
 	AuthFlags auth_flag_;
