@@ -36,6 +36,8 @@ class Server {
 
 	void setChannel(const std::string &ch_name, const Channel &ch);
 
+	bool hasChannelName(const std::string &ch_name);
+
 	void sendMsgToClient(const int fd, const std::string &send_str);
 
   private:

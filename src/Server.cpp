@@ -180,6 +180,10 @@ void Server::setChannel(const std::string &ch_name, const Channel &ch) {
 	this->ch_map_.insert(std::make_pair(ch_name, ch));
 }
 
+bool Server::hasChannelName(const std::string &ch_name) {
+	return ch_map_.find(ch_name) != ch_map_.end();
+}
+
 void Server::printChannelName() const {
 	for (std::map<std::string, Channel>::const_iterator it = ch_map_.begin();
 		 it != ch_map_.end(); ++it) {

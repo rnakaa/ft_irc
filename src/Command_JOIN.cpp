@@ -5,6 +5,10 @@
 //
 // }
 
+bool Command::isChannelName(const std::string &ch_name) {
+	return this->server_.hasChannelName(ch_name);
+}
+
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	std::cout << "start JOIN command" << std::endl;
 	// if (user.getAuthFlags() != User::ALL_AUTH) {
@@ -18,11 +22,11 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 								error_.ERR_NEEDMOREPARAMS("JOIN"));
 		return;
 	}
-	for (size_t i = 0; i < arg.size(); ++i) {
-		Channel ch(arg.at(i), "", user);
-		this->server_.setChannel(ch.getName(), ch);
-		user.setChannel(ch.getName(), ch);
-	}
+	// for (size_t i = 0; i < arg.size(); ++i) {
+	// 	Channel ch(arg.at(i), "", user);
+	// 	this->server_.setChannel(ch.getName(), ch);
+	// 	user.setChannel(ch.getName(), ch);
+	// }
 	// std::vector<std::string> ch_vec, key_vec;
 	// setArgToVec(arg, ch_vec, key_vec);
 	// if (checkValidArg(ch_vec, key_vec)) {
@@ -37,12 +41,18 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	// // 	return ;
 	// // }
 	// for (size_t i = 0; i < ch_vec.size(); ++i) {
-	// 	if (isChName(ch_vec.at(i))) {
-	// 		joinChannel(i, ch_vec, key_vec);
-	// 	} else {
-	// 		createChannel(i, ch_vec, key_vec);
-	// 	}
-	// }
+	for (size_t i = 0; i < arg.size(); ++i) {
+		if (isChannelName(arg.at(i))) {
+			std::cout << "TRUE isChannelName()" << std::endl;
+			// joinChannel(i, ch_vec, key_vec);
+		} else {
+			std::cout << "FALSE isChannelName()" << std::endl;
+			// createChannel(i, ch_vec, key_vec);
+			Channel ch(arg.at(i), "", user);
+			this->server_.setChannel(ch.getName(), ch);
+			user.setChannel(ch.getName(), ch);
+		}
+	}
 	std::cout << "finish JOIN command" << std::endl;
 	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 }
