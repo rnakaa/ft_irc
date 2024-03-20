@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   irc-dev:
+    container_name: irc-dev
     image: irc-dev
     build:
       context: .
