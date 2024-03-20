@@ -38,7 +38,7 @@ class Command {
 
 	// JOIN
 	void JOIN(User &user, std::vector<std::string> &arg);
-	void chekcValidChannel(std::vector<std::string> &ch_vec,
+	void checkValidChannel(std::vector<std::string> &ch_vec,
 						   std::vector<std::string> &key_vec);
 	void setArgToVec(const std::vector<std::string> &arg,
 					 std::vector<std::string> &ch_vec,
