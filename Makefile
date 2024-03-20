@@ -49,4 +49,7 @@ cclean:
 format:
 	$(FORMAT) $(SRCS) $(wildcard $(INC)/*.hpp)
 
+docker:
+	sudo docker compose up --build -d
+
 .PHONY: all fclean clean re run client cclean format
