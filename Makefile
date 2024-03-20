@@ -49,4 +49,13 @@ cclean:
 format:
 	$(FORMAT) $(SRCS) $(wildcard $(INC)/*.hpp)
 
-.PHONY: all fclean clean re run client cclean format
+up:
+	sudo docker compose up --build -d && docker compose exec irc-dev bash
+
+down:
+	sudo docker compose down
+
+exec:
+	sudo docker compose exec irc-dev bash
+
+.PHONY: all fclean clean re run client cclean format up down exec
