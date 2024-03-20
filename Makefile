@@ -55,4 +55,4 @@ up:
 down:
 	sudo docker compose down
 
-.PHONY: all fclean clean re run client cclean format
+.PHONY: all fclean clean re run client cclean format up down
