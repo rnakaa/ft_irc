@@ -43,7 +43,7 @@ class Command {
 	void setArgToVec(const std::vector<std::string> &arg,
 					 std::vector<std::string> &ch_vec,
 					 std::vector<std::string> &key_vec);
-	bool chekcValidChannel(const std::vector<std::string> &ch_vec,
+	bool checkValidChannel(const std::vector<std::string> &ch_vec,
 						   const std::vector<std::string> &key_vec);
 	// void joinChannel(const size_t i, std::vector<std::string> &ch_vec,
 	// 				 std::vector<std::string> &key_vec);
