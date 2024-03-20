@@ -181,13 +181,8 @@ void Server::exit_error(const std::string &func, const std::string &err_msg) {
 
 const std::string &Server::getPass() const { return (this->pass_); }
 
-bool Server::getChannel(const std::string &ch_name, Channel &ch) const {
-	std::map<std::string, Channel>::const_iterator it = ch_map_.find(ch_name);
-	if (it != ch_map_.end()) {
-		ch = it->second;
-		return (true);
-	}
-	return (false);
+const Channel &Server::getChannel(const std::string &ch_name) const {
+	return ch_map_.find(ch_name)->second;
 }
 
 void Server::setChannel(const std::string &ch_name, const Channel &ch) {

@@ -32,7 +32,7 @@ class Server {
 	void run();
 
 	const std::string &getPass() const;
-	bool getChannel(const std::string &ch_name, Channel &ch) const;
+	const Channel &getChannel(const std::string &ch_name) const;
 	void printChannelName() const;
 
 	void setChannel(const std::string &ch_name, const Channel &ch);
