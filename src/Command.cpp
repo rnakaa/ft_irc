@@ -4,7 +4,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["TEST"] = &Command::TEST;
 	this->commands_map_["PASS"] = &Command::PASS;
 	// this->commands_map_["MOD"] = &Command::MOD;
-	//  std::cout << "server pass is" << server_.getPass() << std::endl;
+	//   std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
 void Command::handleCommand(User &user, std::string &message) {
@@ -70,10 +70,20 @@ void Command::TEST(User &user, std::vector<std::string> &arg) {
 
 // void Command::MOD(User &user, std::vector<std::string> &arg) {
 //	(void)arg;
-//	user.setMod(s);
-//	std::cout << user.getMod() << std::endl;
-//	std::cout << user.checkMod(s) << std::endl;
-//	std::cout << user.checkMod(w) << std::endl;
-//	user.setMod(w);
-//	std::cout << user.checkMod(w) << std::endl;
+//	user.setMode(User::s);
+//	std::cout << user.getMode() << std::endl;
+//	std::cout << user.hasMode(User::s) << std::endl;
+//	std::cout << "check w" << std::endl;
+//	std::cout << user.hasMode(User::w) << std::endl;
+//	std::cout << "+w" << std::endl;
+//	user.setMode(User::w);
+//	std::cout << "check w" << std::endl;
+//	std::cout << user.hasMode(User::w) << std::endl;
+//	std::cout << "check o" << std::endl;
+//	std::cout << user.hasMode(User::o) << std::endl;
+//	std::cout << "check a" << std::endl;
+//	std::cout << user.hasMode(User::a) << std::endl;
+//	std::cout << "+a" << std::endl;
+//	user.setMode(User::a);
+//	std::cout << user.hasMode(User::a) << std::endl;
 // }
