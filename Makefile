@@ -55,4 +55,7 @@ up:
 down:
 	sudo docker compose down
 
+exec:
+	sudo docker compose exec irc-dev bash
+
 .PHONY: all fclean clean re run client cclean format up down
