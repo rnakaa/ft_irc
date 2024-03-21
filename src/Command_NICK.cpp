@@ -44,13 +44,16 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 	if (arg.empty()) {
 		std::cerr << error_.ERR_NONICKNAMEGIVEN() << std::endl;
 		server_.sendMsgToClient(user.getFd(), error_.ERR_NONICKNAMEGIVEN());
+		return;
 	} else if (user.hasMode(User::r)) { // Userにrステータスがあれば受け付けない
 		std::cerr << error_.ERR_RESTRICTED() << std::endl;
 		server_.sendMsgToClient(user.getFd(), error_.ERR_RESTRICTED());
+		return;
 	} else if (arg.at(0).length() > 9) {
 		std::cerr << error_.ERR_ERRONEUSNICKNAME(arg.at(0)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
 								error_.ERR_ERRONEUSNICKNAME(arg.at(0)));
+		return;
 	}
 
 	convertToScandinavian(
@@ -66,13 +69,14 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 		std::cerr << error_.ERR_ERRONEUSNICKNAME(arg.at(0)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
 								error_.ERR_ERRONEUSNICKNAME(arg.at(0)));
-	} else if (nickAlreadyExist(arg.at(0))) {
+	} else if (server_.nicknameExist(arg.at(0))) {
 		std::cerr << error_.ERR_NICKCOLLISION(arg.at(0)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
 								error_.ERR_NICKCOLLISION(arg.at(0)));
 	} else {
-		this->nickname_log_.insert(arg.at(0));
+		server_.nicknameInsertLog(arg.at(0));
 		user.setNickname(arg.at(0));
 		user.setAuthFrags(User::NICK_AUTH);
+		server_.sendMsgToClient(user.getFd(), "NICK name success");
 	}
 }

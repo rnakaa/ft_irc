@@ -44,10 +44,6 @@ void Command::parseClientMessage(const std::string &message) {
 	}
 }
 
-bool Command::nickAlreadyExist(std::string nickname) const {
-	return this->nickname_log_.find(nickname) != this->nickname_log_.end();
-}
-
 void Command::PASS(User &user, std::vector<std::string> &arg) {
 	std::cout << "start pass " << user.getFd() << std::endl;
 	if (user.getAuthFlags() == User::PASS_AUTH) {
