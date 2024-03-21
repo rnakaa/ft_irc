@@ -39,5 +39,5 @@ bool Channel::hasMode(const enum Channel::ChannelMode mode) const {
 }
 
 void Channel::setMode(const enum Channel::ChannelMode mode) {
-	this->mode_ = (enum ChannelMode)(this->mode_ | mode);
+	this->mode_ = static_cast<enum ChannelMode>(this->mode_ | mode);
 }
