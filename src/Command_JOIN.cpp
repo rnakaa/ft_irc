@@ -20,6 +20,15 @@ void Command::joinChannel(const std::string &ch_name, User &user) {
 	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 }
 
+void Command::createChannel(const std::string &ch_name, User &user) {
+	Channel new_ch(ch_name, "", user);
+	this->server_.setChannel(new_ch.getName(), new_ch);
+	user.setChannel(new_ch.getName(), new_ch);
+	std::cout << "finish JOIN command" << std::endl;
+	user.printJoinChannel();
+	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+}
+
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	std::cout << "start JOIN command" << std::endl;
 	// if (user.getAuthFlags() != User::ALL_AUTH) {
@@ -59,13 +68,7 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 			// joinChannel(i, ch_vec, key_vec);
 		} else {
 			// createChannel(i, ch_vec, key_vec);
-			Channel ch(arg.at(i), "", user);
-			this->server_.setChannel(ch.getName(), ch);
-			user.setChannel(ch.getName(), ch);
-			std::cout << "finish JOIN command" << std::endl;
-			user.printJoinChannel();
-			this->server_.sendMsgToClient(user.getFd(),
-										  "SUCCESS: JOIN Command");
+			createChannel(arg.at(i), user);
 		}
 	}
 	// std::cout << "finish JOIN command" << std::endl;

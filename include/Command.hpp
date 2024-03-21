@@ -48,8 +48,9 @@ class Command {
 	// void joinChannel(const size_t i, std::vector<std::string> &ch_vec,
 	// 				 std::vector<std::string> &key_vec);
 	void joinChannel(const std::string &ch_name, User &user);
-	void createChannel(const size_t i, std::vector<std::string> &ch_vec,
-					   std::vector<std::string> &key_vec);
+	void createChannel(const std::string &ch_name, User &user);
+	// void createChannel(const size_t i, std::vector<std::string> &ch_vec,
+	// 				   std::vector<std::string> &key_vec);
 
 	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
