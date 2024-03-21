@@ -1,9 +1,23 @@
 #include "Command.hpp"
 
-// void Command::setArgToVec(const std::vector<std::string> &arg,
-// std::vector<std::string> &ch_vec, std::vector<std::string> &key_vec {
-//
-// }
+bool Command::startWithChannelChar(const std::string &str) {
+	return !str.empty() &&
+		   (str[0] == '&' || str[0] == '#' || str[0] == '+' || str[0] == '!');
+}
+
+void Command::setArgToVec(const std::vector<std::string> &arg,
+						  std::vector<std::string> &ch_vec,
+						  std::vector<std::string> &key_vec) {
+	for (size_t i = 0; i < arg.size(); ++i) {
+		if (startWithChannelChar(arg.at(i))) {
+			ch_vec.push_back(arg.at(i));
+			// std::cout << "ch_vec: " << arg.at(i) << std::endl;
+		} else {
+			key_vec.push_back(arg.at(i));
+			// std::cout << "key_vec: " << arg.at(i) << std::endl;
+		}
+	}
+}
 
 void Command::joinChannel(const std::string &ch_name, User &user) {
 	Channel join_ch = this->server_.getChannel(ch_name);
@@ -42,13 +56,18 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 								error_.ERR_NEEDMOREPARAMS("JOIN"));
 		return;
 	}
-	// for (size_t i = 0; i < arg.size(); ++i) {
-	// 	Channel ch(arg.at(i), "", user);
-	// 	this->server_.setChannel(ch.getName(), ch);
-	// 	user.setChannel(ch.getName(), ch);
-	// }
-	// std::vector<std::string> ch_vec, key_vec;
-	// setArgToVec(arg, ch_vec, key_vec);
+	std::vector<std::string> ch_vec, key_vec;
+	setArgToVec(arg, ch_vec, key_vec);
+	std::cout << "ch_vec: ";
+	for (size_t i = 0; i < ch_vec.size(); ++i) {
+		std::cout << ch_vec.at(i) << ", ";
+	}
+	std::cout << std::endl;
+	std::cout << "key_vec: ";
+	for (size_t i = 0; i < key_vec.size(); ++i) {
+		std::cout << key_vec.at(i) << ", ";
+	}
+	std::cout << std::endl;
 	// if (checkValidArg(ch_vec, key_vec)) {
 	// 	std::cerr << "invalid channel name" << std::endl;
 	// 	server_.sendMsgToClient(user.getFd(), "invalid channel name");

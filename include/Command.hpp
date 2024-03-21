@@ -40,6 +40,7 @@ class Command {
 	void JOIN(User &user, std::vector<std::string> &arg);
 	void checkValidChannel(std::vector<std::string> &ch_vec,
 						   std::vector<std::string> &key_vec);
+	bool startWithChannelChar(const std::string &str);
 	void setArgToVec(const std::vector<std::string> &arg,
 					 std::vector<std::string> &ch_vec,
 					 std::vector<std::string> &key_vec);
