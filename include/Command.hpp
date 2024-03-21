@@ -5,9 +5,11 @@
 #include "Server.hpp"
 #include "User.hpp"
 #include <arpa/inet.h>
+#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <set>
 #include <sstream>
 #include <unistd.h>
 #include <vector>
@@ -20,6 +22,7 @@ class Command {
   public:
 	Command(Server &server);
 	void handleCommand(User &user, std::string &message);
+	bool nickAlreadyExist(std::string nickname) const;
 
   private:
 	Server &server_;
@@ -29,6 +32,7 @@ class Command {
 	typedef void (Command::*CommandFunction)(User &,
 											 std::vector<std::string> &);
 	std::map<std::string, CommandFunction> commands_map_;
+	std::set<std::string> nickname_log_;
 
   private:
 	void parseClientMessage(const std::string &message);
@@ -50,6 +54,9 @@ class Command {
 	void joinChannel(const std::string &ch_name, User &user);
 	void createChannel(const size_t i, std::vector<std::string> &ch_vec,
 					   std::vector<std::string> &key_vec);
+	// NICK
+	void NICK(User &user, std::vector<std::string> &arg);
+	bool containsNickname(const std::string &nickname) const;
 
 	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);

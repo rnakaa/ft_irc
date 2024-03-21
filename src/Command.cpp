@@ -5,6 +5,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["PASS"] = &Command::PASS;
 	// this->commands_map_["MOD"] = &Command::MOD;
 	this->commands_map_["JOIN"] = &Command::JOIN;
+	this->commands_map_["NICK"] = &Command::NICK;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
@@ -41,6 +42,10 @@ void Command::parseClientMessage(const std::string &message) {
 		}
 		this->arg_.push_back(str);
 	}
+}
+
+bool Command::nickAlreadyExist(std::string nickname) const {
+	return this->nickname_log_.find(nickname) != this->nickname_log_.end();
 }
 
 void Command::PASS(User &user, std::vector<std::string> &arg) {

@@ -39,6 +39,7 @@ class User {
 	AuthFlags getAuthFlags() const;
 	void setAuthFrags(const AuthFlags &flags);
 	enum UserMode getMode() const;
+	void setNickname(const std::string &nickname);
 	void setMode(const enum UserMode mode);
 	bool hasMode(const enum UserMode mode) const;
 	void setChannel(const std::string &ch_name, const Channel &ch);
