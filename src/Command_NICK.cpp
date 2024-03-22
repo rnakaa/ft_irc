@@ -1,19 +1,8 @@
 #include "Command.hpp"
 
 bool isSpecial(const char &chr) {
-	std::set<char> specialChars;
-	specialChars.insert('[');
-	specialChars.insert(']');
-	specialChars.insert('\\');
-	specialChars.insert('^');
-	specialChars.insert('_');
-	specialChars.insert('`');
-	specialChars.insert('{');
-	specialChars.insert('|');
-	specialChars.insert('}');
-	if (specialChars.find(chr) != specialChars.end())
-		return true;
-	return false;
+	return c != '[' && c != ']' && c != '\\' && c != '^' && c != '_' &&
+		   c != '`' && c != '{' && c != '|' && c != '}';
 }
 
 bool checkStringValidity(const std::string &str) {
