@@ -22,6 +22,7 @@ class Error {
 	std::string ERR_NICKNAMEINUSE(std::string nick);
 	std::string ERR_RESTRICTED();
 	std::string ERR_NICKCOLLISION(std::string nick);
+	std::string ERR_NOTSETPASS();
 };
 
 #endif

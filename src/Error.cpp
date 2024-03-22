@@ -25,3 +25,5 @@ std::string Error::ERR_RESTRICTED() {
 std::string Error::ERR_NICKCOLLISION(std::string nick) {
 	return "<" + nick + "> :Nickname collision";
 }
+
+std::string Error::ERR_NOTSETPASS() { return ":Pass is not yet set."; }

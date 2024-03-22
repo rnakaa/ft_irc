@@ -43,3 +43,5 @@ void User::setMode(const enum User::UserMode mode) {
 void User::setNickname(const std::string &nickname) {
 	this->nick_name_ = nickname;
 }
+
+bool User::isUsernameSet() const { return !this->user_name_.empty(); }
