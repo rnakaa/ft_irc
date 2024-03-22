@@ -5,6 +5,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["PASS"] = &Command::PASS;
 	// this->commands_map_["MOD"] = &Command::MOD;
 	this->commands_map_["JOIN"] = &Command::JOIN;
+	this->commands_map_["NICK"] = &Command::NICK;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
