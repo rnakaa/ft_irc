@@ -8,10 +8,10 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <queue>
 #include <sstream>
 #include <unistd.h>
 #include <vector>
-#include <queue>
 
 class Server;
 class User;
@@ -45,7 +45,8 @@ class Command {
 					 std::queue<std::string> &key_queue);
 	bool checkValidArg(const std::queue<std::string> &ch_queue,
 					   const std::queue<std::string> &key_queue);
-	void handleChannelRequests(std::queue<std::string> &ch_queue, std::queue<std::string> &key_queue, User &user);
+	void handleChannelRequests(std::queue<std::string> &ch_queue,
+							   std::queue<std::string> &key_queue, User &user);
 	bool checkValidChannel(const std::string &ch_name);
 	void joinChannel(const std::string &ch_name, const std::string &ch_key,
 					 User &user);

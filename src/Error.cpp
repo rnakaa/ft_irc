@@ -7,3 +7,11 @@ std::string Error::ERR_NEEDMOREPARAMS(const std::string command) {
 }
 
 std::string Error::ERR_PASSWDMISMATCH() { return ":Password incorrect"; }
+
+std::string Error::ERR_NOSUCHCHANNEL(const std::string &ch_name) {
+	return ch_name + ":No such chaanel";
+}
+
+std::string Error::ERR_BADCHANNELKEY(const std::string &ch_name) {
+	return ch_name + ":Cannot join channel (+k)";
+}

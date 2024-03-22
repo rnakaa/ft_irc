@@ -17,6 +17,8 @@ class Error {
 	std::string ERR_NEEDMOREPARAMS(const std::string command);
 	std::string ERR_ALREADYREGISTRED();
 	std::string ERR_PASSWDMISMATCH();
+	std::string ERR_NOSUCHCHANNEL(const std::string &ch_name);
+	std::string ERR_BADCHANNELKEY(const std::string &ch_name);
 };
 
 #endif
