@@ -42,7 +42,7 @@ class Server {
 
 	void sendMsgToClient(const int fd, const std::string &send_str);
 
-	bool nicknameExist(std::string nickname) const;
+	bool nicknameExist(const std::string &nickname) const;
 	void nicknameInsertLog(std::string nickname);
 
   private:
