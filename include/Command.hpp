@@ -22,7 +22,7 @@ class Command {
   public:
 	Command(Server &server);
 	void handleCommand(User &user, std::string &message);
-	bool nickAlreadyExist(std::string nickname) const;
+	
 
   private:
 	Server &server_;
