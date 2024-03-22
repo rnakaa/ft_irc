@@ -201,7 +201,6 @@ void Server::printChannelName() const {
 	}
 }
 
-bool Server::nicknameExist(std::string nickname) const {
 	return this->nickname_log_.find(nickname) != this->nickname_log_.end();
 }
 
