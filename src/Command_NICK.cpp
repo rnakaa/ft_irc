@@ -30,8 +30,7 @@ void convertToScandinavian(std::string &str) {
 void Command::NICK(User &user, std::vector<std::string> &arg) {
 	std::cout << "start nick " << user.getFd() << std::endl;
 
-	if (user.getAuthFlags() != User::PASS_AUTH &&
-		user.getAuthFlags() != User::ALL_AUTH) {
+	if (user.getAuthFlags() == User::NONE_AUTH) {
 		std::cerr << error_.ERR_NOTSETPASS() << std::endl;
 		server_.sendMsgToClient(user.getFd(), error_.ERR_NOTSETPASS());
 		return;
@@ -71,9 +70,11 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 	} else {
 		server_.nicknameInsertLog(arg.at(0));
 		user.setNickname(arg.at(0));
-		user.setAuthFrags(User::NICK_AUTH);
-		if (user.isUsernameSet()) {
-			user.setAuthFrags(User::ALL_AUTH);
+		user.setAuthFlags(User::NICK_AUTH);
+		if (user.getAuthFlags() == User::USER_AUTH) {
+			user.setAuthFlags(User::ALL_AUTH);
+		} else {
+			user.setAuthFlags(User::NICK_AUTH);
 		}
 		server_.sendMsgToClient(user.getFd(), "NICK name success");
 	}

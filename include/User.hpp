@@ -20,7 +20,7 @@ class Channel;
 
 class User {
   public:
-	enum AuthFlags { NONE_AUTH, PASS_AUTH, NICK_AUTH, ALL_AUTH };
+	enum AuthFlags { NONE_AUTH, PASS_AUTH, NICK_AUTH, USER_AUTH, ALL_AUTH };
 	enum UserMode {
 		a = 1 << 1,
 		i = 1 << 2,
@@ -37,7 +37,7 @@ class User {
 
 	int getFd() const;
 	AuthFlags getAuthFlags() const;
-	void setAuthFrags(const AuthFlags &flags);
+	void setAuthFlags(const AuthFlags &flags);
 	enum UserMode getMode() const;
 	void setNickname(const std::string &nickname);
 	bool isUsernameSet() const;
