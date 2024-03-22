@@ -9,6 +9,7 @@
 #include <iostream>
 #include <map>
 #include <poll.h>
+#include <set>
 #include <sstream>
 #include <string>
 #include <sys/socket.h>
@@ -41,6 +42,9 @@ class Server {
 
 	void sendMsgToClient(const int fd, const std::string &send_str);
 
+	bool nicknameExist(const std::string &nickname) const;
+	void nicknameInsertLog(std::string nickname);
+
   private:
 	void checkValidArgc(const int argc) const;
 	void checkValidPort(const char *str) const;
@@ -60,6 +64,7 @@ class Server {
 	std::vector<struct pollfd> pollfd_vec_;
 	std::map<int, User> user_map_;
 	std::map<std::string, Channel> ch_map_;
+	std::set<std::string> nickname_log_;
 };
 
 #endif

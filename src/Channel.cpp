@@ -32,3 +32,13 @@ const std::string &Channel::getPass() const { return (this->ch_pass_); }
 void Channel::setUser(const User &user) {
 	this->ch_users_.insert(std::make_pair(user.getFd(), user));
 }
+
+enum Channel::ChannelMode Channel::getMode() const { return this->mode_; }
+
+bool Channel::hasMode(const enum Channel::ChannelMode mode) const {
+	return (mode & this->mode_) != 0;
+}
+
+void Channel::setMode(const enum Channel::ChannelMode mode) {
+	this->mode_ = static_cast<enum ChannelMode>(this->mode_ | mode);
+}

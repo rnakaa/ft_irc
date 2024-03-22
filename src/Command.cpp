@@ -5,6 +5,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["PASS"] = &Command::PASS;
 	// this->commands_map_["MOD"] = &Command::MOD;
 	this->commands_map_["JOIN"] = &Command::JOIN;
+	this->commands_map_["NICK"] = &Command::NICK;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
@@ -40,26 +41,6 @@ void Command::parseClientMessage(const std::string &message) {
 				"ERROR: cannot parse command arguments received from client");
 		}
 		this->arg_.push_back(str);
-	}
-}
-
-void Command::PASS(User &user, std::vector<std::string> &arg) {
-	std::cout << "start pass " << user.getFd() << std::endl;
-	if (user.getAuthFlags() == User::PASS_AUTH) {
-		std::cerr << error_.ERR_ALREADYREGISTRED() << std::endl;
-		server_.sendMsgToClient(user.getFd(), error_.ERR_ALREADYREGISTRED());
-	} else if (arg.empty()) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("PASS") << std::endl;
-		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NEEDMOREPARAMS("PASS"));
-	} else if (this->server_.getPass() != arg.at(0)) {
-		std::cerr << error_.ERR_PASSWDMISMATCH() << std::endl;
-		server_.sendMsgToClient(user.getFd(), error_.ERR_PASSWDMISMATCH());
-	} else {
-		user.setAuthFrags(User::PASS_AUTH);
-		std::cout << "SUCCESS: PASS Command client[" << user.getFd()
-				  << "], auth_flag_: " << user.getAuthFlags() << std::endl;
-		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: PASS Command");
 	}
 }
 

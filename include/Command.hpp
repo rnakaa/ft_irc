@@ -5,10 +5,12 @@
 #include "Server.hpp"
 #include "User.hpp"
 #include <arpa/inet.h>
+#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <queue>
+#include <set>
 #include <sstream>
 #include <unistd.h>
 #include <vector>
@@ -21,6 +23,7 @@ class Command {
   public:
 	Command(Server &server);
 	void handleCommand(User &user, std::string &message);
+	
 
   private:
 	Server &server_;
@@ -30,6 +33,7 @@ class Command {
 	typedef void (Command::*CommandFunction)(User &,
 											 std::vector<std::string> &);
 	std::map<std::string, CommandFunction> commands_map_;
+	std::set<std::string> nickname_log_;
 
   private:
 	void parseClientMessage(const std::string &message);
@@ -52,6 +56,7 @@ class Command {
 					 User &user);
 	void createChannel(const std::string &ch_name, const std::string &ch_key,
 					   User &user);
+
 
 	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
