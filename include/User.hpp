@@ -40,6 +40,9 @@ class User {
 	void setAuthFlags(const AuthFlags &flags);
 	enum UserMode getMode() const;
 	void setNickname(const std::string &nickname);
+	void setUsername(const std::string &username);
+	void setRealName(const std::string &real_name);
+	std::string getRealName() const;
 	bool isUsernameSet() const;
 	void setMode(const enum UserMode mode);
 	bool hasMode(const enum UserMode mode) const;
@@ -55,6 +58,7 @@ class User {
 	AuthFlags auth_flag_;
 	std::string nick_name_;
 	std::string user_name_;
+	std::string real_name_;
 	std::map<std::string, Channel> ch_map_;
 };
 

@@ -44,4 +44,14 @@ void User::setNickname(const std::string &nickname) {
 	this->nick_name_ = nickname;
 }
 
+void User::setUsername(const std::string &username) {
+	this->user_name_ = username;
+}
+
+void User::setRealName(const std::string &real_name) {
+	this->real_name_ = real_name;
+}
+
+std::string User::getRealName() const { return this->real_name_; }
+
 bool User::isUsernameSet() const { return !this->user_name_.empty(); }

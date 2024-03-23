@@ -57,8 +57,10 @@ class Command {
 	void NICK(User &user, std::vector<std::string> &arg);
 	bool containsNickname(const std::string &nickname) const;
 
-	void TEST(User &user, std::vector<std::string> &arg);
+	// USER
 	void USER(User &user, std::vector<std::string> &arg);
+
+	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
 };
 
