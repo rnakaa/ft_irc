@@ -21,7 +21,8 @@ Channel::Channel(const std::string &name, const std::string &pass,
 	: ch_name_(name), ch_pass_(pass) {
 	setUser(user);
 	// std::cout << "Channel Constructor with user, ch_name_: " <<
-	// this->ch_name_ << "ch_pass_: " << this->ch_pass_ << std::endl;
+	// this->ch_name_
+	// 		  << "ch_pass_: " << this->ch_pass_ << std::endl;
 }
 
 const std::string &Channel::getName() const { return (this->ch_name_); }
