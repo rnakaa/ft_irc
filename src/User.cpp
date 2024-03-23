@@ -32,6 +32,12 @@ User::User() : fd_(-1), auth_flag_(NONE_AUTH), nick_name_("") {}
 
 enum User::UserMode User::getMode() const { return this->mode_; }
 
+const std::string &User::getNickName() const { return this->nick_name_; }
+
+const std::string &User::getRealName() const { return this->real_name_; }
+
+const std::string &User::getUserName() const { return this->user_name_; }
+
 bool User::hasMode(const enum User::UserMode mode) const {
 	return (mode & this->mode_) != 0;
 }
@@ -51,7 +57,5 @@ void User::setUsername(const std::string &username) {
 void User::setRealName(const std::string &real_name) {
 	this->real_name_ = real_name;
 }
-
-std::string User::getRealName() const { return this->real_name_; }
 
 bool User::isUsernameSet() const { return !this->user_name_.empty(); }

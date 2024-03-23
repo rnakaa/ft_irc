@@ -16,6 +16,7 @@ std::string concatRealName(std::vector<std::string> &arg) {
 		}
 		for (i += 4; i < arg.size(); ++i) {
 			realname += " " + arg.at(i);
+			std::cout << "concatRealName: " << realname << std::endl;
 		}
 	}
 	return realname;
@@ -35,6 +36,9 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 	} else {
 		user.setUsername(arg.at(0));
 		user.setRealName(concatRealName(arg));
+		std::cout << "realname: " << user.getRealName() << std::endl;
+		std::cout << "nickname: " << user.getNickName() << std::endl;
+		std::cout << "username: " << user.getUserName() << std::endl;
 		server_.sendMsgToClient(user.getFd(), "USER name success");
 	}
 }

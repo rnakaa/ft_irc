@@ -37,12 +37,15 @@ class User {
 
 	int getFd() const;
 	AuthFlags getAuthFlags() const;
-	void setAuthFlags(const AuthFlags &flags);
+	const std::string &getNickName() const;
+	const std::string &getRealName() const;
+	const std::string &getUserName() const;
 	enum UserMode getMode() const;
+
+	void setAuthFlags(const AuthFlags &flags);
 	void setNickname(const std::string &nickname);
 	void setUsername(const std::string &username);
 	void setRealName(const std::string &real_name);
-	std::string getRealName() const;
 	bool isUsernameSet() const;
 	void setMode(const enum UserMode mode);
 	bool hasMode(const enum UserMode mode) const;
