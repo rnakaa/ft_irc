@@ -1,23 +1,22 @@
 #include "Command.hpp"
+#include <cctype> //isspace
 
-std::string concatRealName(std::vector<std::string> &arg) {
-	std::string realname;
-	realname = arg.at(3);
-	size_t i = 0;
+std::string Command::extractRealName(std::vector<std::string> &arg) const {
+	size_t i;
+	int word_count = 0;
+	std::string realname = arg.at(3);
 
 	if (realname[0] == ':') {
-		if (realname != ":")
-			realname = realname.substr(1, std::string::npos);
-		else {
-			if (arg.size() == 4)
-				return "";
-			realname = arg.at(4);
-			i++;
+		for (i = 0; this->recv_message_[i]; i++) {
+			while (!std::isspace(this->recv_message_[i]))
+				i++;
+			word_count++;
+			while (std::isspace(this->recv_message_[i]))
+				i++;
+			if (word_count == 4)
+				break;
 		}
-		for (i += 4; i < arg.size(); ++i) {
-			realname += " " + arg.at(i);
-			std::cout << "concatRealName: " << realname << std::endl;
-		}
+		realname = this->recv_message_.substr(i + 1, std::string::npos);
 	}
 	return realname;
 }
@@ -35,7 +34,12 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		server_.sendMsgToClient(user.getFd(), error_.ERR_ALREADYREGISTRED());
 	} else {
 		user.setUsername(arg.at(0));
-		user.setRealName(concatRealName(arg));
+		user.setRealName(extractRealName(arg));
+		if (user.getAuthFlags() == User::NICK_AUTH) {
+			user.setAuthFlags(User::ALL_AUTH);
+		} else {
+			user.setAuthFlags(User::USER_AUTH);
+		}
 		std::cout << "realname: " << user.getRealName() << std::endl;
 		std::cout << "nickname: " << user.getNickName() << std::endl;
 		std::cout << "username: " << user.getUserName() << std::endl;
