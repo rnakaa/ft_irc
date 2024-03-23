@@ -73,6 +73,7 @@ class Command {
 					   User &user);
 
 	void TEST(User &user, std::vector<std::string> &arg);
+	void USER(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
 };
 
