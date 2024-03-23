@@ -9,24 +9,34 @@ int User::getFd() const { return (this->fd_); }
 
 User::AuthFlags User::getAuthFlags() const { return (this->auth_flag_); }
 
-size_t User::getJoinedChannels() const { return (this->ch_map_.size()); }
+size_t User::getJoinedChannelCount() const { return (this->ch_set_.size()); }
+
+const std::set<std::string> &User::getJoinedChannels() const {
+	return (this->ch_set_);
+}
 
 void User::setAuthFlags(const AuthFlags &flags) { this->auth_flag_ = flags; }
 
-void User::setChannel(const std::string &ch_name, const Channel &ch) {
-	this->ch_map_.insert(std::make_pair(ch_name, ch));
+void User::setChannel(const Channel &ch) {
+	// this->ch_map_.insert(std::make_pair(ch_name, ch));
+	this->ch_set_.insert(ch.getName());
 }
 
 bool User::isMemberOfChannel(const std::string &ch_name) {
-	return this->ch_map_.find(ch_name) != ch_map_.end();
+	// return this->ch_map_.find(ch_name) != ch_map_.end();
+	return this->ch_set_.find(ch_name) != ch_set_.end();
 }
 
 void User::printJoinChannel() const {
 	std::cout << "client[" << getFd() << "] channel: ";
-	for (std::map<std::string, Channel>::const_iterator it = ch_map_.begin();
-		 it != ch_map_.end(); ++it) {
-		std::cout << it->first << ", ";
+	for (std::set<std::string>::iterator it = ch_set_.begin();
+		 it != ch_set_.end(); ++it) {
+		std::cout << *it << ", ";
 	}
+	// for (std::map<std::string, Channel>::const_iterator it = ch_map_.begin();
+	// 	 it != ch_map_.end(); ++it) {
+	// 	std::cout << it->first << ", ";
+	// }
 	std::cout << std::endl;
 }
 
@@ -48,4 +58,6 @@ void User::setNickname(const std::string &nickname) {
 
 bool User::isUsernameSet() const { return !this->user_name_.empty(); }
 
-void User::exitAllChannels() { this->ch_map_.clear(); }
+void User::removeChannel(const std::string &ch_name) {
+	this->ch_set_.erase(ch_name);
+}

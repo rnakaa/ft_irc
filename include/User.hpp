@@ -10,6 +10,7 @@
 #include <iostream>
 #include <map>
 #include <poll.h>
+#include <set>
 #include <sstream>
 #include <string>
 #include <sys/socket.h>
@@ -37,7 +38,8 @@ class User {
 
 	int getFd() const;
 	AuthFlags getAuthFlags() const;
-	size_t getJoinedChannels() const;
+	size_t getJoinedChannelCount() const;
+	const std::set<std::string> &getJoinedChannels() const;
 
 	void setAuthFlags(const AuthFlags &flags);
 	enum UserMode getMode() const;
@@ -45,13 +47,13 @@ class User {
 	bool isUsernameSet() const;
 	void setMode(const enum UserMode mode);
 	bool hasMode(const enum UserMode mode) const;
-	void setChannel(const std::string &ch_name, const Channel &ch);
+	void setChannel(const Channel &ch);
 
 	bool isMemberOfChannel(const std::string &ch_name);
 
 	void printJoinChannel() const;
 
-	void exitAllChannels();
+	void removeChannel(const std::string &ch_name);
 
   private:
 	const int fd_;
@@ -59,7 +61,8 @@ class User {
 	AuthFlags auth_flag_;
 	std::string nick_name_;
 	std::string user_name_;
-	std::map<std::string, Channel> ch_map_;
+	std::set<std::string> ch_set_;
+	// std::map<std::string, Channel> ch_map_;
 };
 
 #endif

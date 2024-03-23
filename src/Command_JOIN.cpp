@@ -41,7 +41,9 @@ bool Command::checkValidChannel(const std::string &ch_name) {
 
 void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 						  User &user) {
-	Channel join_ch = this->server_.getChannel(ch_name);
+	const Channel &join_ch_const = this->server_.getChannel(ch_name);
+	join_ch_const.printJoinedUser();
+	Channel &join_ch = const_cast<Channel &>(join_ch_const);
 	if (user.isMemberOfChannel(join_ch.getName())) {
 		std::cerr << "client already join channel received from message"
 				  << std::endl;
@@ -54,9 +56,11 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 								error_.ERR_BADCHANNELKEY(ch_name));
 		return;
 	}
-	user.setChannel(join_ch.getName(), join_ch);
+	user.setChannel(join_ch);
+	join_ch.setUser(user);
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
+	join_ch.printJoinedUser();
 	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 }
 
@@ -64,9 +68,11 @@ void Command::createChannel(const std::string &ch_name,
 							const std::string &ch_key, User &user) {
 	Channel new_ch(ch_name, ch_key, user);
 	this->server_.setChannel(new_ch.getName(), new_ch);
-	user.setChannel(new_ch.getName(), new_ch);
+	user.setChannel(new_ch);
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
+	const Channel ch = this->server_.getChannel(ch_name);
+	ch.printJoinedUser();
 	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 }
 
@@ -94,6 +100,20 @@ void Command::handleChannelRequests(std::queue<std::string> &ch_queue,
 	}
 }
 
+void Command::exitAllChannels(User &user) {
+	const std::set<std::string> joined_ch = user.getJoinedChannels();
+	for (std::set<std::string>::iterator it = joined_ch.begin();
+		 it != joined_ch.end(); ++it) {
+		const std::string ch_name = *it;
+		const Channel &left_ch_const = this->server_.getChannel(ch_name);
+		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
+		if (left_ch_const.getJoinedUserCount() == 0) {
+			this->server_.removeChannel(left_ch_const.getName());
+		}
+		user.removeChannel(ch_name);
+	}
+}
+
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	std::cout << "start JOIN command" << std::endl;
 	// if (user.getAuthFlags() != User::ALL_AUTH) {
@@ -108,7 +128,7 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 		return;
 	}
 	if (arg.at(0) == "0") {
-		user.exitAllChannels();
+		exitAllChannels(user);
 		std::cout << "finish JOIN 0 command" << std::endl;
 		user.printJoinChannel();
 		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN 0 Command");

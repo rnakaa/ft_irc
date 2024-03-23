@@ -54,6 +54,7 @@ class Command {
 	void joinChannel(const std::string &ch_name, User &user);
 	void createChannel(const size_t i, std::vector<std::string> &ch_vec,
 					   std::vector<std::string> &key_vec);
+	void exitAllChannels(User &user);
 	// NICK
 	void NICK(User &user, std::vector<std::string> &arg);
 	bool containsNickname(const std::string &nickname) const;
@@ -70,7 +71,6 @@ class Command {
 					 User &user);
 	void createChannel(const std::string &ch_name, const std::string &ch_key,
 					   User &user);
-	void exitAllChannels(User &user);
 
 	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
