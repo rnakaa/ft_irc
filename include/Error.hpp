@@ -14,15 +14,15 @@
 
 class Error {
   public:
-	std::string ERR_NEEDMOREPARAMS(const std::string command);
-	std::string ERR_ALREADYREGISTRED();
-	std::string ERR_PASSWDMISMATCH();
-	std::string ERR_NONICKNAMEGIVEN();
-	std::string ERR_ERRONEUSNICKNAME(std::string nick);
-	std::string ERR_NICKNAMEINUSE(std::string nick);
-	std::string ERR_RESTRICTED();
-	std::string ERR_NICKCOLLISION(std::string nick);
-	std::string ERR_NOTSETPASS();
+	std::string ERR_NEEDMOREPARAMS(const std::string &command) const;
+	std::string ERR_ALREADYREGISTRED() const;
+	std::string ERR_PASSWDMISMATCH() const;
+	std::string ERR_NONICKNAMEGIVEN() const;
+	std::string ERR_ERRONEUSNICKNAME(std::string &nick) const;
+	std::string ERR_NICKNAMEINUSE(std::string &nick) const;
+	std::string ERR_RESTRICTED() const;
+	std::string ERR_NICKCOLLISION(std::string &nick) const;
+	std::string ERR_NOTSETPASS() const;
 };
 
 #endif

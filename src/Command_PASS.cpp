@@ -13,7 +13,7 @@ void Command::PASS(User &user, std::vector<std::string> &arg) {
 		std::cerr << error_.ERR_PASSWDMISMATCH() << std::endl;
 		server_.sendMsgToClient(user.getFd(), error_.ERR_PASSWDMISMATCH());
 	} else {
-		user.setAuthFrags(User::PASS_AUTH);
+		user.setAuthFlags(User::PASS_AUTH);
 		std::cout << "SUCCESS: PASS Command client[" << user.getFd()
 				  << "], auth_flag_: " << user.getAuthFlags() << std::endl;
 		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: PASS Command");
