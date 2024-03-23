@@ -18,10 +18,10 @@ class Error {
 	std::string ERR_ALREADYREGISTRED() const;
 	std::string ERR_PASSWDMISMATCH() const;
 	std::string ERR_NONICKNAMEGIVEN() const;
-	std::string ERR_ERRONEUSNICKNAME(std::string &nick) const;
-	std::string ERR_NICKNAMEINUSE(std::string &nick) const;
+	std::string ERR_ERRONEUSNICKNAME(const std::string &nick) const;
+	std::string ERR_NICKNAMEINUSE(const std::string &nick) const;
 	std::string ERR_RESTRICTED() const;
-	std::string ERR_NICKCOLLISION(std::string &nick) const;
+	std::string ERR_NICKCOLLISION(const std::string &nick) const;
 	std::string ERR_NOTSETPASS() const;
 };
 

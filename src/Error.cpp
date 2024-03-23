@@ -12,11 +12,11 @@ std::string Error::ERR_PASSWDMISMATCH() const { return ":Password incorrect"; }
 
 std::string Error::ERR_NONICKNAMEGIVEN() const { return ":No nickname given"; }
 
-std::string Error::ERR_ERRONEUSNICKNAME(std::string &nick) const {
+std::string Error::ERR_ERRONEUSNICKNAME(const std::string &nick) const {
 	return nick + " :Erroneous nickname";
 }
 
-std::string Error::ERR_NICKNAMEINUSE(std::string &nick) const {
+std::string Error::ERR_NICKNAMEINUSE(const std::string &nick) const {
 	return nick + " :Nickname is already in use";
 }
 
@@ -24,7 +24,7 @@ std::string Error::ERR_RESTRICTED() const {
 	return ":Your connection is restricted!";
 }
 
-std::string Error::ERR_NICKCOLLISION(std::string &nick) const {
+std::string Error::ERR_NICKCOLLISION(const std::string &nick) const {
 	return nick + " :Nickname collision";
 }
 
