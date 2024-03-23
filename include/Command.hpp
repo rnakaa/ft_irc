@@ -23,7 +23,6 @@ class Command {
   public:
 	Command(Server &server);
 	void handleCommand(User &user, std::string &message);
-	
 
   private:
 	Server &server_;
@@ -59,6 +58,7 @@ class Command {
 
 
 	void TEST(User &user, std::vector<std::string> &arg);
+	void USER(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
 };
 
