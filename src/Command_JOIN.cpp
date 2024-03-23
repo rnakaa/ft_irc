@@ -107,6 +107,13 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 								error_.ERR_NEEDMOREPARAMS("JOIN"));
 		return;
 	}
+	if (arg.at(0) == "0") {
+		user.exitAllChannels();
+		std::cout << "finish JOIN 0 command" << std::endl;
+		user.printJoinChannel();
+		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN 0 Command");
+		return;
+	}
 	std::queue<std::string> ch_queue, key_queue;
 	if (!setArgToVec(arg, ch_queue, key_queue)) {
 		std::cerr << "incorrect channel and key order" << std::endl;

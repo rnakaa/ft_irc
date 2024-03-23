@@ -9,7 +9,9 @@ int User::getFd() const { return (this->fd_); }
 
 User::AuthFlags User::getAuthFlags() const { return (this->auth_flag_); }
 
-void User::setAuthFrags(const AuthFlags &flags) { this->auth_flag_ = flags; }
+size_t User::getJoinedChannels() const { return (this->ch_map_.size()); }
+
+void User::setAuthFlags(const AuthFlags &flags) { this->auth_flag_ = flags; }
 
 void User::setChannel(const std::string &ch_name, const Channel &ch) {
 	this->ch_map_.insert(std::make_pair(ch_name, ch));
@@ -45,3 +47,5 @@ void User::setNickname(const std::string &nickname) {
 }
 
 bool User::isUsernameSet() const { return !this->user_name_.empty(); }
+
+void User::exitAllChannels() { this->ch_map_.clear(); }

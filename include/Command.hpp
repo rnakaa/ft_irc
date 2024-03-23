@@ -9,8 +9,8 @@
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <set>
 #include <queue>
+#include <set>
 #include <sstream>
 #include <unistd.h>
 #include <vector>
@@ -23,7 +23,6 @@ class Command {
   public:
 	Command(Server &server);
 	void handleCommand(User &user, std::string &message);
-	
 
   private:
 	Server &server_;
@@ -71,6 +70,7 @@ class Command {
 					 User &user);
 	void createChannel(const std::string &ch_name, const std::string &ch_key,
 					   User &user);
+	void exitAllChannels(User &user);
 
 	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);

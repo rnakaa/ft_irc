@@ -37,6 +37,8 @@ class User {
 
 	int getFd() const;
 	AuthFlags getAuthFlags() const;
+	size_t getJoinedChannels() const;
+
 	void setAuthFlags(const AuthFlags &flags);
 	enum UserMode getMode() const;
 	void setNickname(const std::string &nickname);
@@ -48,6 +50,8 @@ class User {
 	bool isMemberOfChannel(const std::string &ch_name);
 
 	void printJoinChannel() const;
+
+	void exitAllChannels();
 
   private:
 	const int fd_;
