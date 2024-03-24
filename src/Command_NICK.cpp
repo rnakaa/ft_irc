@@ -70,7 +70,6 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 	} else {
 		server_.nicknameInsertLog(arg.at(0));
 		user.setNickname(arg.at(0));
-		user.setAuthFlags(User::NICK_AUTH);
 		if (user.getAuthFlags() == User::USER_AUTH) {
 			user.setAuthFlags(User::ALL_AUTH);
 		} else {
