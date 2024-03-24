@@ -23,6 +23,7 @@ class User {
   public:
 	enum AuthFlags { NONE_AUTH, PASS_AUTH, NICK_AUTH, USER_AUTH, ALL_AUTH };
 	enum UserMode {
+		none = 0,
 		a = 1 << 1,
 		i = 1 << 2,
 		w = 1 << 3,
