@@ -45,6 +45,8 @@ class Server {
 	bool nicknameExist(const std::string &nickname) const;
 	void nicknameInsertLog(std::string nickname);
 
+	void removeChannel(const std::string &ch_name);
+
   private:
 	void checkValidArgc(const int argc) const;
 	void checkValidPort(const char *str) const;

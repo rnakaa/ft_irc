@@ -38,10 +38,13 @@ class Channel {
 	Channel(const std::string &name, const std::string &pass, const User &user);
 	const std::string &getName() const;
 	const std::string &getPass() const;
+	size_t getJoinedUserCount() const;
 	void setUser(const User &user);
 	enum ChannelMode getMode() const;
 	void setMode(const enum ChannelMode mode);
 	bool hasMode(const enum ChannelMode mode) const;
+	void removeUser(const int fd);
+	void printJoinedUser() const;
 
   private:
 	std::string ch_name_;

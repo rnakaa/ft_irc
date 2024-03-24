@@ -49,6 +49,9 @@ cclean:
 format:
 	$(FORMAT) $(SRCS) $(wildcard $(INC)/*.hpp)
 
+nc:
+	nc localhost 6667
+
 up:
 	sudo docker compose up --build -d && docker compose exec irc-dev bash
 

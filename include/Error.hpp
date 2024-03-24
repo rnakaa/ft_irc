@@ -23,6 +23,8 @@ class Error {
 	std::string ERR_RESTRICTED() const;
 	std::string ERR_NICKCOLLISION(const std::string &nick) const;
 	std::string ERR_NOTSETPASS() const;
+	std::string ERR_NOSUCHCHANNEL(const std::string &ch_name) const;
+	std::string ERR_BADCHANNELKEY(const std::string &ch_name) const;
 };
 
 #endif

@@ -10,14 +10,6 @@ std::string Error::ERR_NEEDMOREPARAMS(const std::string &command) const {
 
 std::string Error::ERR_PASSWDMISMATCH() const { return ":Password incorrect"; }
 
-std::string Error::ERR_NOSUCHCHANNEL(const std::string &ch_name) {
-	return ch_name + ":No such chaanel";
-}
-
-std::string Error::ERR_BADCHANNELKEY(const std::string &ch_name) {
-	return ch_name + ":Cannot join channel (+k)";
-}
-
 std::string Error::ERR_NONICKNAMEGIVEN() const { return ":No nickname given"; }
 
 std::string Error::ERR_ERRONEUSNICKNAME(const std::string &nick) const {
@@ -37,3 +29,11 @@ std::string Error::ERR_NICKCOLLISION(const std::string &nick) const {
 }
 
 std::string Error::ERR_NOTSETPASS() const { return ":Pass is not yet set."; }
+
+std::string Error::ERR_NOSUCHCHANNEL(const std::string &ch_name) const {
+	return ch_name + ":No such chaanel";
+}
+
+std::string Error::ERR_BADCHANNELKEY(const std::string &ch_name) const {
+	return ch_name + ":Cannot join channel (+k)";
+}
