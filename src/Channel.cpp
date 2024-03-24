@@ -21,12 +21,15 @@ Channel::Channel(const std::string &name, const std::string &pass,
 	: ch_name_(name), ch_pass_(pass) {
 	setUser(user);
 	// std::cout << "Channel Constructor with user, ch_name_: " <<
-	// this->ch_name_ << "ch_pass_: " << this->ch_pass_ << std::endl;
+	// this->ch_name_
+	// 		  << "ch_pass_: " << this->ch_pass_ << std::endl;
 }
 
 const std::string &Channel::getName() const { return (this->ch_name_); }
 
 const std::string &Channel::getPass() const { return (this->ch_pass_); }
+
+size_t Channel::getJoinedUserCount() const { return (this->ch_users_.size()); }
 
 void Channel::setUser(const User &user) {
 	this->ch_users_.insert(std::make_pair(user.getFd(), user));
@@ -40,4 +43,24 @@ bool Channel::hasMode(const enum Channel::ChannelMode mode) const {
 
 void Channel::setMode(const enum Channel::ChannelMode mode) {
 	this->mode_ = static_cast<enum ChannelMode>(this->mode_ | mode);
+}
+
+void Channel::printJoinedUser() const {
+	std::cout << this->ch_name_ << " joined user: ";
+	for (std::map<int, User>::const_iterator it = ch_users_.begin();
+		 it != ch_users_.end(); ++it) {
+		std::cout << "client[" << it->first << "], ";
+	}
+	std::cout << std::endl;
+}
+
+void Channel::removeUser(const int fd) {
+	printJoinedUser();
+	std::map<int, User>::iterator it = ch_users_.find(fd);
+	if (it != ch_users_.end()) {
+		ch_users_.erase(it);
+	} else {
+		std::cerr << "cannot remove client[" << fd << "]" << std::endl;
+	}
+	printJoinedUser();
 }

@@ -174,6 +174,11 @@ void Server::sendMsgToClient(const int fd, const std::string &send_str) {
 	}
 }
 
+void Server::removeChannel(const std::string &ch_name) {
+	this->ch_map_.erase(ch_name);
+	std::cout << "remove Channel: " << ch_name << std::endl;
+}
+
 void Server::exit_error(const std::string &func, const std::string &err_msg) {
 	std::cerr << "ERROR: " << func << ": " << err_msg << std::endl;
 	std::exit(EXIT_FAILURE);

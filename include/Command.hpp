@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <queue>
 #include <set>
 #include <sstream>
 #include <unistd.h>
@@ -27,6 +28,7 @@ class Command {
 	Server &server_;
 	Error error_;
 	std::string command_name_;
+	std::string recv_message_;
 	std::vector<std::string> arg_;
 	std::string recv_message_;
 	typedef void (Command::*CommandFunction)(User &,
@@ -54,9 +56,23 @@ class Command {
 	void joinChannel(const std::string &ch_name, User &user);
 	void createChannel(const size_t i, std::vector<std::string> &ch_vec,
 					   std::vector<std::string> &key_vec);
+	void exitAllChannels(User &user);
 	// NICK
 	void NICK(User &user, std::vector<std::string> &arg);
 	bool containsNickname(const std::string &nickname) const;
+	bool startWithChannelChar(const std::string &str);
+	bool setArgToVec(const std::vector<std::string> &arg,
+					 std::queue<std::string> &ch_queue,
+					 std::queue<std::string> &key_queue);
+	bool checkValidArg(const std::queue<std::string> &ch_queue,
+					   const std::queue<std::string> &key_queue);
+	void handleChannelRequests(std::queue<std::string> &ch_queue,
+							   std::queue<std::string> &key_queue, User &user);
+	bool checkValidChannel(const std::string &ch_name);
+	void joinChannel(const std::string &ch_name, const std::string &ch_key,
+					 User &user);
+	void createChannel(const std::string &ch_name, const std::string &ch_key,
+					   User &user);
 
 	// USER
 	void USER(User &user, std::vector<std::string> &arg);

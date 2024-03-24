@@ -1,23 +1,133 @@
 #include "Command.hpp"
 
-// void Command::setArgToVec(const std::vector<std::string> &arg,
-// std::vector<std::string> &ch_vec, std::vector<std::string> &key_vec {
-//
-// }
+bool Command::startWithChannelChar(const std::string &str) {
+	return !str.empty() &&
+		   (str[0] == '&' || str[0] == '#' || str[0] == '+' || str[0] == '!');
+}
 
-void Command::joinChannel(const std::string &ch_name, User &user) {
-	Channel join_ch = this->server_.getChannel(ch_name);
+bool Command::setArgToVec(const std::vector<std::string> &arg,
+						  std::queue<std::string> &ch_queue,
+						  std::queue<std::string> &key_queue) {
+	std::istringstream ch_iss, key_iss;
+	std::string ch_token, key_token, rest;
+	bool is_key = false;
+	if (arg.size() > 2) {
+		return false;
+	} else if (arg.size() == 2) {
+		ch_iss.str(arg.at(0));
+		key_iss.str(arg.at(1));
+		is_key = true;
+	} else {
+		ch_iss.str(arg.at(0));
+	}
+
+	while (std::getline(ch_iss, ch_token, ',')) {
+		if (!startWithChannelChar(ch_token)) {
+			std::cout << "false" << std::endl;
+			return false;
+		}
+		ch_queue.push(ch_token);
+	}
+	if (is_key) {
+		while (std::getline(key_iss, key_token, ',')) {
+			if (startWithChannelChar(key_token)) {
+				return false;
+			}
+			key_queue.push(key_token);
+		}
+	}
+	return true;
+}
+
+bool Command::checkValidArg(const std::queue<std::string> &ch_queue,
+							const std::queue<std::string> &key_queue) {
+	return ch_queue.size() != 0 && ch_queue.size() >= key_queue.size();
+}
+
+bool Command::checkValidChannel(const std::string &ch_name) {
+	if (ch_name.size() > 50 || ch_name.size() == 1) {
+		return false;
+	} else if (ch_name.find(' ') != std::string::npos ||
+			   ch_name.find('\a') != std::string::npos ||
+			   ch_name.find(',') != std::string::npos) {
+		return false;
+	}
+	return true;
+}
+
+void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
+						  User &user) {
+	const Channel &join_ch_const = this->server_.getChannel(ch_name);
+	join_ch_const.printJoinedUser();
+	Channel &join_ch = const_cast<Channel &>(join_ch_const);
 	if (user.isMemberOfChannel(join_ch.getName())) {
-		std::cerr << "client already join channel received message"
+		std::cerr << "client already join channel received from message"
 				  << std::endl;
+		server_.sendMsgToClient(
+			user.getFd(), "client already join channel received from message");
+		return;
+	} else if (join_ch.getPass() != ch_key) {
+		std::cerr << error_.ERR_BADCHANNELKEY(ch_name) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								"client already join channel received message");
+								error_.ERR_BADCHANNELKEY(ch_name));
 		return;
 	}
-	user.setChannel(join_ch.getName(), join_ch);
+	user.setChannel(join_ch);
+	join_ch.setUser(user);
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
+	join_ch.printJoinedUser();
 	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+}
+
+void Command::createChannel(const std::string &ch_name,
+							const std::string &ch_key, User &user) {
+	Channel new_ch(ch_name, ch_key, user);
+	this->server_.setChannel(new_ch.getName(), new_ch);
+	user.setChannel(new_ch);
+	std::cout << "finish JOIN command" << std::endl;
+	user.printJoinChannel();
+	const Channel ch = this->server_.getChannel(ch_name);
+	ch.printJoinedUser();
+	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+}
+
+void Command::handleChannelRequests(std::queue<std::string> &ch_queue,
+									std::queue<std::string> &key_queue,
+									User &user) {
+	std::string ch_name(ch_queue.front()), ch_key;
+	ch_queue.pop();
+	if (key_queue.size() > 0) {
+		ch_key = key_queue.front();
+		key_queue.pop();
+	} else {
+		ch_key = "";
+	}
+	if (!checkValidChannel(ch_name)) {
+		std::cerr << error_.ERR_NOSUCHCHANNEL(ch_name) << std::endl;
+		server_.sendMsgToClient(user.getFd(),
+								error_.ERR_NOSUCHCHANNEL(ch_name));
+		return;
+	}
+	if (this->server_.hasChannelName(ch_name)) {
+		joinChannel(ch_name, ch_key, user);
+	} else {
+		createChannel(ch_name, ch_key, user);
+	}
+}
+
+void Command::exitAllChannels(User &user) {
+	const std::set<std::string> joined_ch = user.getJoinedChannels();
+	for (std::set<std::string>::iterator it = joined_ch.begin();
+		 it != joined_ch.end(); ++it) {
+		const std::string ch_name = *it;
+		const Channel &left_ch_const = this->server_.getChannel(ch_name);
+		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
+		if (left_ch_const.getJoinedUserCount() == 0) {
+			this->server_.removeChannel(left_ch_const.getName());
+		}
+		user.removeChannel(ch_name);
+	}
 }
 
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
@@ -33,42 +143,26 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 								error_.ERR_NEEDMOREPARAMS("JOIN"));
 		return;
 	}
-	// for (size_t i = 0; i < arg.size(); ++i) {
-	// 	Channel ch(arg.at(i), "", user);
-	// 	this->server_.setChannel(ch.getName(), ch);
-	// 	user.setChannel(ch.getName(), ch);
-	// }
-	// std::vector<std::string> ch_vec, key_vec;
-	// setArgToVec(arg, ch_vec, key_vec);
-	// if (checkValidArg(ch_vec, key_vec)) {
-	// 	std::cerr << "invalid channel name" << std::endl;
-	// 	server_.sendMsgToClient(user.getFd(), "invalid channel name");
-	// 	return ;
-	// }
-	// // if (ch_vec.size() == 0 || ch_vec.size() < key_vec.size()) {
-	// // 	std::cerr << error_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
-	// // 	server_.sendMsgToClient(user.getFd(),
-	// // 							error_.ERR_NEEDMOREPARAMS("JOIN"));
-	// // 	return ;
-	// // }
-	// for (size_t i = 0; i < ch_vec.size(); ++i) {
-	for (size_t i = 0; i < arg.size(); ++i) {
-		if (this->server_.hasChannelName(arg.at(i))) {
-			// joinChannel(i, ch_vec, key_vec);
-			joinChannel(arg.at(i), user);
-			// joinChannel(i, ch_vec, key_vec);
-		} else {
-			// createChannel(i, ch_vec, key_vec);
-			Channel ch(arg.at(i), "", user);
-			this->server_.setChannel(ch.getName(), ch);
-			user.setChannel(ch.getName(), ch);
-			std::cout << "finish JOIN command" << std::endl;
-			user.printJoinChannel();
-			this->server_.sendMsgToClient(user.getFd(),
-										  "SUCCESS: JOIN Command");
-		}
+	if (arg.at(0) == "0") {
+		exitAllChannels(user);
+		std::cout << "finish JOIN 0 command" << std::endl;
+		user.printJoinChannel();
+		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN 0 Command");
+		return;
 	}
-	// std::cout << "finish JOIN command" << std::endl;
-	// user.printJoinChannel();
-	// this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+	std::queue<std::string> ch_queue, key_queue;
+	if (!setArgToVec(arg, ch_queue, key_queue)) {
+		std::cerr << "incorrect channel and key arg" << std::endl;
+		server_.sendMsgToClient(user.getFd(), "incorrect channel and key arg");
+		return;
+	}
+	if (!checkValidArg(ch_queue, key_queue)) {
+		std::cerr << error_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
+		server_.sendMsgToClient(user.getFd(),
+								error_.ERR_NEEDMOREPARAMS("JOIN"));
+		return;
+	}
+	while (ch_queue.size() > 0) {
+		handleChannelRequests(ch_queue, key_queue, user);
+	}
 }

@@ -29,3 +29,11 @@ std::string Error::ERR_NICKCOLLISION(const std::string &nick) const {
 }
 
 std::string Error::ERR_NOTSETPASS() const { return ":Pass is not yet set."; }
+
+std::string Error::ERR_NOSUCHCHANNEL(const std::string &ch_name) const {
+	return ch_name + ":No such chaanel";
+}
+
+std::string Error::ERR_BADCHANNELKEY(const std::string &ch_name) const {
+	return ch_name + ":Cannot join channel (+k)";
+}
