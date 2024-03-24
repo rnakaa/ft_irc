@@ -132,8 +132,7 @@ void Command::exitAllChannels(User &user) {
 
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	std::cout << "start JOIN command" << std::endl;
-	// if (user.getAuthFlags() != User::ALL_AUTH) {
-	if (user.getAuthFlags() != User::PASS_AUTH) {
+	if (user.getAuthFlags() != User::ALL_AUTH) {
 		std::cerr << "client cannot authenticate" << std::endl;
 		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");
 		return;
