@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <vector>
 
-#define PORT 8080
+#define PORT 6667
 #define SERVER_IP "127.0.0.1"
 #define BUF_SIZE 1024
 #define POLL_WAIT_FOREVER -1

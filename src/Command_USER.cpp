@@ -1,6 +1,13 @@
 #include "Command.hpp"
 #include <cctype> //isspace
 
+std::string Command::substrRealName(size_t i) const {
+	size_t recv_size = recv_message_.size();
+	if (recv_message_[recv_size - 1] == '\n')
+		return recv_message_.substr(i + 1, recv_size - i - 2);
+	return recv_message_.substr(i + 1, std::string::npos);
+}
+
 std::string Command::extractRealName(std::vector<std::string> &arg) const {
 	size_t i;
 	int word_count = 0;
@@ -16,7 +23,7 @@ std::string Command::extractRealName(std::vector<std::string> &arg) const {
 			if (word_count == 4)
 				break;
 		}
-		realname = this->recv_message_.substr(i + 1, std::string::npos);
+		realname = substrRealName(i);
 	}
 	return realname;
 }
