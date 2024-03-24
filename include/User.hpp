@@ -66,7 +66,6 @@ class User {
 	std::string nick_name_;
 	std::string user_name_;
 	std::string real_name_;
-	std::map<std::string, Channel> ch_map_;
 	std::set<std::string> ch_set_;
 	// std::map<std::string, Channel> ch_map_;
 };
