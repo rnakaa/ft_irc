@@ -8,16 +8,32 @@ bool Command::startWithChannelChar(const std::string &str) {
 bool Command::setArgToVec(const std::vector<std::string> &arg,
 						  std::queue<std::string> &ch_queue,
 						  std::queue<std::string> &key_queue) {
-	bool is_push_key = false;
-	for (size_t i = 0; i < arg.size(); ++i) {
-		if (startWithChannelChar(arg.at(i))) {
-			if (is_push_key) {
+	std::istringstream ch_iss, key_iss;
+	std::string ch_token, key_token, rest;
+	bool is_key = false;
+	if (arg.size() > 2) {
+		return false;
+	} else if (arg.size() == 2) {
+		ch_iss.str(arg.at(0));
+		key_iss.str(arg.at(1));
+		is_key = true;
+	} else {
+		ch_iss.str(arg.at(0));
+	}
+
+	while (std::getline(ch_iss, ch_token, ',')) {
+		if (!startWithChannelChar(ch_token)) {
+			std::cout << "false" << std::endl;
+			return false;
+		}
+		ch_queue.push(ch_token);
+	}
+	if (is_key) {
+		while (std::getline(key_iss, key_token, ',')) {
+			if (startWithChannelChar(key_token)) {
 				return false;
 			}
-			ch_queue.push(arg.at(i));
-		} else {
-			key_queue.push(arg.at(i));
-			is_push_key = true;
+			key_queue.push(key_token);
 		}
 	}
 	return true;
@@ -136,9 +152,8 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	}
 	std::queue<std::string> ch_queue, key_queue;
 	if (!setArgToVec(arg, ch_queue, key_queue)) {
-		std::cerr << "incorrect channel and key order" << std::endl;
-		server_.sendMsgToClient(user.getFd(),
-								"incorrect channel and key order");
+		std::cerr << "incorrect channel and key arg" << std::endl;
+		server_.sendMsgToClient(user.getFd(), "incorrect channel and key arg");
 		return;
 	}
 	if (!checkValidArg(ch_queue, key_queue)) {

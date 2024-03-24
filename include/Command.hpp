@@ -28,6 +28,7 @@ class Command {
 	Server &server_;
 	Error error_;
 	std::string command_name_;
+	std::string recv_message_;
 	std::vector<std::string> arg_;
 	typedef void (Command::*CommandFunction)(User &,
 											 std::vector<std::string> &);
