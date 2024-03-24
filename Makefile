@@ -2,7 +2,7 @@ NAME = ircserv
 PORT = 6667
 PASS = password
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 RM = rm -rf
 SRC_DIR = src
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)	

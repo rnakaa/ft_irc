@@ -30,6 +30,7 @@ class Command {
 	std::string command_name_;
 	std::string recv_message_;
 	std::vector<std::string> arg_;
+	std::string recv_message_;
 	typedef void (Command::*CommandFunction)(User &,
 											 std::vector<std::string> &);
 	std::map<std::string, CommandFunction> commands_map_;
@@ -73,8 +74,12 @@ class Command {
 	void createChannel(const std::string &ch_name, const std::string &ch_key,
 					   User &user);
 
-	void TEST(User &user, std::vector<std::string> &arg);
+	// USER
 	void USER(User &user, std::vector<std::string> &arg);
+	std::string extractRealName(std::vector<std::string> &arg) const;
+	std::string substrRealName(size_t i) const;
+
+	void TEST(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
 };
 

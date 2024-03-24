@@ -38,12 +38,16 @@ class User {
 
 	int getFd() const;
 	AuthFlags getAuthFlags() const;
+	const std::string &getNickName() const;
+	const std::string &getRealName() const;
+	const std::string &getUserName() const;
 	size_t getJoinedChannelCount() const;
 	const std::set<std::string> &getJoinedChannels() const;
-
-	void setAuthFlags(const AuthFlags &flags);
 	enum UserMode getMode() const;
+	void setAuthFlags(const AuthFlags &flags);
 	void setNickname(const std::string &nickname);
+	void setUsername(const std::string &username);
+	void setRealName(const std::string &real_name);
 	bool isUsernameSet() const;
 	void setMode(const enum UserMode mode);
 	bool hasMode(const enum UserMode mode) const;
@@ -61,6 +65,7 @@ class User {
 	AuthFlags auth_flag_;
 	std::string nick_name_;
 	std::string user_name_;
+	std::string real_name_;
 	std::set<std::string> ch_set_;
 	// std::map<std::string, Channel> ch_map_;
 };
