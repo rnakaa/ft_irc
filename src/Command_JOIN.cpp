@@ -83,12 +83,15 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 void Command::createChannel(const std::string &ch_name,
 							const std::string &ch_key, User &user) {
 	Channel new_ch(ch_name, ch_key, user);
+	new_ch.setMode(Channel::O);
+	new_ch.setChannelOperators(user.getFd());
 	this->server_.setChannel(new_ch.getName(), new_ch);
 	user.setChannel(new_ch);
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
 	const Channel ch = this->server_.getChannel(ch_name);
 	ch.printJoinedUser();
+	ch.printChannelOperators();
 	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 }
 
