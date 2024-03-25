@@ -30,7 +30,7 @@ const std::string &Channel::getName() const { return (this->ch_name_); }
 
 const std::string &Channel::getPass() const { return (this->ch_pass_); }
 
-const std::vector<int> &Channel::getChannelOperators() const {
+const std::vector<std::string> &Channel::getChannelOperators() const {
 	return this->ch_operators_;
 }
 
@@ -44,8 +44,18 @@ void Channel::setUser(const User &user) {
 	this->ch_users_.insert(std::make_pair(user.getFd(), user));
 }
 
-void Channel::setChannelOperators(const int user_fd) {
-	this->ch_operators_.push_back(user_fd);
+void Channel::setChannelOperator(const std::string &user_nickname) {
+	this->ch_operators_.push_back(user_nickname);
+}
+
+void Channel::removeChannelOperator(const std::string &user_nickname) {
+	for (std::vector<std::string>::iterator it = this->ch_operators_.begin();
+		 it != this->ch_operators_.end(); ++it) {
+		if (*it == user_nickname) {
+			it = this->ch_operators_.erase(it);
+			return;
+		}
+	}
 }
 
 enum Channel::ChannelMode Channel::getMode() const { return this->mode_; }
@@ -86,7 +96,17 @@ void Channel::removeUser(const int fd) {
 	printJoinedUser();
 }
 
-bool Channel::isChannelOperator(const User &user) const {
+bool Channel::isChannelOperator(const std::string &nick_name) const {
 	return std::find(this->ch_operators_.begin(), this->ch_operators_.end(),
-					 user.getFd()) != ch_operators_.end();
+					 nick_name) != ch_operators_.end();
+}
+
+bool Channel::isChannelUser(const std::string &nick_name) const {
+	for (std::map<int, User>::const_iterator it = ch_users_.begin();
+		 it != ch_users_.end(); ++it) {
+		if (nick_name == it->second.getNickName()) {
+			return true;
+		}
+	}
+	return false;
 }

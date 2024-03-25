@@ -84,7 +84,7 @@ void Command::createChannel(const std::string &ch_name,
 							const std::string &ch_key, User &user) {
 	Channel new_ch(ch_name, ch_key, user);
 	new_ch.setMode(Channel::O);
-	new_ch.setChannelOperators(user.getFd());
+	new_ch.setChannelOperator(user.getNickName());
 	this->server_.setChannel(new_ch.getName(), new_ch);
 	user.setChannel(new_ch);
 	std::cout << "finish JOIN command" << std::endl;
@@ -125,6 +125,10 @@ void Command::exitAllChannels(User &user) {
 		 it != joined_ch.end(); ++it) {
 		const std::string ch_name = *it;
 		const Channel &left_ch_const = this->server_.getChannel(ch_name);
+		if (left_ch_const.isChannelOperator(user.getNickName())) {
+			const_cast<Channel &>(left_ch_const)
+				.removeChannelOperator(user.getNickName());
+		}
 		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());

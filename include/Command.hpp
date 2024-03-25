@@ -91,9 +91,16 @@ class Command {
 						   const Channel &ch_name);
 	ModeAction checkModeAction(const std::string &mode_str) const;
 	bool checkModeType(const char c) const;
+	bool checkInvalidSignsCount(const std::string &mode_str);
+	void joinStrFromVector(std::string &join_str,
+						   const std::vector<std::string> &vec,
+						   const std::string delimiter);
 	void handleChannelOriginOperator(const ModeAction mode_action, User &user,
 									 const Channel &ch); // mode "O"
-	bool checkInvalidSignsCount(const std::string &mode_str);
+	void handleChannelOperator(const ModeAction mode_action, User &user,
+							   const Channel &ch); // mode "o"
+	void setOrUnsetChannelOperator(const size_t i, const ModeAction mode_action,
+								   User &user, const Channel &ch);
 };
 
 #endif

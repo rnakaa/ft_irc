@@ -40,18 +40,20 @@ class Channel {
 	Channel(const std::string &name, const std::string &pass, const User &user);
 	const std::string &getName() const;
 	const std::string &getPass() const;
-	const std::vector<int> &getChannelOperators() const;
+	const std::vector<std::string> &getChannelOperators() const;
 	size_t getJoinedUserCount() const;
 	const std::string &getCreatedUser() const;
 	void setUser(const User &user);
-	void setChannelOperators(const int user_fd);
+	void setChannelOperator(const std::string &user_nickname);
+	void removeChannelOperator(const std::string &user_nickname);
 	enum ChannelMode getMode() const;
 	void setMode(const enum ChannelMode mode);
 	bool hasMode(const enum ChannelMode mode) const;
 	void removeUser(const int fd);
 	void printJoinedUser() const;
 	void printChannelOperators() const;
-	bool isChannelOperator(const User &user) const;
+	bool isChannelOperator(const std::string &nick_name) const;
+	bool isChannelUser(const std::string &nick_name) const;
 
   private:
 	std::string ch_name_;
@@ -59,7 +61,7 @@ class Channel {
 	std::map<int, User> ch_users_;
 	enum ChannelMode mode_;
 	std::string created_user_;
-	std::vector<int> ch_operators_;
+	std::vector<std::string> ch_operators_;
 };
 
 #endif

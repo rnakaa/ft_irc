@@ -35,6 +35,18 @@ Command::checkModeAction(const std::string &mode_str) const {
 	}
 }
 
+void Command::joinStrFromVector(std::string &join_str,
+								const std::vector<std::string> &vec,
+								const std::string delimiter) {
+	for (size_t i = 0; i < vec.size(); ++i) {
+		join_str += vec.at(i);
+		if (i < vec.size() - 1) {
+			join_str += delimiter;
+		}
+	}
+}
+
+// mode "O"
 void Command::handleChannelOriginOperator(const ModeAction mode_action,
 										  User &user, const Channel &ch) {
 	if (mode_action == Command::unsetMode || mode_action == Command::setMode) {
@@ -50,6 +62,84 @@ void Command::handleChannelOriginOperator(const ModeAction mode_action,
 	std::cout << ch.getName() << " " << ch.getCreatedUser() << std::endl;
 	this->server_.sendMsgToClient(user.getFd(),
 								  ch.getName() + " " + ch.getCreatedUser());
+}
+
+// mode "o": Give/take channel operator privilege
+void Command::handleChannelOperator(const ModeAction mode_action, User &user,
+									const Channel &ch) {
+	if (mode_action == Command::queryMode) {
+		if (this->arg_.size() > 2) {
+			std::cerr << "o: mode parameters are not required" << std::endl;
+			this->server_.sendMsgToClient(
+				user.getFd(), "o: mode parameters are not required");
+			return;
+		}
+		std::string send_str = ch.getName() + " ";
+		joinStrFromVector(send_str, ch.getChannelOperators(), ",");
+		std::cout << send_str << std::endl;
+		this->server_.sendMsgToClient(user.getFd(), send_str);
+	} else {
+		if (this->arg_.size() < 3) {
+			std::cerr << error_.ERR_NEEDMOREPARAMS("o") << std::endl;
+			this->server_.sendMsgToClient(user.getFd(),
+										  error_.ERR_NEEDMOREPARAMS("o"));
+			return;
+		}
+		std::vector<std::string> user_vec;
+		for (size_t i = 2; i < this->arg_.size(); ++i) {
+			setOrUnsetChannelOperator(i, mode_action, user, ch);
+		}
+	}
+}
+
+void Command::setOrUnsetChannelOperator(const size_t i,
+										const ModeAction mode_action,
+										User &user, const Channel &ch) {
+	if (!ch.isChannelUser(this->arg_.at(i))) {
+		std::cerr << error_.ERR_USERNOTINCHANNEL(this->arg_.at(i), ch.getName())
+				  << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(),
+			error_.ERR_USERNOTINCHANNEL(this->arg_.at(i), ch.getName()));
+		return;
+	} else if (mode_action == Command::setMode) {
+		if (ch.isChannelOperator(this->arg_.at(i))) {
+			std::cerr << this->arg_.at(i) << " is already channel "
+					  << ch.getName() << " operator" << std::endl;
+			this->server_.sendMsgToClient(
+				user.getFd(), this->arg_.at(i) + " is already channel " +
+								  ch.getName() + " operator");
+			return;
+		}
+		const_cast<Channel &>(ch).setChannelOperator(this->arg_.at(i));
+		std::cout << ch.getName() << " " << this->arg_.at(i)
+				  << " is now channel operator" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  ch.getName() + " " + this->arg_.at(i) +
+										  " is now channel operator");
+	} else if (mode_action == Command::unsetMode) {
+		if (this->arg_.at(i) == ch.getCreatedUser()) {
+			std::cerr << "cannot unset channel operator because "
+					  << this->arg_.at(i) << " is channel creator";
+			this->server_.sendMsgToClient(
+				user.getFd(), "cannot unset channel operator because " +
+								  this->arg_.at(i) + " is channel creator");
+			return;
+		} else if (!ch.isChannelOperator(this->arg_.at(i))) {
+			std::cerr << this->arg_.at(i) << " is already not channel "
+					  << ch.getName() << " operator" << std::endl;
+			this->server_.sendMsgToClient(
+				user.getFd(), this->arg_.at(i) + " is already not channel " +
+								  ch.getName() + " operator");
+			return;
+		}
+		const_cast<Channel &>(ch).removeChannelOperator(this->arg_.at(i));
+		std::cout << ch.getName() << " " << this->arg_.at(i)
+				  << " is now not channel operator" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  ch.getName() + " " + this->arg_.at(i) +
+										  " is now not channel operator");
+	}
 }
 
 bool Command::checkInvalidSignsCount(const std::string &mode_str) {
@@ -78,7 +168,7 @@ void Command::handleChannelMode(User &user, std::vector<std::string> &arg,
 	ModeAction mode_action = checkModeAction(mode_str);
 	if ((mode_action == Command::setMode ||
 		 mode_action == Command::unsetMode) &&
-		!ch.isChannelOperator(user)) {
+		!ch.isChannelOperator(user.getNickName())) {
 		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
 		this->server_.sendMsgToClient(
 			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));

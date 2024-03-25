@@ -54,3 +54,8 @@ std::string Error::ERR_NOPRIVILEGES() const {
 std::string Error::ERR_UMODEUNKNOWNFLAG(const std::string &mode_flag) const {
 	return mode_flag + ":Unknown MODE flag";
 }
+
+std::string Error::ERR_USERNOTINCHANNEL(const std::string &nick_name,
+										const std::string &ch_name) const {
+	return nick_name + " " + ch_name + " They aren't on that channel";
+}

@@ -30,6 +30,8 @@ class Error {
 								const std::string &ch_name) const;
 	std::string ERR_NOPRIVILEGES() const;
 	std::string ERR_UMODEUNKNOWNFLAG(const std::string &mode_flag) const;
+	std::string ERR_USERNOTINCHANNEL(const std::string &nick_name,
+									 const std::string &ch_name) const;
 };
 
 #endif
