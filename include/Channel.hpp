@@ -5,13 +5,15 @@
 #include "Server.hpp"
 #include "User.hpp"
 
+#include <algorithm>
 #include <map>
-#include <string>
 
 class User;
 
 class Channel {
+  public:
 	enum ChannelMode {
+		none = 0,
 		O = 1 << 1,
 		o = 1 << 2,
 		v = 1 << 3,
@@ -38,19 +40,26 @@ class Channel {
 	Channel(const std::string &name, const std::string &pass, const User &user);
 	const std::string &getName() const;
 	const std::string &getPass() const;
+	const std::vector<int> &getChannelOperators() const;
 	size_t getJoinedUserCount() const;
+	const std::string &getCreatedUser() const;
 	void setUser(const User &user);
+	void setChannelOperators(const int user_fd);
 	enum ChannelMode getMode() const;
 	void setMode(const enum ChannelMode mode);
 	bool hasMode(const enum ChannelMode mode) const;
 	void removeUser(const int fd);
 	void printJoinedUser() const;
+	void printChannelOperators() const;
+	bool isChannelOperator(const User &user) const;
 
   private:
 	std::string ch_name_;
 	std::string ch_pass_;
 	std::map<int, User> ch_users_;
 	enum ChannelMode mode_;
+	std::string created_user_;
+	std::vector<int> ch_operators_;
 };
 
 #endif

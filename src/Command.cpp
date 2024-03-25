@@ -7,6 +7,8 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["JOIN"] = &Command::JOIN;
 	this->commands_map_["NICK"] = &Command::NICK;
 	this->commands_map_["USER"] = &Command::USER;
+	this->commands_map_["MODE"] = &Command::MODE;
+	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
