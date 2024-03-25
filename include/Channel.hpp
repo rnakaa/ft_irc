@@ -5,8 +5,8 @@
 #include "Server.hpp"
 #include "User.hpp"
 
+#include <algorithm>
 #include <map>
-#include <string>
 
 class User;
 
@@ -42,6 +42,7 @@ class Channel {
 	const std::string &getPass() const;
 	const std::vector<int> &getChannelOperators() const;
 	size_t getJoinedUserCount() const;
+	const std::string &getCreatedUser() const;
 	void setUser(const User &user);
 	void setChannelOperators(const int user_fd);
 	enum ChannelMode getMode() const;
@@ -50,12 +51,14 @@ class Channel {
 	void removeUser(const int fd);
 	void printJoinedUser() const;
 	void printChannelOperators() const;
+	bool isChannelOperator(const User &user) const;
 
   private:
 	std::string ch_name_;
 	std::string ch_pass_;
 	std::map<int, User> ch_users_;
 	enum ChannelMode mode_;
+	std::string created_user_;
 	std::vector<int> ch_operators_;
 };
 

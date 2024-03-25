@@ -25,6 +25,8 @@ class Command {
 	void handleCommand(User &user, std::string &message);
 
   private:
+	enum ModeAction { setMode, unsetMode, queryMode };
+
 	Server &server_;
 	Error error_;
 	std::string command_name_;
@@ -33,6 +35,9 @@ class Command {
 	typedef void (Command::*CommandFunction)(User &,
 											 std::vector<std::string> &);
 	std::map<std::string, CommandFunction> commands_map_;
+	typedef void (Command::*ModeFunction)(const ModeAction, User &,
+										  const Channel &);
+	std::map<char, ModeFunction> mode_map_;
 	std::set<std::string> nickname_log_;
 
   private:
@@ -79,7 +84,16 @@ class Command {
 	std::string substrRealName(size_t i) const;
 
 	void TEST(User &user, std::vector<std::string> &arg);
-	// void MOD(User &user, std::vector<std::string> &arg);
+
+	// MODE
+	void MODE(User &user, std::vector<std::string> &arg);
+	void handleChannelMode(User &user, std::vector<std::string> &arg,
+						   const Channel &ch_name);
+	ModeAction checkModeAction(const std::string &mode_str) const;
+	bool checkModeType(const char c) const;
+	void handleChannelOriginOperator(const ModeAction mode_action, User &user,
+									 const Channel &ch); // mode "O"
+	bool checkInvalidSignsCount(const std::string &mode_str);
 };
 
 #endif

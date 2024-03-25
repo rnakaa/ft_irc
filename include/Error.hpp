@@ -25,6 +25,11 @@ class Error {
 	std::string ERR_NOTSETPASS() const;
 	std::string ERR_NOSUCHCHANNEL(const std::string &ch_name) const;
 	std::string ERR_BADCHANNELKEY(const std::string &ch_name) const;
+	std::string ERR_CHANOPRIVSNEEDED(const std::string &ch_name) const;
+	std::string ERR_UNKNOWNMODE(const std::string &c,
+								const std::string &ch_name) const;
+	std::string ERR_NOPRIVILEGES() const;
+	std::string ERR_UMODEUNKNOWNFLAG(const std::string &mode_flag) const;
 };
 
 #endif
