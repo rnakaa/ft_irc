@@ -1,0 +1,10 @@
+diff --git a/src/Command.cpp b/src/Command.cpp
+index c7953d5..7341d67 100644
+--- a/src/Command.cpp
++++ b/src/Command.cpp
+@@ -1,4 +1,5 @@
+ #include "Command.hpp"
++helllo
+ 
+ Command::Command(Server &server) : server_(server) {
+ 	this->commands_map_["TEST"] = &Command::TEST;

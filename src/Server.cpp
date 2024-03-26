@@ -159,7 +159,7 @@ std::string Server::recvCmdFromClient(const size_t i) {
 	return (recv_msg);
 }
 
-void Server::sendMsgToClient(const int fd, const std::string &send_str) {
+void Server::sendMsgToClient(const int fd, const std::string &send_str) const {
 	// std::cout << "start sendMsgToClient" << std::endl;
 	char send_msg[BUF_SIZE];
 	if (send_str.size() + 1 > BUF_SIZE - 1) {
@@ -179,7 +179,8 @@ void Server::removeChannel(const std::string &ch_name) {
 	std::cout << "remove Channel: " << ch_name << std::endl;
 }
 
-void Server::exit_error(const std::string &func, const std::string &err_msg) {
+void Server::exit_error(const std::string &func,
+						const std::string &err_msg) const {
 	std::cerr << "ERROR: " << func << ": " << err_msg << std::endl;
 	std::exit(EXIT_FAILURE);
 }
@@ -204,7 +205,7 @@ void Server::setChannel(const std::string &ch_name, const Channel &ch) {
 	this->ch_map_.insert(std::make_pair(ch_name, ch));
 }
 
-bool Server::hasChannelName(const std::string &ch_name) {
+bool Server::hasChannelName(const std::string &ch_name) const {
 	return ch_map_.find(ch_name) != ch_map_.end();
 }
 
@@ -224,7 +225,7 @@ void Server::nicknameInsertLog(std::string nickname) {
 	this->nickname_log_.insert(nickname);
 }
 
-void Server::sendToChannelUser(std::string &ch_name, std::string &msg) {
+void Server::sendToChannelUser(std::string &ch_name, std::string &msg) const {
 	if (!hasChannelName(ch_name))
 		return;
 	const Channel &ch = getChannel(ch_name);
