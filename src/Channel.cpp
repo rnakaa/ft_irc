@@ -32,7 +32,8 @@ const std::string &Channel::getPass() const { return (this->ch_pass_); }
 size_t Channel::getJoinedUserCount() const { return (this->ch_users_.size()); }
 
 void Channel::setUser(const User &user) {
-	this->ch_users_.insert(std::make_pair(user.getFd(), user));
+	// this->ch_users_.insert(std::make_pair(user.getFd(), &user));
+	this->ch_users_[user.getFd()] = const_cast<User *>(&user);
 }
 
 enum Channel::ChannelMode Channel::getMode() const { return this->mode_; }
@@ -47,7 +48,7 @@ void Channel::setMode(const enum Channel::ChannelMode mode) {
 
 void Channel::printJoinedUser() const {
 	std::cout << this->ch_name_ << " joined user: ";
-	for (std::map<int, User>::const_iterator it = ch_users_.begin();
+	for (std::map<int, User *>::const_iterator it = ch_users_.begin();
 		 it != ch_users_.end(); ++it) {
 		std::cout << "client[" << it->first << "], ";
 	}
@@ -56,7 +57,7 @@ void Channel::printJoinedUser() const {
 
 void Channel::removeUser(const int fd) {
 	printJoinedUser();
-	std::map<int, User>::iterator it = ch_users_.find(fd);
+	std::map<int, User *>::iterator it = ch_users_.find(fd);
 	if (it != ch_users_.end()) {
 		ch_users_.erase(it);
 	} else {

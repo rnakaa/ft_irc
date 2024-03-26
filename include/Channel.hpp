@@ -49,7 +49,7 @@ class Channel {
   private:
 	std::string ch_name_;
 	std::string ch_pass_;
-	std::map<int, User> ch_users_;
+	std::map<int, User *> ch_users_;
 	enum ChannelMode mode_;
 };
 
