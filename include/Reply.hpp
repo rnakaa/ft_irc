@@ -1,5 +1,5 @@
-#ifndef ERROR_HPP
-#define ERROR_HPP
+#ifndef REPLY_HPP
+#define REPLY_HPP
 
 #include <arpa/inet.h>
 #include <cerrno>
@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <vector>
 
-class Error {
+class Reply {
   public:
 	std::string ERR_NEEDMOREPARAMS(const std::string &command) const;
 	std::string ERR_ALREADYREGISTRED() const;
