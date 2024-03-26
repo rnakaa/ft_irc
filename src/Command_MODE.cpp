@@ -35,9 +35,13 @@ Command::checkModeAction(const std::string &mode_str) const {
 	}
 }
 
-void Command::joinStrFromVector(std::string &join_str,
-								const std::vector<std::string> &vec,
+void Command::joinStrFromVector(std::string &join_str, const Channel &ch,
 								const std::string delimiter) {
+	std::cout << "start joinStrFromVector" << std::endl;
+	std::vector<std::string> vec = ch.getChannelOperatorsNickName();
+	for (size_t i = 0; i < vec.size(); ++i) {
+		std::cout << vec[i] << std::endl;
+	}
 	for (size_t i = 0; i < vec.size(); ++i) {
 		join_str += vec.at(i);
 		if (i < vec.size() - 1) {
@@ -75,7 +79,7 @@ void Command::handleChannelOperator(const ModeAction mode_action, User &user,
 			return;
 		}
 		std::string send_str = ch.getName() + " ";
-		joinStrFromVector(send_str, ch.getChannelOperators(), ",");
+		joinStrFromVector(send_str, ch, ",");
 		std::cout << send_str << std::endl;
 		this->server_.sendMsgToClient(user.getFd(), send_str);
 	} else {
@@ -85,7 +89,6 @@ void Command::handleChannelOperator(const ModeAction mode_action, User &user,
 										  error_.ERR_NEEDMOREPARAMS("o"));
 			return;
 		}
-		std::vector<std::string> user_vec;
 		for (size_t i = 2; i < this->arg_.size(); ++i) {
 			setOrUnsetChannelOperator(i, mode_action, user, ch);
 		}
@@ -95,50 +98,60 @@ void Command::handleChannelOperator(const ModeAction mode_action, User &user,
 void Command::setOrUnsetChannelOperator(const size_t i,
 										const ModeAction mode_action,
 										User &user, const Channel &ch) {
-	if (!ch.isChannelUser(this->arg_.at(i))) {
-		std::cerr << error_.ERR_USERNOTINCHANNEL(this->arg_.at(i), ch.getName())
+	if (!this->server_.isUser(this->arg_.at(i))) {
+		std::cerr << error_.ERR_NOSUCHNICK(user.getNickName()) << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(), error_.ERR_NOSUCHNICK(user.getNickName()));
+		return;
+	}
+	const User &mode_user = this->server_.getUser(this->arg_.at(i));
+	if (!ch.isChannelUser(mode_user.getFd())) {
+		std::cerr << error_.ERR_USERNOTINCHANNEL(mode_user.getNickName(),
+												 ch.getName())
 				  << std::endl;
 		this->server_.sendMsgToClient(
 			user.getFd(),
-			error_.ERR_USERNOTINCHANNEL(this->arg_.at(i), ch.getName()));
+			error_.ERR_USERNOTINCHANNEL(mode_user.getNickName(), ch.getName()));
 		return;
 	} else if (mode_action == Command::setMode) {
-		if (ch.isChannelOperator(this->arg_.at(i))) {
-			std::cerr << this->arg_.at(i) << " is already channel "
+		if (ch.isChannelOperator(mode_user.getFd())) {
+			std::cerr << mode_user.getNickName() << " is already channel "
 					  << ch.getName() << " operator" << std::endl;
 			this->server_.sendMsgToClient(
-				user.getFd(), this->arg_.at(i) + " is already channel " +
+				user.getFd(), mode_user.getNickName() + " is already channel " +
 								  ch.getName() + " operator");
 			return;
 		}
-		const_cast<Channel &>(ch).setChannelOperator(this->arg_.at(i));
-		std::cout << ch.getName() << " " << this->arg_.at(i)
+		const_cast<Channel &>(ch).setChannelOperator(mode_user.getFd());
+		std::cout << ch.getName() << " " << mode_user.getNickName()
 				  << " is now channel operator" << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  ch.getName() + " " + this->arg_.at(i) +
-										  " is now channel operator");
+		this->server_.sendMsgToClient(
+			user.getFd(), ch.getName() + " " + mode_user.getNickName() +
+							  " is now channel operator");
 	} else if (mode_action == Command::unsetMode) {
-		if (this->arg_.at(i) == ch.getCreatedUser()) {
+		if (mode_user.getNickName() == ch.getCreatedUser()) {
 			std::cerr << "cannot unset channel operator because "
-					  << this->arg_.at(i) << " is channel creator";
+					  << mode_user.getNickName() << " is channel creator";
 			this->server_.sendMsgToClient(
 				user.getFd(), "cannot unset channel operator because " +
-								  this->arg_.at(i) + " is channel creator");
+								  mode_user.getNickName() +
+								  " is channel creator");
 			return;
-		} else if (!ch.isChannelOperator(this->arg_.at(i))) {
-			std::cerr << this->arg_.at(i) << " is already not channel "
+		} else if (!ch.isChannelOperator(mode_user.getFd())) {
+			std::cerr << mode_user.getNickName() << " is already not channel "
 					  << ch.getName() << " operator" << std::endl;
-			this->server_.sendMsgToClient(
-				user.getFd(), this->arg_.at(i) + " is already not channel " +
-								  ch.getName() + " operator");
+			this->server_.sendMsgToClient(user.getFd(),
+										  mode_user.getNickName() +
+											  " is already not channel " +
+											  ch.getName() + " operator");
 			return;
 		}
-		const_cast<Channel &>(ch).removeChannelOperator(this->arg_.at(i));
-		std::cout << ch.getName() << " " << this->arg_.at(i)
+		const_cast<Channel &>(ch).removeChannelOperator(mode_user.getFd());
+		std::cout << ch.getName() << " " << mode_user.getNickName()
 				  << " is now not channel operator" << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  ch.getName() + " " + this->arg_.at(i) +
-										  " is now not channel operator");
+		this->server_.sendMsgToClient(
+			user.getFd(), ch.getName() + " " + mode_user.getNickName() +
+							  " is now not channel operator");
 	}
 }
 
@@ -168,7 +181,7 @@ void Command::handleChannelMode(User &user, std::vector<std::string> &arg,
 	ModeAction mode_action = checkModeAction(mode_str);
 	if ((mode_action == Command::setMode ||
 		 mode_action == Command::unsetMode) &&
-		!ch.isChannelOperator(user.getNickName())) {
+		!ch.isChannelOperator(user.getFd())) {
 		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
 		this->server_.sendMsgToClient(
 			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));

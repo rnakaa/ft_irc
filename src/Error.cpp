@@ -59,3 +59,7 @@ std::string Error::ERR_USERNOTINCHANNEL(const std::string &nick_name,
 										const std::string &ch_name) const {
 	return nick_name + " " + ch_name + " They aren't on that channel";
 }
+
+std::string Error::ERR_NOSUCHNICK(const std::string &nick) const {
+	return nick + " :No such nick";
+}
