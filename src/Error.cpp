@@ -37,3 +37,25 @@ std::string Error::ERR_NOSUCHCHANNEL(const std::string &ch_name) const {
 std::string Error::ERR_BADCHANNELKEY(const std::string &ch_name) const {
 	return ch_name + ":Cannot join channel (+k)";
 }
+
+std::string Error::ERR_CHANOPRIVSNEEDED(const std::string &ch_name) const {
+	return ch_name + ":You're not channel operator";
+}
+
+std::string Error::ERR_UNKNOWNMODE(const std::string &c,
+								   const std::string &ch_name) const {
+	return c + ":is unknown mode char to me for " + ch_name;
+}
+
+std::string Error::ERR_NOPRIVILEGES() const {
+	return ":Permission Denied- You're not an IRC operator";
+}
+
+std::string Error::ERR_UMODEUNKNOWNFLAG(const std::string &mode_flag) const {
+	return mode_flag + ":Unknown MODE flag";
+}
+
+std::string Error::ERR_USERNOTINCHANNEL(const std::string &nick_name,
+										const std::string &ch_name) const {
+	return nick_name + " " + ch_name + " They aren't on that channel";
+}

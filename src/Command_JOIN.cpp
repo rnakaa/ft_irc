@@ -83,12 +83,15 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 void Command::createChannel(const std::string &ch_name,
 							const std::string &ch_key, User &user) {
 	Channel new_ch(ch_name, ch_key, user);
+	new_ch.setMode(Channel::O);
+	new_ch.setChannelOperator(user.getNickName());
 	this->server_.setChannel(new_ch.getName(), new_ch);
 	user.setChannel(new_ch);
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
 	const Channel ch = this->server_.getChannel(ch_name);
 	ch.printJoinedUser();
+	ch.printChannelOperators();
 	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
 }
 
@@ -122,6 +125,10 @@ void Command::exitAllChannels(User &user) {
 		 it != joined_ch.end(); ++it) {
 		const std::string ch_name = *it;
 		const Channel &left_ch_const = this->server_.getChannel(ch_name);
+		if (left_ch_const.isChannelOperator(user.getNickName())) {
+			const_cast<Channel &>(left_ch_const)
+				.removeChannelOperator(user.getNickName());
+		}
 		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());
@@ -132,8 +139,7 @@ void Command::exitAllChannels(User &user) {
 
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	std::cout << "start JOIN command" << std::endl;
-	// if (user.getAuthFlags() != User::ALL_AUTH) {
-	if (user.getAuthFlags() != User::PASS_AUTH) {
+	if (user.getAuthFlags() != User::ALL_AUTH) {
 		std::cerr << "client cannot authenticate" << std::endl;
 		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");
 		return;
