@@ -45,6 +45,7 @@ class Channel {
 	bool hasMode(const enum ChannelMode mode) const;
 	void removeUser(const int fd);
 	void printJoinedUser() const;
+	std::map<int, User *>::const_iterator getMapIterator() const;
 
   private:
 	std::string ch_name_;
