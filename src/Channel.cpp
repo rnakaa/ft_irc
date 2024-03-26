@@ -59,6 +59,8 @@ void Channel::setChannelOperator(const int user_fd) {
 	this->ch_operators_.push_back(user_fd);
 }
 
+void Channel::setPass(const std::string &pass) { this->ch_pass_ = pass; }
+
 void Channel::removeChannelOperator(const int user_fd) {
 	for (std::vector<int>::iterator it = this->ch_operators_.begin();
 		 it != this->ch_operators_.end(); ++it) {

@@ -10,6 +10,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["MODE"] = &Command::MODE;
 	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
 	this->mode_map_['o'] = &Command::handleChannelOperator;
+	this->mode_map_['k'] = &Command::handleChannelKey;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
