@@ -52,7 +52,7 @@ const std::vector<std::string> Channel::getChannelOperatorsNickName() const {
 	return ch_operators_nick;
 }
 
-const int &Channel::getMaxUsers() const { return this->max_users_; }
+const ssize_t &Channel::getMaxUsers() const { return this->max_users_; }
 
 void Channel::setUser(const User &user) {
 	// this->ch_users_.insert(std::make_pair(user.getFd(), &user));
