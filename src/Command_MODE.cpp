@@ -155,6 +155,29 @@ void Command::setOrUnsetChannelOperator(const size_t i,
 	}
 }
 
+// mode "k": Set/remove the channel key (password)
+void Command::handleChannelKey(const ModeAction mode_action, User &user,
+							   const Channel &ch) {
+	if (mode_action == Command::queryMode) {
+		if (!ch.isChannelOperator(user.getFd())) {
+			std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+			this->server_.sendMsgToClient(
+				user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+			return;
+		} else if (this->arg_.size() > 2) {
+			std::cerr << "k: mode parameters are not required" << std::endl;
+			this->server_.sendMsgToClient(
+				user.getFd(), "k: mode parameters are not required");
+			return;
+		} else {
+			std::cout << ch.getName() << " key: " << ch.getPass() << std::endl;
+			this->server_.sendMsgToClient(
+				user.getFd(), ch.getName() + " key: " + ch.getPass());
+		}
+		return;
+	}
+}
+
 bool Command::checkInvalidSignsCount(const std::string &mode_str) {
 	int count = 0;
 	for (size_t i = 0; i < mode_str.size(); ++i) {
