@@ -190,6 +190,16 @@ const Channel &Server::getChannel(const std::string &ch_name) const {
 	return ch_map_.find(ch_name)->second;
 }
 
+const User &Server::getUser(const std::string &nickname) const {
+	for (std::map<int, User>::const_iterator it = user_map_.begin();
+		 it != user_map_.end(); ++it) {
+		if (nickname == it->second.getNickName()) {
+			return it->second;
+		}
+	}
+	throw std::runtime_error("cannot find user");
+}
+
 void Server::setChannel(const std::string &ch_name, const Channel &ch) {
 	this->ch_map_.insert(std::make_pair(ch_name, ch));
 }
@@ -224,6 +234,16 @@ void Server::sendToChannelUser(std::string &ch_name, std::string &msg) {
 		this->sendMsgToClient(iter->second->getFd(), msg);
 		++iter;
 	}
+}
+
+bool Server::isUser(const std::string &nickname) const {
+	for (std::map<int, User>::const_iterator it = user_map_.begin();
+		 it != user_map_.end(); ++it) {
+		if (nickname == it->second.getNickName()) {
+			return true;
+		}
+	}
+	return false;
 }
 
 Server::~Server() {}

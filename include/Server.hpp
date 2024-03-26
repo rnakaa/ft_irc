@@ -34,11 +34,13 @@ class Server {
 
 	const std::string &getPass() const;
 	const Channel &getChannel(const std::string &ch_name) const;
+	const User &getUser(const std::string &nickname) const;
 	void printChannelName() const;
 
 	void setChannel(const std::string &ch_name, const Channel &ch);
 
 	bool hasChannelName(const std::string &ch_name);
+	bool isUser(const std::string &nickname) const;
 
 	void sendMsgToClient(const int fd, const std::string &send_str);
 

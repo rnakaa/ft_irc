@@ -70,11 +70,15 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 	} else {
 		server_.nicknameInsertLog(arg.at(0));
 		user.setNickname(arg.at(0));
-		if (user.getAuthFlags() == User::USER_AUTH) {
+		if (user.getAuthFlags() == User::ALL_AUTH) {
+			this->server_.sendMsgToClient(user.getFd(), "NICK rename success");
+			return;
+		} else if (user.getAuthFlags() == User::USER_AUTH) {
 			user.setAuthFlags(User::ALL_AUTH);
 		} else {
 			user.setAuthFlags(User::NICK_AUTH);
 		}
+		std::cout << user.getAuthFlags() << std::endl;
 		server_.sendMsgToClient(user.getFd(), "NICK name success");
 	}
 }

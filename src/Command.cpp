@@ -7,7 +7,9 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["JOIN"] = &Command::JOIN;
 	this->commands_map_["NICK"] = &Command::NICK;
 	this->commands_map_["USER"] = &Command::USER;
-	this->commands_map_["SEND"] = &Command::USER;
+	this->commands_map_["MODE"] = &Command::MODE;
+	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
+	this->mode_map_['o'] = &Command::handleChannelOperator;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
@@ -52,9 +54,4 @@ void Command::TEST(User &user, std::vector<std::string> &arg) {
 	std::cout << "Command => printTest " << std::endl;
 	this->server_.printChannelName();
 	server_.sendMsgToClient(user.getFd(), "Command => printTest: Hello world!");
-}
-
-void Command::SEND(User &user, std::vector<std::string> &arg) {
-	(void)user;
-	server_.sendToChannelUser(arg.at(0), arg.at(1));
 }
