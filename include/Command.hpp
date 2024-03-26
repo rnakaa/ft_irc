@@ -84,6 +84,7 @@ class Command {
 	std::string substrRealName(size_t i) const;
 
 	void TEST(User &user, std::vector<std::string> &arg);
+	// void MOD(User &user, std::vector<std::string> &arg);
 
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
@@ -92,8 +93,7 @@ class Command {
 	ModeAction checkModeAction(const std::string &mode_str) const;
 	bool checkModeType(const char c) const;
 	bool checkInvalidSignsCount(const std::string &mode_str);
-	void joinStrFromVector(std::string &join_str,
-						   const Channel &ch,
+	void joinStrFromVector(std::string &join_str, const Channel &ch,
 						   const std::string delimiter);
 	void handleChannelOriginOperator(const ModeAction mode_action, User &user,
 									 const Channel &ch); // mode "O"
