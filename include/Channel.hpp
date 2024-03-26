@@ -45,6 +45,7 @@ class Channel {
 	const std::vector<std::string> getChannelOperatorsNickName() const;
 	const std::string &getCreatedUser() const;
 	void setUser(const User &user);
+	void setPass(const std::string &pass);
 	void setChannelOperator(const int user_fd);
 	void removeChannelOperator(const int user_fd);
 	enum ChannelMode getMode() const;

@@ -105,6 +105,9 @@ class Command {
 	// mode 'k'
 	void handleChannelKey(const ModeAction mode_action, User &user,
 						  const Channel &ch);
+	void handleQueryMode(User &user, const Channel &ch);
+	void handleSetMode(User &user, const Channel &ch);
+	void handleUnsetMode(User &user, const Channel &ch);
 };
 
 #endif
