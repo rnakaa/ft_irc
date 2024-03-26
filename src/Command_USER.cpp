@@ -51,6 +51,8 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		std::cout << "realname: " << user.getRealName() << std::endl;
 		std::cout << "nickname: " << user.getNickName() << std::endl;
 		std::cout << "username: " << user.getUserName() << std::endl;
-		server_.sendMsgToClient(user.getFd(), "USER name success");
+		server_.sendMsgToClient(
+			user.getFd(),
+			reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 	}
 }

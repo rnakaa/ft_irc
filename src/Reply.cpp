@@ -63,3 +63,8 @@ std::string Reply::ERR_USERNOTINCHANNEL(const std::string &nick_name,
 std::string Reply::ERR_NOSUCHNICK(const std::string &nick) const {
 	return nick + " :No such nick";
 }
+
+std::string Reply::RPL_WELCOME(const std::string &nick,
+							   const std::string &user) const {
+	return "Welcome to the Internet Relay Network " + nick + "!" + user + "@";
+}
