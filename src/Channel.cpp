@@ -66,6 +66,10 @@ void Channel::removeUser(const int fd) {
 	printJoinedUser();
 }
 
-std::map<int, User *>::const_iterator Channel::getMapIterator() const {
+std::map<int, User *>::const_iterator Channel::getMapBeginIterator() const {
 	return this->ch_users_.begin();
+}
+
+std::map<int, User *>::const_iterator Channel::getMapEndIterator() const {
+	return this->ch_users_.end();
 }

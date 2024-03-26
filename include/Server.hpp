@@ -47,6 +47,8 @@ class Server {
 
 	void removeChannel(const std::string &ch_name);
 
+	void sendToChannelUser(std::string &ch_name, std::string &msg);
+
   private:
 	void checkValidArgc(const int argc) const;
 	void checkValidPort(const char *str) const;

@@ -79,6 +79,7 @@ class Command {
 	std::string substrRealName(size_t i) const;
 
 	void TEST(User &user, std::vector<std::string> &arg);
+	void SEND(User &user, std::vector<std::string> &arg);
 	// void MOD(User &user, std::vector<std::string> &arg);
 };
 
