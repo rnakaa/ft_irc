@@ -232,7 +232,7 @@ void Server::sendToChannelUser(std::string &ch_name, std::string &msg) const {
 	std::map<int, User *>::const_iterator iter =
 		const_cast<Channel &>(ch).getMapBeginIterator();
 	while (iter != const_cast<Channel &>(ch).getMapEndIterator()) {
-		this->sendMsgToClient(iter->second->getFd(), msg);
+		sendMsgToClient(iter->second->getFd(), msg);
 		++iter;
 	}
 }
