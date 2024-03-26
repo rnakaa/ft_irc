@@ -47,6 +47,7 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		} else {
 			user.setAuthFlags(User::USER_AUTH);
 		}
+		std::cout << user.getAuthFlags() << std::endl;
 		std::cout << "realname: " << user.getRealName() << std::endl;
 		std::cout << "nickname: " << user.getNickName() << std::endl;
 		std::cout << "username: " << user.getUserName() << std::endl;

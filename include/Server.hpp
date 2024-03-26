@@ -34,24 +34,28 @@ class Server {
 
 	const std::string &getPass() const;
 	const Channel &getChannel(const std::string &ch_name) const;
+	const User &getUser(const std::string &nickname) const;
 	void printChannelName() const;
 
 	void setChannel(const std::string &ch_name, const Channel &ch);
 
-	bool hasChannelName(const std::string &ch_name);
+	bool hasChannelName(const std::string &ch_name) const;
+	bool isUser(const std::string &nickname) const;
 
-	void sendMsgToClient(const int fd, const std::string &send_str);
+	void sendMsgToClient(const int fd, const std::string &send_str) const;
 
 	bool nicknameExist(const std::string &nickname) const;
 	void nicknameInsertLog(std::string nickname);
 
 	void removeChannel(const std::string &ch_name);
 
+	void sendToChannelUser(std::string &ch_name, std::string &msg) const;
+
   private:
 	void checkValidArgc(const int argc) const;
 	void checkValidPort(const char *str) const;
 	void setPortAndPass(const char **argv);
-	void exit_error(const std::string &func, const std::string &err_msg);
+	void exit_error(const std::string &func, const std::string &err_msg) const;
 	std::string recvCmdFromClient(const size_t i);
 	void acceptNewClientConnect();
 	void handlPollEvents();
