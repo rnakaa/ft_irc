@@ -44,6 +44,9 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		user.setRealName(extractRealName(arg));
 		if (user.getAuthFlags() == User::NICK_AUTH) {
 			user.setAuthFlags(User::ALL_AUTH);
+			server_.sendMsgToClient(
+			user.getFd(),
+			reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 		} else {
 			user.setAuthFlags(User::USER_AUTH);
 		}
@@ -51,8 +54,5 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		std::cout << "realname: " << user.getRealName() << std::endl;
 		std::cout << "nickname: " << user.getNickName() << std::endl;
 		std::cout << "username: " << user.getUserName() << std::endl;
-		server_.sendMsgToClient(
-			user.getFd(),
-			reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 	}
 }
