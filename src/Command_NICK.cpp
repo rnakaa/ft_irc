@@ -75,11 +75,13 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 			return;
 		} else if (user.getAuthFlags() == User::USER_AUTH) {
 			user.setAuthFlags(User::ALL_AUTH);
-			server_.sendMsgToClient(user.getFd(), reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
+			server_.sendMsgToClient(
+				user.getFd(),
+				reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 		} else {
 			user.setAuthFlags(User::NICK_AUTH);
+			server_.sendMsgToClient(user.getFd(), "NICK name success");
 		}
 		std::cout << user.getAuthFlags() << std::endl;
-		server_.sendMsgToClient(user.getFd(), "NICK name success");
 	}
 }

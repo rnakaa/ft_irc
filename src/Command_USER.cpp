@@ -45,10 +45,11 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		if (user.getAuthFlags() == User::NICK_AUTH) {
 			user.setAuthFlags(User::ALL_AUTH);
 			server_.sendMsgToClient(
-			user.getFd(),
-			reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
+				user.getFd(),
+				reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 		} else {
 			user.setAuthFlags(User::USER_AUTH);
+			server_.sendMsgToClient(user.getFd(), "USER name success");
 		}
 		std::cout << user.getAuthFlags() << std::endl;
 		std::cout << "realname: " << user.getRealName() << std::endl;
