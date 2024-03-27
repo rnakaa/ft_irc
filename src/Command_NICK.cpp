@@ -34,6 +34,10 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 		std::cerr << reply_.ERR_NOTSETPASS() << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_NOTSETPASS());
 		return;
+	} else if (arg.size() >= 2) {
+		std::cerr << error_.ERR_TOOMANYPARAMS("NICK") << std::endl;
+		server_.sendMsgToClient(user.getFd(), error_.ERR_TOOMANYPARAMS("NICK"));
+		return;
 	} else if (arg.empty()) {
 		std::cerr << reply_.ERR_NONICKNAMEGIVEN() << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_NONICKNAMEGIVEN());

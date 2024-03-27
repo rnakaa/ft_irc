@@ -95,12 +95,20 @@ class Command {
 	bool checkInvalidSignsCount(const std::string &mode_str);
 	void joinStrFromVector(std::string &join_str, const Channel &ch,
 						   const std::string delimiter);
+	// mode 'O'
 	void handleChannelOriginOperator(const ModeAction mode_action, User &user,
-									 const Channel &ch); // mode "O"
+									 const Channel &ch);
+	// mode 'o'
 	void handleChannelOperator(const ModeAction mode_action, User &user,
-							   const Channel &ch); // mode "o"
+							   const Channel &ch);
 	void setOrUnsetChannelOperator(const size_t i, const ModeAction mode_action,
 								   User &user, const Channel &ch);
+	// mode 'k'
+	void handleChannelKey(const ModeAction mode_action, User &user,
+						  const Channel &ch);
+	void handleQueryMode(User &user, const Channel &ch);
+	void handleSetMode(User &user, const Channel &ch);
+	void handleUnsetMode(User &user, const Channel &ch);
 };
 
 #endif
