@@ -36,6 +36,7 @@ class Reply {
 	std::string RPL_WELCOME(const std::string &nick,
 							const std::string &user) const;
 	std::string ERR_TOOMANYPARAMS(const std::string &command) const;
+	std::string ERR_CHANNELISFULL(const std::string &ch_name) const;
 };
 
 #endif

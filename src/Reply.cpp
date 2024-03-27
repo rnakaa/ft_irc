@@ -68,3 +68,11 @@ std::string Reply::RPL_WELCOME(const std::string &nick,
 							   const std::string &user) const {
 	return "Welcome to the Internet Relay Network " + nick + "!" + user + "@";
 }
+
+std::string Reply::ERR_CHANNELISFULL(const std::string &ch_name) const {
+	return ch_name + " :Cannot join channel (+l)";
+}
+
+std::string Reply::ERR_TOOMANYPARAMS(const std::string &command) const {
+	return command + " :too many params";
+}
