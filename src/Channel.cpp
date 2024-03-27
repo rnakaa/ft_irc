@@ -142,6 +142,7 @@ std::map<int, User *>::const_iterator Channel::getMapBeginIterator() const {
 std::map<int, User *>::const_iterator Channel::getMapEndIterator() const {
 	return this->ch_users_.end();
 }
+
 bool Channel::isChannelOperator(const int user_fd) const {
 	return std::find(this->ch_operators_.begin(), this->ch_operators_.end(),
 					 user_fd) != ch_operators_.end();
