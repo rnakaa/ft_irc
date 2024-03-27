@@ -49,6 +49,7 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 			reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 		} else {
 			user.setAuthFlags(User::USER_AUTH);
+			server_.sendMsgToClient(user.getFd(), "USER name success");
 		}
 		std::cout << user.getAuthFlags() << std::endl;
 		std::cout << "realname: " << user.getRealName() << std::endl;
