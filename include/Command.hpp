@@ -83,8 +83,10 @@ class Command {
 	std::string extractRealName(std::vector<std::string> &arg) const;
 	std::string substrRealName(size_t i) const;
 
+	// INVITE
+	void INVITE(User &user, std::vector<std::string> &arg);
+
 	void TEST(User &user, std::vector<std::string> &arg);
-	// void MOD(User &user, std::vector<std::string> &arg);
 
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);

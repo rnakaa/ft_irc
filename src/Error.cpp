@@ -31,15 +31,15 @@ std::string Error::ERR_NICKCOLLISION(const std::string &nick) const {
 std::string Error::ERR_NOTSETPASS() const { return ":Pass is not yet set."; }
 
 std::string Error::ERR_NOSUCHCHANNEL(const std::string &ch_name) const {
-	return ch_name + ":No such chaanel";
+	return ch_name + " :No such channel";
 }
 
 std::string Error::ERR_BADCHANNELKEY(const std::string &ch_name) const {
-	return ch_name + ":Cannot join channel (+k)";
+	return ch_name + " :Cannot join channel (+k)";
 }
 
 std::string Error::ERR_CHANOPRIVSNEEDED(const std::string &ch_name) const {
-	return ch_name + ":You're not channel operator";
+	return ch_name + " :You're not channel operator";
 }
 
 std::string Error::ERR_UNKNOWNMODE(const std::string &c,
