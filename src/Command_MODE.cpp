@@ -333,6 +333,76 @@ void Command::handleLimitedUnsetMode(User &user, const Channel &ch) {
 		user.getFd(), ch.getName() + " remove a limit of the max users");
 }
 
+// mode "i":set/remove Invite-only channel
+void Command::handleInviteOnly(const ModeAction mode_action, User &user,
+							   const Channel &ch) {
+	if (this->arg_.size() > 2) {
+		std::cerr << "i: mode parameters are not required" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  "i: mode parameters are not required");
+		return;
+	}
+	if (mode_action == Command::queryMode) {
+		queryInviteOnly(user, ch);
+		return;
+	}
+	if (!ch.isChannelOperator(user.getFd())) {
+		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+		return;
+	} else if (mode_action == Command::setMode) {
+		setInviteOnly(user, ch);
+	} else {
+		unsetInviteOnly(user, ch);
+	}
+}
+
+void Command::queryInviteOnly(User &user, const Channel &ch) {
+	std::vector<std::string> invited_user = ch.getInvitedUsersNickName();
+	if (invited_user.empty()) {
+		std::cerr << "no invited users" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(), "no invited users");
+		return;
+	}
+	std::ostringstream oss;
+	oss << ch.getName() << " invited users: ";
+	for (size_t i = 0; i < invited_user.size(); ++i) {
+		oss << invited_user.at(i);
+		if (i < invited_user.size() - 1) {
+			oss << ", ";
+		}
+	}
+	std::cout << oss.str() << std::endl;
+	this->server_.sendMsgToClient(user.getFd(), oss.str());
+}
+
+void Command::setInviteOnly(User &user, const Channel &ch) {
+	if (ch.hasMode(Channel::i)) {
+		std::cerr << ch.getName() << " is already set i mode" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  ch.getName() + " is already set i mode");
+		return;
+	}
+	const_cast<Channel &>(ch).setMode(Channel::i);
+	std::cout << ch.getName() << " is now set i mode" << std::endl;
+	this->server_.sendMsgToClient(user.getFd(),
+								  ch.getName() + " is now set i mode");
+}
+
+void Command::unsetInviteOnly(User &user, const Channel &ch) {
+	if (!ch.hasMode(Channel::i)) {
+		std::cerr << ch.getName() << " is already unset i mode" << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(), ch.getName() + " is already unset i mode");
+		return;
+	}
+	const_cast<Channel &>(ch).unsetMode(Channel::i);
+	std::cout << ch.getName() << " is now unset i mode" << std::endl;
+	this->server_.sendMsgToClient(user.getFd(),
+								  ch.getName() + " is now unset i mode");
+}
+
 bool Command::checkInvalidSignsCount(const std::string &mode_str) {
 	int count = 0;
 	for (size_t i = 0; i < mode_str.size(); ++i) {

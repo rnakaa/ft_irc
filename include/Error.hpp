@@ -35,6 +35,7 @@ class Error {
 	std::string ERR_NOSUCHNICK(const std::string &nick) const;
 	std::string ERR_TOOMANYPARAMS(const std::string &command) const;
 	std::string ERR_CHANNELISFULL(const std::string &ch_name) const;
+	std::string ERR_INVITEONLYCHAN(const std::string &ch_name) const;
 };
 
 #endif
