@@ -66,6 +66,13 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 		server_.sendMsgToClient(
 			user.getFd(), "client already join channel received from message");
 		return;
+	} else if (join_ch.hasMode(Channel::i) &&
+			   !join_ch.isInvitedUser(user.getFd())) {
+
+		std::cerr << reply_.ERR_INVITEONLYCHAN(ch_name) << std::endl;
+		server_.sendMsgToClient(user.getFd(),
+								reply_.ERR_INVITEONLYCHAN(ch_name));
+		return;
 	} else if (static_cast<ssize_t>(join_ch.getJoinedUserCount()) ==
 			   join_ch.getMaxUsers()) {
 		std::cerr << reply_.ERR_CHANNELISFULL(ch_name) << std::endl;
