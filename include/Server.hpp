@@ -49,7 +49,7 @@ class Server {
 
 	void removeChannel(const std::string &ch_name);
 
-	void sendToChannelUser(std::string &ch_name, std::string &msg) const;
+	void sendToChannelUser(std::string &ch_name, const std::string &msg) const;
 
   private:
 	void checkValidArgc(const int argc) const;
