@@ -1,7 +1,7 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include "Error.hpp"
+#include "Reply.hpp"
 #include "Server.hpp"
 #include "User.hpp"
 #include <arpa/inet.h>
@@ -18,7 +18,7 @@
 
 class Server;
 class User;
-class Error;
+class Reply;
 
 class Command {
   public:
@@ -29,7 +29,7 @@ class Command {
 	enum ModeAction { setMode, unsetMode, queryMode };
 
 	Server &server_;
-	Error error_;
+	Reply reply_;
 	std::string command_name_;
 	std::vector<std::string> arg_;
 	std::string recv_message_;

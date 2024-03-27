@@ -1,5 +1,5 @@
-#ifndef ERROR_HPP
-#define ERROR_HPP
+#ifndef REPLY_HPP
+#define REPLY_HPP
 
 #include <arpa/inet.h>
 #include <cerrno>
@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <vector>
 
-class Error {
+class Reply {
   public:
 	std::string ERR_NEEDMOREPARAMS(const std::string &command) const;
 	std::string ERR_ALREADYREGISTRED() const;
@@ -33,8 +33,10 @@ class Error {
 	std::string ERR_USERNOTINCHANNEL(const std::string &nick_name,
 									 const std::string &ch_name) const;
 	std::string ERR_NOSUCHNICK(const std::string &nick) const;
-	std::string ERR_CHANNELISFULL(const std::string &ch_name) const;
+	std::string RPL_WELCOME(const std::string &nick,
+							const std::string &user) const;
 	std::string ERR_TOOMANYPARAMS(const std::string &command) const;
+	std::string ERR_CHANNELISFULL(const std::string &ch_name) const;
 };
 
 #endif
