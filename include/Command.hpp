@@ -8,6 +8,7 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <queue>
 #include <set>
@@ -38,7 +39,6 @@ class Command {
 	typedef void (Command::*ModeFunction)(const ModeAction, User &,
 										  const Channel &);
 	std::map<char, ModeFunction> mode_map_;
-	std::set<std::string> nickname_log_;
 
   private:
 	void parseClientMessage(const std::string &message);
@@ -95,12 +95,26 @@ class Command {
 	bool checkInvalidSignsCount(const std::string &mode_str);
 	void joinStrFromVector(std::string &join_str, const Channel &ch,
 						   const std::string delimiter);
+	// mode 'O'
 	void handleChannelOriginOperator(const ModeAction mode_action, User &user,
-									 const Channel &ch); // mode "O"
+									 const Channel &ch);
+	// mode 'o'
 	void handleChannelOperator(const ModeAction mode_action, User &user,
-							   const Channel &ch); // mode "o"
+							   const Channel &ch);
 	void setOrUnsetChannelOperator(const size_t i, const ModeAction mode_action,
 								   User &user, const Channel &ch);
+	// mode 'k'
+	void handleChannelKey(const ModeAction mode_action, User &user,
+						  const Channel &ch);
+	void handleKeyQueryMode(User &user, const Channel &ch);
+	void handleKeySetMode(User &user, const Channel &ch);
+	void handleKeyUnsetMode(User &user, const Channel &ch);
+	// mode 'l'
+	void handleLimitedUserNum(const ModeAction mode_action, User &user,
+							  const Channel &ch);
+	void handleLimitedQueryMode(User &user, const Channel &ch);
+	void handleLimitedSetMode(User &user, const Channel &ch);
+	void handleLimitedUnsetMode(User &user, const Channel &ch);
 };
 
 #endif

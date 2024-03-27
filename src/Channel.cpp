@@ -1,25 +1,27 @@
 #include "Channel.hpp"
 
-Channel::Channel() : ch_name_(""), ch_pass_(""), created_user_fd_(-1) {
+Channel::Channel()
+	: ch_name_(""), ch_pass_(""), created_user_fd_(-1), max_users_(-1) {
 	// std::cout << "Channel Constructor, ch_name_: " << this->ch_name_ <<
 	// std::endl;
 }
 
 Channel::Channel(const std::string &ch_name)
-	: ch_name_(ch_name), ch_pass_(""), created_user_fd_(-1) {
+	: ch_name_(ch_name), ch_pass_(""), created_user_fd_(-1), max_users_(-1) {
 	// std::cout << "Channel Constructor, ch_name_: " << this->ch_name_ <<
 	// std::endl;
 }
 
 Channel::Channel(const std::string &name, const std::string &pass)
-	: ch_name_(name), ch_pass_(pass), created_user_fd_(-1) {
+	: ch_name_(name), ch_pass_(pass), created_user_fd_(-1), max_users_(-1) {
 	// std::cout << "Channel Constructor, ch_name_: " << this->ch_name_ <<
 	// "ch_pass_: " << this->ch_pass_ << std::endl;
 }
 
 Channel::Channel(const std::string &name, const std::string &pass,
 				 const User &user)
-	: ch_name_(name), ch_pass_(pass), created_user_fd_(user.getFd()) {
+	: ch_name_(name), ch_pass_(pass), created_user_fd_(user.getFd()),
+	  max_users_(-1) {
 	setUser(user);
 	// std::cout << "Channel Constructor with user, ch_name_: " <<
 	// this->ch_name_
@@ -50,6 +52,8 @@ const std::vector<std::string> Channel::getChannelOperatorsNickName() const {
 	return ch_operators_nick;
 }
 
+const ssize_t &Channel::getMaxUsers() const { return this->max_users_; }
+
 void Channel::setUser(const User &user) {
 	// this->ch_users_.insert(std::make_pair(user.getFd(), &user));
 	this->ch_users_[user.getFd()] = const_cast<User *>(&user);
@@ -58,6 +62,10 @@ void Channel::setUser(const User &user) {
 void Channel::setChannelOperator(const int user_fd) {
 	this->ch_operators_.push_back(user_fd);
 }
+
+void Channel::setPass(const std::string &pass) { this->ch_pass_ = pass; }
+
+void Channel::setMaxUsers(const int max_users) { this->max_users_ = max_users; }
 
 void Channel::removeChannelOperator(const int user_fd) {
 	for (std::vector<int>::iterator it = this->ch_operators_.begin();

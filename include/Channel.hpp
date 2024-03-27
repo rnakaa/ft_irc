@@ -44,8 +44,11 @@ class Channel {
 	size_t getJoinedUserCount() const;
 	const std::vector<std::string> getChannelOperatorsNickName() const;
 	const std::string &getCreatedUser() const;
+	const ssize_t &getMaxUsers() const;
 	void setUser(const User &user);
+	void setPass(const std::string &pass);
 	void setChannelOperator(const int user_fd);
+	void setMaxUsers(const int max_users);
 	void removeChannelOperator(const int user_fd);
 	enum ChannelMode getMode() const;
 	void setMode(const enum ChannelMode mode);
@@ -65,6 +68,7 @@ class Channel {
 	enum ChannelMode mode_;
 	int created_user_fd_;
 	std::vector<int> ch_operators_;
+	ssize_t max_users_;
 };
 
 #endif
