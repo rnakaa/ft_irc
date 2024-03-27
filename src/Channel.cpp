@@ -52,6 +52,15 @@ const std::vector<std::string> Channel::getChannelOperatorsNickName() const {
 	return ch_operators_nick;
 }
 
+const std::vector<std::string> Channel::getInvitedUsersNickName() const {
+	std::vector<std::string> invited_users_nick;
+	for (size_t i = 0; i < this->invited_users_.size(); ++i) {
+		invited_users_nick.push_back(
+			this->ch_users_.at(this->invited_users_.at(i))->getNickName());
+	}
+	return invited_users_nick;
+}
+
 const ssize_t &Channel::getMaxUsers() const { return this->max_users_; }
 
 void Channel::setUser(const User &user) {
@@ -66,6 +75,10 @@ void Channel::setChannelOperator(const int user_fd) {
 void Channel::setPass(const std::string &pass) { this->ch_pass_ = pass; }
 
 void Channel::setMaxUsers(const int max_users) { this->max_users_ = max_users; }
+
+void Channel::setInvitedUser(const int user_fd) {
+	this->invited_users_.push_back(user_fd);
+}
 
 void Channel::removeChannelOperator(const int user_fd) {
 	for (std::vector<int>::iterator it = this->ch_operators_.begin();
@@ -85,6 +98,10 @@ bool Channel::hasMode(const enum Channel::ChannelMode mode) const {
 
 void Channel::setMode(const enum Channel::ChannelMode mode) {
 	this->mode_ = static_cast<enum ChannelMode>(this->mode_ | mode);
+}
+
+void Channel::unsetMode(const enum Channel::ChannelMode mode) {
+	this->mode_ = static_cast<enum ChannelMode>(this->mode_ - mode);
 }
 
 void Channel::printJoinedUser() const {
@@ -135,4 +152,9 @@ bool Channel::isChannelUser(const int user_fd) const {
 		}
 	}
 	return false;
+}
+
+bool Channel::isInvitedUser(const int user_fd) const {
+	return std::find(this->invited_users_.begin(), this->invited_users_.end(),
+					 user_fd) != invited_users_.end();
 }
