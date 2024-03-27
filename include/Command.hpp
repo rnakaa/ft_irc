@@ -81,10 +81,15 @@ class Command {
 	// USER
 	void USER(User &user, std::vector<std::string> &arg);
 	std::string extractRealName(std::vector<std::string> &arg) const;
-	std::string substrRealName(size_t i) const;
+	std::string extractAfterColon(int words_to_skip) const;
+	std::string substrAfterColon(size_t i) const;
 
+	// QUIT
+	void QUIT(User &user, std::vector<std::string> &arg);
+	void quitAllChannels(User &user, std::string broadcast_msg);
+
+	// TEST
 	void TEST(User &user, std::vector<std::string> &arg);
-	// void MOD(User &user, std::vector<std::string> &arg);
 
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
