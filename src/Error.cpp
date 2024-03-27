@@ -63,3 +63,7 @@ std::string Error::ERR_USERNOTINCHANNEL(const std::string &nick_name,
 std::string Error::ERR_NOSUCHNICK(const std::string &nick) const {
 	return nick + " :No such nick";
 }
+
+std::string Error::ERR_TOOMANYPARAMS(const std::string &command) const {
+	return command + " :Too many params";
+}
