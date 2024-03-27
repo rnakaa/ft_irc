@@ -165,15 +165,15 @@ void Command::handleChannelKey(const ModeAction mode_action, User &user,
 		return;
 	}
 	if (mode_action == Command::queryMode) {
-		handleQueryMode(user, ch);
+		handleKeyQueryMode(user, ch);
 	} else if (mode_action == Command::setMode) {
-		handleSetMode(user, ch);
+		handleKeySetMode(user, ch);
 	} else {
-		handleUnsetMode(user, ch);
+		handleKeyUnsetMode(user, ch);
 	}
 }
 
-void Command::handleQueryMode(User &user, const Channel &ch) {
+void Command::handleKeyQueryMode(User &user, const Channel &ch) {
 	if (this->arg_.size() > 2) {
 		std::cerr << "k: mode parameters are not required" << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
@@ -185,7 +185,7 @@ void Command::handleQueryMode(User &user, const Channel &ch) {
 								  ch.getName() + " key: " + ch.getPass());
 }
 
-void Command::handleSetMode(User &user, const Channel &ch) {
+void Command::handleKeySetMode(User &user, const Channel &ch) {
 	if (this->arg_.size() < 3) {
 		std::cerr << error_.ERR_NEEDMOREPARAMS("MODE k flag") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
@@ -203,7 +203,7 @@ void Command::handleSetMode(User &user, const Channel &ch) {
 								  ch.getName() + " key is now " + ch.getPass());
 }
 
-void Command::handleUnsetMode(User &user, const Channel &ch) {
+void Command::handleKeyUnsetMode(User &user, const Channel &ch) {
 	if (this->arg_.size() < 3) {
 		std::cerr << error_.ERR_NEEDMOREPARAMS("MODE k flag") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
@@ -230,6 +230,107 @@ void Command::handleUnsetMode(User &user, const Channel &ch) {
 		this->server_.sendMsgToClient(user.getFd(),
 									  ch.getName() + " key is now unset");
 	}
+}
+
+// mode "l": Set/remove the user limit to channel
+void Command::handleLimitedUserNum(const ModeAction mode_action, User &user,
+								   const Channel &ch) {
+	if (mode_action == Command::queryMode) {
+		handleLimitedQueryMode(user, ch);
+		return;
+	}
+	if (!ch.isChannelOperator(user.getFd())) {
+		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+		return;
+	} else if (mode_action == Command::setMode) {
+		handleLimitedSetMode(user, ch);
+	} else {
+		handleLimitedUnsetMode(user, ch);
+	}
+}
+
+void Command::handleLimitedQueryMode(User &user, const Channel &ch) {
+	if (this->arg_.size() > 2) {
+		std::cerr << "l: mode parameters are not required" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  "l: mode parameters are not required");
+		return;
+	}
+	std::ostringstream oss_joined_user_num;
+	oss_joined_user_num << ch.getJoinedUserCount();
+	std::cout << "getMaxUsers(): " << ch.getMaxUsers() << std::endl;
+	if (ch.getMaxUsers() == -1) {
+		std::cout << ch.getName() << " has not a limit of users" << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(), ch.getName() + " has not a limit of users");
+		return;
+	}
+	std::ostringstream oss_max_user_num;
+	oss_max_user_num << ch.getMaxUsers();
+	std::cout << ch.getName() << " has a limit of " << oss_max_user_num.str()
+			  << " users" << std::endl;
+	this->server_.sendMsgToClient(user.getFd(),
+								  ch.getName() + " has a limit of " +
+									  oss_max_user_num.str() + " users");
+	return;
+}
+
+void Command::handleLimitedSetMode(User &user, const Channel &ch) {
+	if (this->arg_.size() < 3) {
+		std::cerr << error_.ERR_NEEDMOREPARAMS("MODE l flag") << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  error_.ERR_NEEDMOREPARAMS("MODE l flag"));
+		return;
+	} else if (this->arg_.size() > 3) {
+		std::cerr << "+l: mode parameters are not required" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  "+l: mode parameters are not required");
+		return;
+	}
+	std::istringstream iss(this->arg_.at(2));
+	long max_users;
+	iss >> max_users;
+	if (std::numeric_limits<int>::max() < max_users) {
+		std::cerr << "too large user limits" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(), "too large user limits");
+		return;
+	} else if (max_users < static_cast<long>(ch.getJoinedUserCount())) {
+		std::cerr << "smaller than current joined users" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  "smaller than current joined users");
+		return;
+	}
+	std::cout << "max_users: " << max_users
+			  << " joineduser: " << ch.getJoinedUserCount() << std::endl;
+	const_cast<Channel &>(ch).setMaxUsers(static_cast<int>(max_users));
+	std::cout << ch.getName() << " set max number of users to "
+			  << ch.getMaxUsers() << std::endl;
+	this->server_.sendMsgToClient(
+		user.getFd(),
+		ch.getName() + " set max number of users to " + iss.str());
+}
+
+void Command::handleLimitedUnsetMode(User &user, const Channel &ch) {
+	if (this->arg_.size() > 2) {
+		std::cerr << "-l: mode parameters are not required" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  "-l: mode parameters are not required");
+		return;
+	} else if (ch.getMaxUsers() == -1) {
+		std::cerr << ch.getName() << " is already unset max number of users"
+				  << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(),
+			ch.getName() + " is already unset max number of users");
+		return;
+	}
+	const_cast<Channel &>(ch).setMaxUsers(-1);
+	std::cout << ch.getName() << " remove a limit of the max users"
+			  << std::endl;
+	this->server_.sendMsgToClient(
+		user.getFd(), ch.getName() + " remove a limit of the max users");
 }
 
 bool Command::checkInvalidSignsCount(const std::string &mode_str) {

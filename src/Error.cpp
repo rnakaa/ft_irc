@@ -64,6 +64,10 @@ std::string Error::ERR_NOSUCHNICK(const std::string &nick) const {
 	return nick + " :No such nick";
 }
 
+std::string Error::ERR_CHANNELISFULL(const std::string &ch_name) const {
+	return ch_name + " :Cannot join channel (+l)";
+}
+
 std::string Error::ERR_TOOMANYPARAMS(const std::string &command) const {
 	return command + " :Too many params";
 }
