@@ -8,18 +8,18 @@ void Command::MODE(User &user, std::vector<std::string> &arg) {
 									  "client cannot authenticate");
 		return;
 	} else if (arg.empty() || arg.size() == 1) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("MODE") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("MODE") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  error_.ERR_NEEDMOREPARAMS("MODE"));
+									  reply_.ERR_NEEDMOREPARAMS("MODE"));
 		return;
 	}
 	if (this->server_.hasChannelName(arg.at(0))) {
 		handleChannelMode(user, arg, this->server_.getChannel(arg.at(0)));
 	} else {
 		// handleUserMode(user, arg);
-		std::cerr << error_.ERR_NOSUCHCHANNEL("MODE") << std::endl;
+		std::cerr << reply_.ERR_NOSUCHCHANNEL("MODE") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  error_.ERR_NOSUCHCHANNEL("MODE"));
+									  reply_.ERR_NOSUCHCHANNEL("MODE"));
 		return;
 	}
 }
@@ -54,8 +54,8 @@ void Command::joinStrFromVector(std::string &join_str, const Channel &ch,
 void Command::handleChannelOriginOperator(const ModeAction mode_action,
 										  User &user, const Channel &ch) {
 	if (mode_action == Command::unsetMode || mode_action == Command::setMode) {
-		std::cerr << error_.ERR_NOPRIVILEGES() << std::endl;
-		this->server_.sendMsgToClient(user.getFd(), error_.ERR_NOPRIVILEGES());
+		std::cerr << reply_.ERR_NOPRIVILEGES() << std::endl;
+		this->server_.sendMsgToClient(user.getFd(), reply_.ERR_NOPRIVILEGES());
 		return;
 	} else if (this->arg_.size() > 3) {
 		std::cerr << "O: mode parameters are not required" << std::endl;
@@ -84,9 +84,9 @@ void Command::handleChannelOperator(const ModeAction mode_action, User &user,
 		this->server_.sendMsgToClient(user.getFd(), send_str);
 	} else {
 		if (this->arg_.size() < 3) {
-			std::cerr << error_.ERR_NEEDMOREPARAMS("o") << std::endl;
+			std::cerr << reply_.ERR_NEEDMOREPARAMS("o") << std::endl;
 			this->server_.sendMsgToClient(user.getFd(),
-										  error_.ERR_NEEDMOREPARAMS("o"));
+										  reply_.ERR_NEEDMOREPARAMS("o"));
 			return;
 		}
 		for (size_t i = 2; i < this->arg_.size(); ++i) {
@@ -99,19 +99,19 @@ void Command::setOrUnsetChannelOperator(const size_t i,
 										const ModeAction mode_action,
 										User &user, const Channel &ch) {
 	if (!this->server_.isUser(this->arg_.at(i))) {
-		std::cerr << error_.ERR_NOSUCHNICK(user.getNickName()) << std::endl;
+		std::cerr << reply_.ERR_NOSUCHNICK(user.getNickName()) << std::endl;
 		this->server_.sendMsgToClient(
-			user.getFd(), error_.ERR_NOSUCHNICK(user.getNickName()));
+			user.getFd(), reply_.ERR_NOSUCHNICK(user.getNickName()));
 		return;
 	}
 	const User &mode_user = this->server_.getUser(this->arg_.at(i));
 	if (!ch.isChannelUser(mode_user.getFd())) {
-		std::cerr << error_.ERR_USERNOTINCHANNEL(mode_user.getNickName(),
+		std::cerr << reply_.ERR_USERNOTINCHANNEL(mode_user.getNickName(),
 												 ch.getName())
 				  << std::endl;
 		this->server_.sendMsgToClient(
 			user.getFd(),
-			error_.ERR_USERNOTINCHANNEL(mode_user.getNickName(), ch.getName()));
+			reply_.ERR_USERNOTINCHANNEL(mode_user.getNickName(), ch.getName()));
 		return;
 	} else if (mode_action == Command::setMode) {
 		if (ch.isChannelOperator(mode_user.getFd())) {
@@ -159,9 +159,9 @@ void Command::setOrUnsetChannelOperator(const size_t i,
 void Command::handleChannelKey(const ModeAction mode_action, User &user,
 							   const Channel &ch) {
 	if (!ch.isChannelOperator(user.getFd())) {
-		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
 		this->server_.sendMsgToClient(
-			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+			user.getFd(), reply_.ERR_CHANOPRIVSNEEDED(ch.getName()));
 		return;
 	}
 	if (mode_action == Command::queryMode) {
@@ -187,9 +187,9 @@ void Command::handleKeyQueryMode(User &user, const Channel &ch) {
 
 void Command::handleKeySetMode(User &user, const Channel &ch) {
 	if (this->arg_.size() < 3) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("MODE k flag") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("MODE k flag") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  error_.ERR_NEEDMOREPARAMS("MODE k flag"));
+									  reply_.ERR_NEEDMOREPARAMS("MODE k flag"));
 		return;
 	} else if (this->arg_.size() > 3) {
 		std::cerr << "k: mode parameters are not required" << std::endl;
@@ -205,9 +205,9 @@ void Command::handleKeySetMode(User &user, const Channel &ch) {
 
 void Command::handleKeyUnsetMode(User &user, const Channel &ch) {
 	if (this->arg_.size() < 3) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("MODE k flag") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("MODE k flag") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  error_.ERR_NEEDMOREPARAMS("MODE k flag"));
+									  reply_.ERR_NEEDMOREPARAMS("MODE k flag"));
 		return;
 	} else if (this->arg_.size() > 3) {
 		std::cerr << "k: mode parameters are not required" << std::endl;
@@ -221,9 +221,9 @@ void Command::handleKeyUnsetMode(User &user, const Channel &ch) {
 		this->server_.sendMsgToClient(
 			user.getFd(), ch.getName() + " is already not set password");
 	} else if (this->arg_.at(2) != ch.getPass()) {
-		std::cerr << error_.ERR_PASSWDMISMATCH() << std::endl;
+		std::cerr << reply_.ERR_PASSWDMISMATCH() << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  error_.ERR_PASSWDMISMATCH());
+									  reply_.ERR_PASSWDMISMATCH());
 	} else {
 		const_cast<Channel &>(ch).setPass("");
 		std::cout << ch.getName() << " key is now unset" << std::endl;
@@ -240,9 +240,9 @@ void Command::handleLimitedUserNum(const ModeAction mode_action, User &user,
 		return;
 	}
 	if (!ch.isChannelOperator(user.getFd())) {
-		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
 		this->server_.sendMsgToClient(
-			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+			user.getFd(), reply_.ERR_CHANOPRIVSNEEDED(ch.getName()));
 		return;
 	} else if (mode_action == Command::setMode) {
 		handleLimitedSetMode(user, ch);
@@ -279,9 +279,9 @@ void Command::handleLimitedQueryMode(User &user, const Channel &ch) {
 
 void Command::handleLimitedSetMode(User &user, const Channel &ch) {
 	if (this->arg_.size() < 3) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("MODE l flag") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("MODE l flag") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  error_.ERR_NEEDMOREPARAMS("MODE l flag"));
+									  reply_.ERR_NEEDMOREPARAMS("MODE l flag"));
 		return;
 	} else if (this->arg_.size() > 3) {
 		std::cerr << "+l: mode parameters are not required" << std::endl;
@@ -347,9 +347,9 @@ void Command::handleInviteOnly(const ModeAction mode_action, User &user,
 		return;
 	}
 	if (!ch.isChannelOperator(user.getFd())) {
-		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
 		this->server_.sendMsgToClient(
-			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+			user.getFd(), reply_.ERR_CHANOPRIVSNEEDED(ch.getName()));
 		return;
 	} else if (mode_action == Command::setMode) {
 		setInviteOnly(user, ch);
@@ -421,18 +421,18 @@ void Command::handleChannelMode(User &user, std::vector<std::string> &arg,
 	size_t i = 0;
 	std::string mode_str = arg.at(1);
 	if (!checkInvalidSignsCount(mode_str)) {
-		std::cerr << error_.ERR_UMODEUNKNOWNFLAG(mode_str) << std::endl;
+		std::cerr << reply_.ERR_UMODEUNKNOWNFLAG(mode_str) << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  error_.ERR_UMODEUNKNOWNFLAG(mode_str));
+									  reply_.ERR_UMODEUNKNOWNFLAG(mode_str));
 		return;
 	}
 	ModeAction mode_action = checkModeAction(mode_str);
 	if ((mode_action == Command::setMode ||
 		 mode_action == Command::unsetMode) &&
 		!ch.isChannelOperator(user.getFd())) {
-		std::cerr << error_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
 		this->server_.sendMsgToClient(
-			user.getFd(), error_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+			user.getFd(), reply_.ERR_CHANOPRIVSNEEDED(ch.getName()));
 		return;
 	}
 	if (mode_action == Command::setMode || mode_action == Command::unsetMode) {
@@ -443,11 +443,11 @@ void Command::handleChannelMode(User &user, std::vector<std::string> &arg,
 		char mode_type = mode_str[i];
 		ModeFunction mode_func = this->mode_map_[mode_type];
 		if (!mode_func) {
-			std::cerr << error_.ERR_UNKNOWNMODE(std::string(1, mode_type),
+			std::cerr << reply_.ERR_UNKNOWNMODE(std::string(1, mode_type),
 												ch.getName())
 					  << std::endl;
 			this->server_.sendMsgToClient(
-				user.getFd(), error_.ERR_UNKNOWNMODE(std::string(1, mode_type),
+				user.getFd(), reply_.ERR_UNKNOWNMODE(std::string(1, mode_type),
 													 ch.getName()));
 			continue;
 		}

@@ -7,9 +7,9 @@ void Command::INVITE(User &user, std::vector<std::string> &arg) {
 		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");
 		return;
 	} else if (this->arg_.empty() || this->arg_.size() == 1) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("INVITE") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("INVITE") << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NEEDMOREPARAMS("INVITE"));
+								reply_.ERR_NEEDMOREPARAMS("INVITE"));
 		return;
 	} else if (this->arg_.size() > 2) {
 		std::cerr << "INVITE: mode parameters are not required" << std::endl;
@@ -17,14 +17,14 @@ void Command::INVITE(User &user, std::vector<std::string> &arg) {
 			user.getFd(), "INVITE: mode parameters are not required");
 		return;
 	} else if (!this->server_.hasChannelName(this->arg_.at(1))) {
-		std::cerr << error_.ERR_NOSUCHCHANNEL(this->arg_.at(1)) << std::endl;
+		std::cerr << reply_.ERR_NOSUCHCHANNEL(this->arg_.at(1)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NOSUCHCHANNEL(this->arg_.at(1)));
+								reply_.ERR_NOSUCHCHANNEL(this->arg_.at(1)));
 		return;
 	} else if (!this->server_.isUser(this->arg_.at(0))) {
-		std::cerr << error_.ERR_NOSUCHNICK(this->arg_.at(0)) << std::endl;
+		std::cerr << reply_.ERR_NOSUCHNICK(this->arg_.at(0)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NOSUCHNICK(this->arg_.at(0)));
+								reply_.ERR_NOSUCHNICK(this->arg_.at(0)));
 		return;
 	}
 	const Channel &invite_ch = this->server_.getChannel(this->arg_.at(1));
@@ -37,9 +37,9 @@ void Command::INVITE(User &user, std::vector<std::string> &arg) {
 		return;
 	} else if (invite_ch.hasMode(Channel::i) &&
 			   !invite_ch.isChannelOperator(user.getFd())) {
-		std::cerr << error_.ERR_CHANOPRIVSNEEDED(this->arg_.at(1)) << std::endl;
+		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(this->arg_.at(1)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_CHANOPRIVSNEEDED(this->arg_.at(1)));
+								reply_.ERR_CHANOPRIVSNEEDED(this->arg_.at(1)));
 		return;
 	} else if (invite_ch.isChannelUser(invite_user.getFd())) {
 		std::cerr << invite_user.getNickName() << " " << invite_ch.getName()

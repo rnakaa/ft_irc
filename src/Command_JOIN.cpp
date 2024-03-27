@@ -69,20 +69,20 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 	} else if (join_ch.hasMode(Channel::i) &&
 			   !join_ch.isInvitedUser(user.getFd())) {
 
-		std::cerr << error_.ERR_INVITEONLYCHAN(ch_name) << std::endl;
+		std::cerr << reply_.ERR_INVITEONLYCHAN(ch_name) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_INVITEONLYCHAN(ch_name));
+								reply_.ERR_INVITEONLYCHAN(ch_name));
 		return;
 	} else if (static_cast<ssize_t>(join_ch.getJoinedUserCount()) ==
 			   join_ch.getMaxUsers()) {
-		std::cerr << error_.ERR_CHANNELISFULL(ch_name) << std::endl;
+		std::cerr << reply_.ERR_CHANNELISFULL(ch_name) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_CHANNELISFULL(ch_name));
+								reply_.ERR_CHANNELISFULL(ch_name));
 		return;
 	} else if (join_ch.getPass() != ch_key) {
-		std::cerr << error_.ERR_BADCHANNELKEY(ch_name) << std::endl;
+		std::cerr << reply_.ERR_BADCHANNELKEY(ch_name) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_BADCHANNELKEY(ch_name));
+								reply_.ERR_BADCHANNELKEY(ch_name));
 		return;
 	}
 	user.setChannel(join_ch);
@@ -120,9 +120,9 @@ void Command::handleChannelRequests(std::queue<std::string> &ch_queue,
 		ch_key = "";
 	}
 	if (!checkValidChannel(ch_name)) {
-		std::cerr << error_.ERR_NOSUCHCHANNEL(ch_name) << std::endl;
+		std::cerr << reply_.ERR_NOSUCHCHANNEL(ch_name) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NOSUCHCHANNEL(ch_name));
+								reply_.ERR_NOSUCHCHANNEL(ch_name));
 		return;
 	}
 	if (this->server_.hasChannelName(ch_name)) {
@@ -157,9 +157,9 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");
 		return;
 	} else if (arg.empty()) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NEEDMOREPARAMS("JOIN"));
+								reply_.ERR_NEEDMOREPARAMS("JOIN"));
 		return;
 	}
 	if (arg.at(0) == "0") {
@@ -176,9 +176,9 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 		return;
 	}
 	if (!checkValidArg(ch_queue, key_queue)) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("JOIN") << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NEEDMOREPARAMS("JOIN"));
+								reply_.ERR_NEEDMOREPARAMS("JOIN"));
 		return;
 	}
 	while (ch_queue.size() > 0) {
