@@ -9,10 +9,12 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["USER"] = &Command::USER;
 	this->commands_map_["MODE"] = &Command::MODE;
 	this->commands_map_["PRIVMSG"] = &Command::PRIVMSG;
+	this->commands_map_["INVITE"] = &Command::INVITE;
 	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
 	this->mode_map_['o'] = &Command::handleChannelOperator;
 	this->mode_map_['k'] = &Command::handleChannelKey;
 	this->mode_map_['l'] = &Command::handleLimitedUserNum;
+	this->mode_map_['i'] = &Command::handleInviteOnly;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 

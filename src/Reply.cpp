@@ -31,20 +31,20 @@ std::string Reply::ERR_NICKCOLLISION(const std::string &nick) const {
 std::string Reply::ERR_NOTSETPASS() const { return ":Pass is not yet set."; }
 
 std::string Reply::ERR_NOSUCHCHANNEL(const std::string &ch_name) const {
-	return ch_name + ":No such chaanel";
+	return ch_name + " :No such channel";
 }
 
 std::string Reply::ERR_BADCHANNELKEY(const std::string &ch_name) const {
-	return ch_name + ":Cannot join channel (+k)";
+	return ch_name + " :Cannot join channel (+k)";
 }
 
 std::string Reply::ERR_CHANOPRIVSNEEDED(const std::string &ch_name) const {
-	return ch_name + ":You're not channel operator";
+	return ch_name + " :You're not channel operator";
 }
 
 std::string Reply::ERR_UNKNOWNMODE(const std::string &c,
 								   const std::string &ch_name) const {
-	return c + ":is unknown mode char to me for " + ch_name;
+	return c + " :is unknown mode char to me for " + ch_name;
 }
 
 std::string Reply::ERR_NOPRIVILEGES() const {
@@ -52,7 +52,7 @@ std::string Reply::ERR_NOPRIVILEGES() const {
 }
 
 std::string Reply::ERR_UMODEUNKNOWNFLAG(const std::string &mode_flag) const {
-	return mode_flag + ":Unknown MODE flag";
+	return mode_flag + " :Unknown MODE flag";
 }
 
 std::string Reply::ERR_USERNOTINCHANNEL(const std::string &nick_name,
@@ -75,4 +75,8 @@ std::string Reply::ERR_CHANNELISFULL(const std::string &ch_name) const {
 
 std::string Reply::ERR_TOOMANYPARAMS(const std::string &command) const {
 	return command + " :too many params";
+}
+
+std::string Reply::ERR_INVITEONLYCHAN(const std::string &ch_name) const {
+	return ch_name + " :Cannot join channel (+i)";
 }
