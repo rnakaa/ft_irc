@@ -333,57 +333,6 @@ void Command::handleLimitedUnsetMode(User &user, const Channel &ch) {
 		user.getFd(), ch.getName() + " remove a limit of the max users");
 }
 
-// mode "t":Set/remove the restrictions of the TOPIC command to channel
-// operators
-void Command::handleTopicOnlyOperator(const ModeAction mode_action, User &user,
-									  const Channel &ch) {
-	if (!ch.isChannelOperator(user.getFd())) {
-		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
-		this->server_.sendMsgToClient(
-			user.getFd(), reply_.ERR_CHANOPRIVSNEEDED(ch.getName()));
-		return;
-	} else if (this->arg_.size() > 2) {
-		std::cerr << reply_.ERR_TOOMANYPARAMS("Mode t flag") << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  reply_.ERR_TOOMANYPARAMS("Mode t flag"));
-		return;
-	} else if (this->arg_.size() < 2) {
-		std::cerr << reply_.ERR_NEEDMOREPARAMS("Mode t flag") << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  reply_.ERR_NEEDMOREPARAMS("Mode t flag"));
-		return;
-	} else if (mode_action == Command::queryMode) {
-		std::cerr << reply_.ERR_UMODEUNKNOWNFLAG("t") << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  reply_.ERR_UMODEUNKNOWNFLAG("t"));
-		return;
-	}
-	if (mode_action == Command::setMode) {
-		if (ch.hasMode(Channel::t)) {
-			std::cerr << ch.getName() << " is already set t mode" << std::endl;
-			this->server_.sendMsgToClient(
-				user.getFd(), ch.getName() + " is already set t mode");
-			return;
-		}
-		const_cast<Channel &>(ch).setMode(Channel::t);
-		std::cout << ch.getName() << " is now set t mode" << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  ch.getName() + " is now set t mode");
-	} else {
-		if (!ch.hasMode(Channel::t)) {
-			std::cerr << ch.getName() << " is already not set t mode"
-					  << std::endl;
-			this->server_.sendMsgToClient(
-				user.getFd(), ch.getName() + " is already not set t mode");
-			return;
-		}
-		const_cast<Channel &>(ch).unsetMode(Channel::t);
-		std::cout << ch.getName() << " is now unset t mode" << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  ch.getName() + " is now unset t mode");
-	}
-}
-
 // mode "i":set/remove Invite-only channel
 void Command::handleInviteOnly(const ModeAction mode_action, User &user,
 							   const Channel &ch) {

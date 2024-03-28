@@ -40,7 +40,8 @@ void Command::QUIT(User &user, std::vector<std::string> &arg) {
 	}
 	quitAllChannels(user, broadcast_msg);
 	// send error message to client?
-	this->server_.removeUser(user.getFd());
-	this->server_.removePollfd(user.getFd());
-	close(user.getFd());
+	const int fd = user.getFd();
+	this->server_.removeUser(fd);
+	this->server_.removePollfd(fd);
+	close(fd);
 }

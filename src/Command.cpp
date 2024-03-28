@@ -16,7 +16,6 @@ Command::Command(Server &server) : server_(server) {
 	this->mode_map_['l'] = &Command::handleLimitedUserNum;
 	this->mode_map_['l'] = &Command::handleLimitedUserNum;
 	this->mode_map_['i'] = &Command::handleInviteOnly;
-	this->mode_map_['t'] = &Command::handleTopicOnlyOperator;
 	// std::cout << "server pass is" << server_.getPass() << std::endl;
 }
 
