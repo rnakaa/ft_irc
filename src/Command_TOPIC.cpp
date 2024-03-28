@@ -31,7 +31,7 @@ void Command::TOPIC(User &user, std::vector<std::string> &arg) {
 	} else if (arg.size() == 2 && arg.at(1)[0] == ':') {
 		removeChannelTopic(user, topic_ch);
 	} else {
-		// setChannelTopic();
+		setChannelTopic(user, topic_ch);
 	}
 }
 
@@ -62,4 +62,29 @@ void Command::removeChannelTopic(User &user, const Channel &topic_ch) {
 			user.getFd(),
 			reply_.RPL_TOPIC(topic_ch.getName(), topic_ch.getTopicStr()));
 	}
+}
+
+void Command::setChannelTopic(User &user, const Channel &topic_ch) {
+	std::string topic_msg;
+	// if (this->arg_.at(1)[0] == ':') {
+	// 	topic_msg += this->arg_.at(1).substr(1);
+	// } else {
+	// 	topic_msg += this->arg_.at(1);
+	// }
+	for (size_t i = 1; i < this->arg_.size(); ++i) {
+		if (i == 1 && this->arg_.at(i)[0] == ':') {
+			topic_msg += this->arg_.at(1).substr(1);
+		} else {
+			topic_msg += this->arg_.at(i);
+		}
+		if (i < this->arg_.size() - 1) {
+			topic_msg += " ";
+		}
+	}
+	std::cout << "topic_msg: " << topic_msg << std::endl;
+	const_cast<Channel &>(topic_ch).setTopicStr(topic_msg);
+	std::cout << reply_.RPL_TOPIC(topic_ch.getName(), topic_ch.getTopicStr());
+	this->server_.sendMsgToClient(
+		user.getFd(),
+		reply_.RPL_TOPIC(topic_ch.getName(), topic_ch.getTopicStr()));
 }
