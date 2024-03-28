@@ -94,6 +94,11 @@ class Command {
 	// INVITE
 	void INVITE(User &user, std::vector<std::string> &arg);
 
+	// TOPIC
+	void TOPIC(User &user, std::vector<std::string> &arg);
+	void queryChannelTopic(User &user, const Channel &topic_ch);
+	void removeChannelTopic(User &user, const Channel &topic_ch);
+
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
 	void handleChannelMode(User &user, std::vector<std::string> &arg,

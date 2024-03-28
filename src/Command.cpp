@@ -9,6 +9,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["JOIN"] = &Command::JOIN;
 	this->commands_map_["MODE"] = &Command::MODE;
 	this->commands_map_["INVITE"] = &Command::INVITE;
+	this->commands_map_["TOPIC"] = &Command::TOPIC;
 	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
 	this->mode_map_['o'] = &Command::handleChannelOperator;
 	this->mode_map_['k'] = &Command::handleChannelKey;

@@ -14,6 +14,7 @@
 
 class Reply {
   public:
+	// ERR
 	std::string ERR_NEEDMOREPARAMS(const std::string &command) const;
 	std::string ERR_ALREADYREGISTRED() const;
 	std::string ERR_PASSWDMISMATCH() const;
@@ -37,8 +38,14 @@ class Reply {
 	std::string ERR_CHANNELISFULL(const std::string &ch_name) const;
 	std::string ERR_INVITEONLYCHAN(const std::string &ch_name) const;
 
+	std::string ERR_NOTONCHANNEL(const std::string &ch_name) const;
+
+	// RPL
 	std::string RPL_WELCOME(const std::string &nick,
 							const std::string &user) const;
+	std::string RPL_NOTOPIC(const std::string &ch_name) const;
+	std::string RPL_TOPIC(const std::string &ch_name,
+						  const std::string &topic_str) const;
 };
 
 #endif
