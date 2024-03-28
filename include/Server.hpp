@@ -48,6 +48,8 @@ class Server {
 	void nicknameInsertLog(std::string nickname);
 
 	void removeChannel(const std::string &ch_name);
+	void removeUser(const int fd);
+	void removePollfd(const int fd);
 
 	void sendToChannelUser(std::string &ch_name, std::string &msg) const;
 
