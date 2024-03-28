@@ -1,27 +1,30 @@
 #include "Channel.hpp"
 
 Channel::Channel()
-	: ch_name_(""), ch_pass_(""), created_user_fd_(-1), max_users_(-1) {
+	: ch_name_(""), ch_pass_(""), mode_(none), created_user_fd_(-1),
+	  max_users_(-1) {
 	// std::cout << "Channel Constructor, ch_name_: " << this->ch_name_ <<
 	// std::endl;
 }
 
 Channel::Channel(const std::string &ch_name)
-	: ch_name_(ch_name), ch_pass_(""), created_user_fd_(-1), max_users_(-1) {
+	: ch_name_(ch_name), ch_pass_(""), mode_(none), created_user_fd_(-1),
+	  max_users_(-1) {
 	// std::cout << "Channel Constructor, ch_name_: " << this->ch_name_ <<
 	// std::endl;
 }
 
 Channel::Channel(const std::string &name, const std::string &pass)
-	: ch_name_(name), ch_pass_(pass), created_user_fd_(-1), max_users_(-1) {
+	: ch_name_(name), ch_pass_(pass), mode_(none), created_user_fd_(-1),
+	  max_users_(-1) {
 	// std::cout << "Channel Constructor, ch_name_: " << this->ch_name_ <<
 	// "ch_pass_: " << this->ch_pass_ << std::endl;
 }
 
 Channel::Channel(const std::string &name, const std::string &pass,
 				 const User &user)
-	: ch_name_(name), ch_pass_(pass), created_user_fd_(user.getFd()),
-	  max_users_(-1) {
+	: ch_name_(name), ch_pass_(pass), mode_(none),
+	  created_user_fd_(user.getFd()), max_users_(-1) {
 	setUser(user);
 	// std::cout << "Channel Constructor with user, ch_name_: " <<
 	// this->ch_name_
@@ -139,6 +142,7 @@ std::map<int, User *>::const_iterator Channel::getMapBeginIterator() const {
 std::map<int, User *>::const_iterator Channel::getMapEndIterator() const {
 	return this->ch_users_.end();
 }
+
 bool Channel::isChannelOperator(const int user_fd) const {
 	return std::find(this->ch_operators_.begin(), this->ch_operators_.end(),
 					 user_fd) != ch_operators_.end();
