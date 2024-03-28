@@ -182,12 +182,10 @@ void Server::removeChannel(const std::string &ch_name) {
 void Server::removeUser(const int fd) { this->user_map_.erase(fd); }
 
 void Server::removePollfd(const int fd) {
-	size_t i = 0;
-
-	for (std::vector<struct pollfd>::iterator it = pollfd_vec_.begin();
-		 it != pollfd_vec_.end(); ++it) {
-		if (it->fd == fd)
+	for (size_t i = 0; i < this->pollfd_vec_.size(); ++i) {
+		if (this->pollfd_vec_.at(i).fd == fd) {
 			this->pollfd_vec_.erase(pollfd_vec_.begin() + i);
+		}
 	}
 }
 
