@@ -1,13 +1,14 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include "Error.hpp"
+#include "Reply.hpp"
 #include "Server.hpp"
 #include "User.hpp"
 #include <arpa/inet.h>
 #include <cctype>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <queue>
 #include <set>
@@ -17,7 +18,7 @@
 
 class Server;
 class User;
-class Error;
+class Reply;
 
 class Command {
   public:
@@ -28,7 +29,7 @@ class Command {
 	enum ModeAction { setMode, unsetMode, queryMode };
 
 	Server &server_;
-	Error error_;
+	Reply reply_;
 	std::string command_name_;
 	std::vector<std::string> arg_;
 	std::string recv_message_;
@@ -38,7 +39,6 @@ class Command {
 	typedef void (Command::*ModeFunction)(const ModeAction, User &,
 										  const Channel &);
 	std::map<char, ModeFunction> mode_map_;
-	std::set<std::string> nickname_log_;
 
   private:
 	void parseClientMessage(const std::string &message);
@@ -83,8 +83,10 @@ class Command {
 	std::string extractRealName(std::vector<std::string> &arg) const;
 	std::string substrRealName(size_t i) const;
 
+	// INVITE
+	void INVITE(User &user, std::vector<std::string> &arg);
+
 	void TEST(User &user, std::vector<std::string> &arg);
-	// void MOD(User &user, std::vector<std::string> &arg);
 
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
@@ -106,9 +108,25 @@ class Command {
 	// mode 'k'
 	void handleChannelKey(const ModeAction mode_action, User &user,
 						  const Channel &ch);
-	void handleQueryMode(User &user, const Channel &ch);
-	void handleSetMode(User &user, const Channel &ch);
-	void handleUnsetMode(User &user, const Channel &ch);
+	void handleKeyQueryMode(User &user, const Channel &ch);
+	void handleKeySetMode(User &user, const Channel &ch);
+	void handleKeyUnsetMode(User &user, const Channel &ch);
+	// mode 'l'
+	void handleLimitedUserNum(const ModeAction mode_action, User &user,
+							  const Channel &ch);
+	void handleLimitedQueryMode(User &user, const Channel &ch);
+	void handleLimitedSetMode(User &user, const Channel &ch);
+	void handleLimitedUnsetMode(User &user, const Channel &ch);
+	// PRIVMSG
+	void PRIVMSG(User &user, std::vector<std::string> &arg);
+	void sendMessage(User &user, const std::string &dsn,
+					 const std::string &msg);
+	// mode 'i'
+	void handleInviteOnly(const ModeAction mode_action, User &user,
+						  const Channel &ch);
+	void queryInviteOnly(User &user, const Channel &ch);
+	void setInviteOnly(User &user, const Channel &ch);
+	void unsetInviteOnly(User &user, const Channel &ch);
 };
 
 #endif

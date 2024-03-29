@@ -230,7 +230,9 @@ void Server::nicknameInsertLog(std::string nickname) {
 	this->nickname_log_.insert(nickname);
 }
 
-void Server::sendToChannelUser(std::string &ch_name, std::string &msg) const {
+void Server::sendToChannelUser(std::string &ch_name,
+							   const std::string &msg) const {
+	std::cout << "start sendToChannelUser" << std::endl;
 	if (!hasChannelName(ch_name))
 		return;
 	const Channel &ch = getChannel(ch_name);
@@ -250,25 +252,6 @@ bool Server::isUser(const std::string &nickname) const {
 		}
 	}
 	return false;
-}
-
-std::string Server::getWelcomeMessage(const std::string &nickname,
-									  const std::string &username) {
-	std::string result;
-	char dateStr[100];
-	std::time_t t = std::time(nullptr);
-	std::strftime(dateStr, sizeof(dateStr), "%b %d", std::localtime(&t));
-	// std::string date = std::put_time(std::localtime(&t), "%b %d");
-
-	std::ostringstream ss;
-	ss << "001 " << nickname << " :Welcome to the Internet Relay Network \r\n"
-	   << nickname << "!" << username << "@localhost\r\n"
-	   << "002 Your host is localhost, running version 2.0\r\n"
-	   << "003 This server was created "
-	   << std::put_time(std::localtime(&t), "%b %d") << "\r\n"
-	   << "004 localhost 2.0 aiwroOs aimnqpsrtklbeI\r\n";
-	result = ss.str();
-	return result;
 }
 
 Server::~Server() {}

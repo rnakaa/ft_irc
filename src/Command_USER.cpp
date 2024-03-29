@@ -30,25 +30,26 @@ std::string Command::extractRealName(std::vector<std::string> &arg) const {
 
 void Command::USER(User &user, std::vector<std::string> &arg) {
 	if (user.getAuthFlags() == User::NONE_AUTH) {
-		std::cerr << error_.ERR_NOTSETPASS() << std::endl;
-		server_.sendMsgToClient(user.getFd(), error_.ERR_NOTSETPASS());
+		std::cerr << reply_.ERR_NOTSETPASS() << std::endl;
+		server_.sendMsgToClient(user.getFd(), reply_.ERR_NOTSETPASS());
 	} else if (arg.size() < 4) {
-		std::cerr << error_.ERR_NEEDMOREPARAMS("USER") << std::endl;
+		std::cerr << reply_.ERR_NEEDMOREPARAMS("USER") << std::endl;
 		server_.sendMsgToClient(user.getFd(),
-								error_.ERR_NEEDMOREPARAMS("USER"));
+								reply_.ERR_NEEDMOREPARAMS("USER"));
 	} else if (user.isUsernameSet()) {
-		std::cerr << error_.ERR_ALREADYREGISTRED() << std::endl;
-		server_.sendMsgToClient(user.getFd(), error_.ERR_ALREADYREGISTRED());
+		std::cerr << reply_.ERR_ALREADYREGISTRED() << std::endl;
+		server_.sendMsgToClient(user.getFd(), reply_.ERR_ALREADYREGISTRED());
 	} else {
 		user.setUsername(arg.at(0));
 		user.setRealName(extractRealName(arg));
 		if (user.getAuthFlags() == User::NICK_AUTH) {
 			user.setAuthFlags(User::ALL_AUTH);
 			server_.sendMsgToClient(
-				user.getFd(), server_.getWelcomeMessage(user.getNickName(),
-														user.getUserName()));
+				user.getFd(),
+				reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 		} else {
 			user.setAuthFlags(User::USER_AUTH);
+			server_.sendMsgToClient(user.getFd(), "USER name success");
 		}
 		std::cout << user.getAuthFlags() << std::endl;
 	}
