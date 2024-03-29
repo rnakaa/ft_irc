@@ -66,6 +66,8 @@ const std::vector<std::string> Channel::getInvitedUsersNickName() const {
 
 const ssize_t &Channel::getMaxUsers() const { return this->max_users_; }
 
+const std::string &Channel::getTopicStr() const { return this->topic_str_; }
+
 void Channel::setUser(const User &user) {
 	// this->ch_users_.insert(std::make_pair(user.getFd(), &user));
 	this->ch_users_[user.getFd()] = const_cast<User *>(&user);
@@ -82,6 +84,8 @@ void Channel::setMaxUsers(const int max_users) { this->max_users_ = max_users; }
 void Channel::setInvitedUser(const int user_fd) {
 	this->invited_users_.push_back(user_fd);
 }
+
+void Channel::setTopicStr(const std::string &str) { this->topic_str_ = str; }
 
 void Channel::removeChannelOperator(const int user_fd) {
 	for (std::vector<int>::iterator it = this->ch_operators_.begin();

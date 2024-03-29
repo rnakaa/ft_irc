@@ -94,6 +94,12 @@ class Command {
 	// INVITE
 	void INVITE(User &user, std::vector<std::string> &arg);
 
+	// TOPIC
+	void TOPIC(User &user, std::vector<std::string> &arg);
+	void queryChannelTopic(User &user, const Channel &topic_ch);
+	void removeChannelTopic(User &user, const Channel &topic_ch);
+	void setChannelTopic(User &user, const Channel &topic_ch);
+
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
 	void handleChannelMode(User &user, std::vector<std::string> &arg,
@@ -133,6 +139,9 @@ class Command {
 	void queryInviteOnly(User &user, const Channel &ch);
 	void setInviteOnly(User &user, const Channel &ch);
 	void unsetInviteOnly(User &user, const Channel &ch);
+	// mode 't'
+	void handleTopicOnlyOperator(const ModeAction mode_action, User &user,
+								 const Channel &ch);
 };
 
 #endif
