@@ -100,6 +100,9 @@ class Command {
 	void removeChannelTopic(User &user, const Channel &topic_ch);
 	void setChannelTopic(User &user, const Channel &topic_ch);
 
+	// OPER
+	void OPER(User &user, std::vector<std::string> &arg);
+
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
 	void handleChannelMode(User &user, std::vector<std::string> &arg,

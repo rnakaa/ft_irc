@@ -95,3 +95,7 @@ std::string Reply::RPL_TOPIC(const std::string &ch_name,
 							 const std::string &topic_str) const {
 	return ch_name + " :" + topic_str;
 }
+
+std::string Reply::RPL_YOUREOPER() const {
+	return ":You are now an IRC operator";
+}

@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server(const int argc, const char **argv) {
+Server::Server(const int argc, const char **argv) : oper_pass_("password") {
 	try {
 		checkValidArgc(argc);
 		checkValidPort(argv[1]);
@@ -210,6 +210,8 @@ const User &Server::getUser(const std::string &nickname) const {
 	}
 	throw std::runtime_error("cannot find user");
 }
+
+const std::string &Server::getOperPass() const { return this->oper_pass_; }
 
 void Server::setChannel(const std::string &ch_name, const Channel &ch) {
 	this->ch_map_.insert(std::make_pair(ch_name, ch));
