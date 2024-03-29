@@ -1,30 +1,34 @@
 #include "Command.hpp"
 #include <cctype> //isspace
 
-std::string Command::substrRealName(size_t i) const {
+std::string Command::substrAfterColon(size_t i) const {
 	size_t recv_size = recv_message_.size();
 	if (recv_message_[recv_size - 1] == '\n')
 		return recv_message_.substr(i + 1, recv_size - i - 2);
 	return recv_message_.substr(i + 1, std::string::npos);
 }
 
-std::string Command::extractRealName(std::vector<std::string> &arg) const {
+std::string Command::extractAfterColon(int words_to_skip) const {
 	size_t i;
 	int word_count = 0;
+
+	for (i = 0; this->recv_message_[i]; i++) {
+		while (!std::isspace(this->recv_message_[i]))
+			i++;
+		word_count++;
+		while (std::isspace(this->recv_message_[i]))
+			i++;
+		if (word_count == words_to_skip)
+			break;
+	}
+	return substrAfterColon(i);
+}
+
+std::string Command::extractRealName(std::vector<std::string> &arg) const {
 	std::string realname = arg.at(3);
 
-	if (realname[0] == ':') {
-		for (i = 0; this->recv_message_[i]; i++) {
-			while (!std::isspace(this->recv_message_[i]))
-				i++;
-			word_count++;
-			while (std::isspace(this->recv_message_[i]))
-				i++;
-			if (word_count == 4)
-				break;
-		}
-		realname = substrRealName(i);
-	}
+	if (realname[0] == ':')
+		realname = extractAfterColon(4);
 	return realname;
 }
 

@@ -81,12 +81,24 @@ class Command {
 	// USER
 	void USER(User &user, std::vector<std::string> &arg);
 	std::string extractRealName(std::vector<std::string> &arg) const;
-	std::string substrRealName(size_t i) const;
+	std::string extractAfterColon(int words_to_skip) const;
+	std::string substrAfterColon(size_t i) const;
+
+	// QUIT
+	void QUIT(User &user, std::vector<std::string> &arg);
+	void quitAllChannels(User &user, std::string broadcast_msg);
+
+	// TEST
+	void TEST(User &user, std::vector<std::string> &arg);
 
 	// INVITE
 	void INVITE(User &user, std::vector<std::string> &arg);
 
-	void TEST(User &user, std::vector<std::string> &arg);
+	// TOPIC
+	void TOPIC(User &user, std::vector<std::string> &arg);
+	void queryChannelTopic(User &user, const Channel &topic_ch);
+	void removeChannelTopic(User &user, const Channel &topic_ch);
+	void setChannelTopic(User &user, const Channel &topic_ch);
 
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
@@ -127,6 +139,9 @@ class Command {
 	void queryInviteOnly(User &user, const Channel &ch);
 	void setInviteOnly(User &user, const Channel &ch);
 	void unsetInviteOnly(User &user, const Channel &ch);
+	// mode 't'
+	void handleTopicOnlyOperator(const ModeAction mode_action, User &user,
+								 const Channel &ch);
 };
 
 #endif

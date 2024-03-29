@@ -183,6 +183,16 @@ void Server::removeChannel(const std::string &ch_name) {
 	std::cout << "remove Channel: " << ch_name << std::endl;
 }
 
+void Server::removeUser(const int fd) { this->user_map_.erase(fd); }
+
+void Server::removePollfd(const int fd) {
+	for (size_t i = 0; i < this->pollfd_vec_.size(); ++i) {
+		if (this->pollfd_vec_.at(i).fd == fd) {
+			this->pollfd_vec_.erase(pollfd_vec_.begin() + i);
+		}
+	}
+}
+
 void Server::exit_error(const std::string &func,
 						const std::string &err_msg) const {
 	std::cerr << "ERROR: " << func << ": " << err_msg << std::endl;

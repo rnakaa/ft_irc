@@ -80,7 +80,6 @@ std::string Reply::RPL_WELCOME(const std::string &nickname,
 	result = ss.str();
 	return result;
 }
-
 std::string Reply::ERR_CHANNELISFULL(const std::string &ch_name) const {
 	return ch_name + " :Cannot join channel (+l)";
 }
@@ -91,4 +90,24 @@ std::string Reply::ERR_TOOMANYPARAMS(const std::string &command) const {
 
 std::string Reply::ERR_INVITEONLYCHAN(const std::string &ch_name) const {
 	return ch_name + " :Cannot join channel (+i)";
+}
+
+std::string Reply::ERR_NOTONCHANNEL(const std::string &ch_name) const {
+	return ch_name + " :You're not on that channel";
+}
+
+// RPL
+
+std::string Reply::RPL_WELCOME(const std::string &nick,
+							   const std::string &user) const {
+	return "Welcome to the Internet Relay Network " + nick + "!" + user + "@";
+}
+
+std::string Reply::RPL_NOTOPIC(const std::string &ch_name) const {
+	return ch_name + " :No topic is set";
+}
+
+std::string Reply::RPL_TOPIC(const std::string &ch_name,
+							 const std::string &topic_str) const {
+	return ch_name + " :" + topic_str;
 }
