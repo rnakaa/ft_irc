@@ -51,6 +51,7 @@ class User {
 	void setRealName(const std::string &real_name);
 	bool isUsernameSet() const;
 	void setMode(const enum UserMode mode);
+	void unsetMode(const enum UserMode mode);
 	bool hasMode(const enum UserMode mode) const;
 	void setChannel(const Channel &ch);
 

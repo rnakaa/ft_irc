@@ -105,8 +105,8 @@ class Command {
 
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
-	void handleChannelMode(User &user, std::vector<std::string> &arg,
-						   const Channel &ch_name);
+	void handleChannelMode(User &user, std::vector<std::string> &arg);
+	void handleUserMode(User &user, std::vector<std::string> &arg);
 	ModeAction checkModeAction(const std::string &mode_str) const;
 	bool checkModeType(const char c) const;
 	bool checkInvalidSignsCount(const std::string &mode_str);
