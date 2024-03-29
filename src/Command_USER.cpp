@@ -38,6 +38,8 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_NOTSETPASS());
 		return;
 	} else if (user.getAuthFlags() == User::ALL_AUTH) {
+		std::cerr << reply_.ERR_ALREADYREGISTRED() << std::endl;
+		server_.sendMsgToClient(user.getFd(), reply_.ERR_ALREADYREGISTRED());
 		return;
 	} else if (arg.size() < 4) {
 		std::cerr << reply_.ERR_NEEDMOREPARAMS("USER") << std::endl;
