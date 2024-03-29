@@ -35,6 +35,8 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_NOTSETPASS());
 		return;
 	} else if (user.getAuthFlags() == User::ALL_AUTH) {
+		std::cerr << reply_.ERR_ALREADYREGISTRED() << std::endl;
+		server_.sendMsgToClient(user.getFd(), reply_.ERR_ALREADYREGISTRED());
 		return;
 	} else if (arg.size() >= 2) {
 		std::cerr << reply_.ERR_TOOMANYPARAMS("NICK") << std::endl;
