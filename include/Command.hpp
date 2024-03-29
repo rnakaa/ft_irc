@@ -123,6 +123,10 @@ class Command {
 	void handleLimitedQueryMode(User &user, const Channel &ch);
 	void handleLimitedSetMode(User &user, const Channel &ch);
 	void handleLimitedUnsetMode(User &user, const Channel &ch);
+	// PRIVMSG
+	void PRIVMSG(User &user, std::vector<std::string> &arg);
+	void sendMessage(User &user, const std::string &dsn,
+					 const std::string &msg);
 	// mode 'i'
 	void handleInviteOnly(const ModeAction mode_action, User &user,
 						  const Channel &ch);
