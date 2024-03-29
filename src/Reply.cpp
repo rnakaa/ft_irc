@@ -98,11 +98,6 @@ std::string Reply::ERR_NOTONCHANNEL(const std::string &ch_name) const {
 
 // RPL
 
-std::string Reply::RPL_WELCOME(const std::string &nick,
-							   const std::string &user) const {
-	return "Welcome to the Internet Relay Network " + nick + "!" + user + "@";
-}
-
 std::string Reply::RPL_NOTOPIC(const std::string &ch_name) const {
 	return ch_name + " :No topic is set";
 }
