@@ -32,13 +32,18 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 	if (user.getAuthFlags() == User::NONE_AUTH) {
 		std::cerr << reply_.ERR_NOTSETPASS() << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_NOTSETPASS());
+		return;
+	} else if (user.getAuthFlags() == User::ALL_AUTH) {
+		return;
 	} else if (arg.size() < 4) {
 		std::cerr << reply_.ERR_NEEDMOREPARAMS("USER") << std::endl;
 		server_.sendMsgToClient(user.getFd(),
 								reply_.ERR_NEEDMOREPARAMS("USER"));
+		return;
 	} else if (user.isUsernameSet()) {
 		std::cerr << reply_.ERR_ALREADYREGISTRED() << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_ALREADYREGISTRED());
+		return;
 	} else {
 		user.setUsername(arg.at(0));
 		user.setRealName(extractRealName(arg));

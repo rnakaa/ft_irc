@@ -34,6 +34,8 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 		std::cerr << reply_.ERR_NOTSETPASS() << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_NOTSETPASS());
 		return;
+	} else if (user.getAuthFlags() == User::ALL_AUTH) {
+		return;
 	} else if (arg.size() >= 2) {
 		std::cerr << reply_.ERR_TOOMANYPARAMS("NICK") << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_TOOMANYPARAMS("NICK"));
@@ -53,21 +55,17 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 		return;
 	}
 
-	convertToScandinavian(
-		arg.at(0)); // スカンディナビアンを満たすように文字列を変更
+	convertToScandinavian(arg.at(0));
 
-	if (!isalpha(arg.at(0)[0]) &&
-		!isSpecial(arg.at(0)[0])) // 最初の文字のチェック
-	{
+	if (!isalpha(arg.at(0)[0]) && !isSpecial(arg.at(0)[0])) {
 		std::cerr << reply_.ERR_ERRONEUSNICKNAME(arg.at(0)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
 								reply_.ERR_ERRONEUSNICKNAME(arg.at(0)));
-	} else if (!checkStringValidity(arg.at(0))) { // 最初の文字以外のチェック
+	} else if (!checkStringValidity(arg.at(0))) {
 		std::cerr << reply_.ERR_ERRONEUSNICKNAME(arg.at(0)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
 								reply_.ERR_ERRONEUSNICKNAME(arg.at(0)));
-	} else if (server_.nicknameExist(arg.at(
-				   0))) { // ニックネームが既に登録されているかどうかの確認
+	} else if (server_.nicknameExist(arg.at(0))) {
 		std::cerr << reply_.ERR_NICKCOLLISION(arg.at(0)) << std::endl;
 		server_.sendMsgToClient(user.getFd(),
 								reply_.ERR_NICKCOLLISION(arg.at(0)));
