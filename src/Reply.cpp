@@ -99,3 +99,9 @@ std::string Reply::RPL_TOPIC(const std::string &ch_name,
 std::string Reply::RPL_YOUREOPER() const {
 	return ":You are now an IRC operator";
 }
+
+std::string Reply::RPL_KILL(const std::string &nick,
+							const std::string &killed_user,
+							const std::string &kill_str) const {
+	return nick + " use KILL command to " + killed_user + ": " + kill_str;
+}

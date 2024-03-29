@@ -12,6 +12,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["INVITE"] = &Command::INVITE;
 	this->commands_map_["TOPIC"] = &Command::TOPIC;
 	this->commands_map_["OPER"] = &Command::OPER;
+	this->commands_map_["KILL"] = &Command::KILL;
 	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
 	this->mode_map_['o'] = &Command::handleChannelOperator;
 	this->mode_map_['k'] = &Command::handleChannelKey;

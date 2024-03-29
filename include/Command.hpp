@@ -103,6 +103,9 @@ class Command {
 	// OPER
 	void OPER(User &user, std::vector<std::string> &arg);
 
+	// KILL
+	void KILL(User &user, std::vector<std::string> &arg);
+
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
 	void handleChannelMode(User &user, std::vector<std::string> &arg);
