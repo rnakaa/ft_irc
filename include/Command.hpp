@@ -24,6 +24,7 @@ class Command {
   public:
 	Command(Server &server);
 	void handleCommand(User &user, std::string &message);
+	void quitAllChannels(User &user, std::string broadcast_msg);
 
   private:
 	enum ModeAction { setMode, unsetMode, queryMode };
@@ -55,12 +56,12 @@ class Command {
 					 std::vector<std::string> &key_vec);
 	bool checkValidChannel(const std::vector<std::string> &ch_vec,
 						   const std::vector<std::string> &key_vec);
+	void exitAllChannels(User &user);
 	// void joinChannel(const size_t i, std::vector<std::string> &ch_vec,
 	// 				 std::vector<std::string> &key_vec);
 	void joinChannel(const std::string &ch_name, User &user);
 	void createChannel(const size_t i, std::vector<std::string> &ch_vec,
 					   std::vector<std::string> &key_vec);
-	void exitAllChannels(User &user);
 	// NICK
 	void NICK(User &user, std::vector<std::string> &arg);
 	bool containsNickname(const std::string &nickname) const;
@@ -86,7 +87,6 @@ class Command {
 
 	// QUIT
 	void QUIT(User &user, std::vector<std::string> &arg);
-	void quitAllChannels(User &user, std::string broadcast_msg);
 
 	// TEST
 	void TEST(User &user, std::vector<std::string> &arg);

@@ -151,8 +151,13 @@ std::string Server::recvCmdFromClient(const size_t i) {
 	} else if (recv_size == 0) {
 		std::cout << "finish connection from client[" << this->pollfd_vec_[i].fd
 				  << "]" << std::endl;
-		close(this->pollfd_vec_[i].fd);
-		this->user_map_.erase(pollfd_vec_[i].fd);
+		Command cmd(*this);
+		User &user = user_map_[this->pollfd_vec_[i].fd];
+		const int fd = user.getFd();
+		cmd.quitAllChannels(user,
+							"finish connection from " + user.getNickName());
+		close(fd);
+		this->user_map_.erase(fd);
 		this->pollfd_vec_.erase(this->pollfd_vec_.begin() + i);
 		throw std::runtime_error("finish connection from client");
 	}
