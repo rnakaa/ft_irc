@@ -254,6 +254,23 @@ void Server::sendToChannelUser(const std::string &ch_name,
 	}
 }
 
+void Server::sendToChannelUser(const std::string &ch_name, const User &user,
+							   const std::string &msg) const {
+	std::cout << "start sendToChannelUser" << std::endl;
+	if (!hasChannelName(ch_name))
+		return;
+	const std::string send_msg = ":" + user.getNickName() + "!" +
+								 user.getUserName() + "ft_ircserver" +
+								 " PRIVMSG " + ch_name + ":" + msg;
+	const Channel &ch = getChannel(ch_name);
+	std::map<int, User *>::const_iterator iter =
+		const_cast<Channel &>(ch).getMapBeginIterator();
+	while (iter != const_cast<Channel &>(ch).getMapEndIterator()) {
+		sendMsgToClient(iter->second->getFd(), send_msg);
+		++iter;
+	}
+}
+
 bool Server::isUser(const std::string &nickname) const {
 	for (std::map<int, User>::const_iterator it = user_map_.begin();
 		 it != user_map_.end(); ++it) {

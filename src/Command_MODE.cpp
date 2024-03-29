@@ -125,11 +125,14 @@ void Command::setOrUnsetChannelOperator(const size_t i,
 		const_cast<Channel &>(ch).setChannelOperator(mode_user.getFd());
 		std::cout << ch.getName() << " " << mode_user.getNickName()
 				  << " is now channel operator" << std::endl;
-		this->server_.sendToChannelUser(
-			ch.getName(), ":" + user.getNickName() + "!" + user.getUserName() +
-							  "ft_ircserver" + " MODE +o " + ch.getName() +
-							  " :" + mode_user.getNickName() +
-							  " is now channel operator");
+		this->server_.sendToChannelUser(ch.getName(), user,
+										mode_user.getNickName() +
+											" is now channel operator");
+		// this->server_.sendToChannelUser(
+		// 	ch.getName(), ":" + user.getNickName() + "!" + user.getUserName() +
+		// 					  "ft_ircserver" + " MODE +o " + ch.getName() +
+		// 					  " :" + mode_user.getNickName() +
+		// 					  " is now channel operator");
 		// this->server_.sendMsgToClient(
 		// 	user.getFd(), ch.getName() + " " + mode_user.getNickName() +
 		// 					  " is now channel operator");
