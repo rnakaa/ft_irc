@@ -18,6 +18,7 @@ void Command::handleCommand(User &user, std::string &message) {
 	// std::cout << "start handleCommand" << std::endl;
 	try {
 		this->recv_message_ = message;
+		std::cout << "comand handl " << message << std::endl;
 		parseClientMessage(message);
 		CommandFunction func = this->commands_map_[this->command_name_];
 		if (!func) {

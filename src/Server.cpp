@@ -96,14 +96,19 @@ void Server::handlPollEvents() {
 					this->recv_msg_ = recvCmdFromClient(i);
 					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
 							  << this->recv_msg_ << "\"" << std::endl;
-					Command cmd(*this);
 					if (this->user_map_.find(this->pollfd_vec_[i].fd) ==
 						this->user_map_.end()) {
 						std::cout << "Warning: fd " << this->pollfd_vec_[i].fd
 								  << " not found in user_map_" << std::endl;
 					}
-					cmd.handleCommand(this->user_map_[this->pollfd_vec_[i].fd],
-									  this->recv_msg_);
+					std::istringstream iss(recv_msg_);
+
+					while (std::getline(iss, this->recv_msg_)) {
+						Command cmd(*this);
+						cmd.handleCommand(
+							this->user_map_[this->pollfd_vec_[i].fd],
+							this->recv_msg_);
+					}
 					// sendMsgToClient(i, this->recv_msg_);
 				} catch (const std::exception &e) {
 					continue;
@@ -245,6 +250,25 @@ bool Server::isUser(const std::string &nickname) const {
 		}
 	}
 	return false;
+}
+
+std::string Server::getWelcomeMessage(const std::string &nickname,
+									  const std::string &username) {
+	std::string result;
+	char dateStr[100];
+	std::time_t t = std::time(nullptr);
+	std::strftime(dateStr, sizeof(dateStr), "%b %d", std::localtime(&t));
+	// std::string date = std::put_time(std::localtime(&t), "%b %d");
+
+	std::ostringstream ss;
+	ss << "001 " << nickname << " :Welcome to the Internet Relay Network \r\n"
+	   << nickname << "!" << username << "@localhost\r\n"
+	   << "002 Your host is localhost, running version 2.0\r\n"
+	   << "003 This server was created "
+	   << std::put_time(std::localtime(&t), "%b %d") << "\r\n"
+	   << "004 localhost 2.0 aiwroOs aimnqpsrtklbeI\r\n";
+	result = ss.str();
+	return result;
 }
 
 Server::~Server() {}

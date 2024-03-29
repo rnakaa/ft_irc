@@ -6,6 +6,8 @@
 #include "User.hpp"
 #include <arpa/inet.h>
 #include <cerrno>
+#include <ctime>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <poll.h>
@@ -50,6 +52,8 @@ class Server {
 	void removeChannel(const std::string &ch_name);
 
 	void sendToChannelUser(std::string &ch_name, std::string &msg) const;
+	std::string getWelcomeMessage(const std::string &nickname,
+								  const std::string &username);
 
   private:
 	void checkValidArgc(const int argc) const;
