@@ -109,7 +109,6 @@ void Server::handlPollEvents() {
 							this->user_map_[this->pollfd_vec_[i].fd],
 							this->recv_msg_);
 					}
-					// sendMsgToClient(i, this->recv_msg_);
 				} catch (const std::exception &e) {
 					continue;
 				}

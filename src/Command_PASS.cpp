@@ -5,6 +5,8 @@ void Command::PASS(User &user, std::vector<std::string> &arg) {
 	if (user.getAuthFlags() == User::PASS_AUTH) {
 		std::cerr << reply_.ERR_ALREADYREGISTRED() << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_ALREADYREGISTRED());
+	} else if (user.getAuthFlags() == User::ALL_AUTH) {
+		return;
 	} else if (arg.empty()) {
 		std::cerr << reply_.ERR_NEEDMOREPARAMS("PASS") << std::endl;
 		server_.sendMsgToClient(user.getFd(),
