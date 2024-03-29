@@ -228,11 +228,8 @@ void Server::nicknameInsertLog(std::string nickname) {
 void Server::sendToChannelUser(std::string &ch_name,
 							   const std::string &msg) const {
 	std::cout << "start sendToChannelUser" << std::endl;
-	if (!hasChannelName(ch_name)) {
-		std::cout << "false" << std::endl;
+	if (!hasChannelName(ch_name))
 		return;
-	}
-	std::cout << "true" << std::endl;
 	const Channel &ch = getChannel(ch_name);
 	std::map<int, User *>::const_iterator iter =
 		const_cast<Channel &>(ch).getMapBeginIterator();
