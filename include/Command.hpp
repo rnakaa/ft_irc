@@ -142,6 +142,9 @@ class Command {
 	// mode 't'
 	void handleTopicOnlyOperator(const ModeAction mode_action, User &user,
 								 const Channel &ch);
+
+	// PING
+	void PING(User &user, std::vector<std::string> &arg);
 };
 
 #endif
