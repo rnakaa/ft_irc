@@ -235,7 +235,7 @@ void Server::nicknameInsertLog(std::string nickname) {
 	this->nickname_log_.insert(nickname);
 }
 
-void Server::sendToChannelUser(std::string &ch_name,
+void Server::sendToChannelUser(const std::string &ch_name,
 							   const std::string &msg) const {
 	std::cout << "start sendToChannelUser" << std::endl;
 	if (!hasChannelName(ch_name))

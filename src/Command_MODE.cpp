@@ -125,9 +125,12 @@ void Command::setOrUnsetChannelOperator(const size_t i,
 		const_cast<Channel &>(ch).setChannelOperator(mode_user.getFd());
 		std::cout << ch.getName() << " " << mode_user.getNickName()
 				  << " is now channel operator" << std::endl;
-		this->server_.sendMsgToClient(
-			user.getFd(), ch.getName() + " " + mode_user.getNickName() +
+		this->server_.sendToChannelUser(
+			ch.getName(), ch.getName() + " " + mode_user.getNickName() +
 							  " is now channel operator");
+		// this->server_.sendMsgToClient(
+		// 	user.getFd(), ch.getName() + " " + mode_user.getNickName() +
+		// 					  " is now channel operator");
 	} else if (mode_action == Command::unsetMode) {
 		if (mode_user.getNickName() == ch.getCreatedUser()) {
 			std::cerr << "cannot unset channel operator because "
@@ -149,8 +152,11 @@ void Command::setOrUnsetChannelOperator(const size_t i,
 		const_cast<Channel &>(ch).removeChannelOperator(mode_user.getFd());
 		std::cout << ch.getName() << " " << mode_user.getNickName()
 				  << " is now not channel operator" << std::endl;
-		this->server_.sendMsgToClient(
-			user.getFd(), ch.getName() + " " + mode_user.getNickName() +
+		// this->server_.sendMsgToClient(
+		// 	user.getFd(), ch.getName() + " " + mode_user.getNickName() +
+		// 					  " is now not channel operator");
+		this->server_.sendToChannelUser(
+			ch.getName(), ch.getName() + " " + mode_user.getNickName() +
 							  " is now not channel operator");
 	}
 }
@@ -307,8 +313,11 @@ void Command::handleLimitedSetMode(User &user, const Channel &ch) {
 	const_cast<Channel &>(ch).setMaxUsers(static_cast<int>(max_users));
 	std::cout << ch.getName() << " set max number of users to "
 			  << ch.getMaxUsers() << std::endl;
-	this->server_.sendMsgToClient(
-		user.getFd(),
+	// this->server_.sendMsgToClient(
+	// 	user.getFd(),
+	// 	ch.getName() + " set max number of users to " + iss.str());
+	this->server_.sendToChannelUser(
+		ch.getName(),
 		ch.getName() + " set max number of users to " + iss.str());
 }
 
@@ -329,8 +338,10 @@ void Command::handleLimitedUnsetMode(User &user, const Channel &ch) {
 	const_cast<Channel &>(ch).setMaxUsers(-1);
 	std::cout << ch.getName() << " remove a limit of the max users"
 			  << std::endl;
-	this->server_.sendMsgToClient(
-		user.getFd(), ch.getName() + " remove a limit of the max users");
+	// this->server_.sendMsgToClient(
+	// 	user.getFd(), ch.getName() + " remove a limit of the max users");
+	this->server_.sendToChannelUser(
+		ch.getName(), ch.getName() + " remove a limit of the max users");
 }
 
 // mode "i":set/remove Invite-only channel
@@ -386,8 +397,10 @@ void Command::setInviteOnly(User &user, const Channel &ch) {
 	}
 	const_cast<Channel &>(ch).setMode(Channel::i);
 	std::cout << ch.getName() << " is now set i mode" << std::endl;
-	this->server_.sendMsgToClient(user.getFd(),
-								  ch.getName() + " is now set i mode");
+	// this->server_.sendMsgToClient(user.getFd(),
+	// 							  ch.getName() + " is now set i mode");
+	this->server_.sendToChannelUser(ch.getName(),
+									ch.getName() + " is now set i mode");
 }
 
 void Command::unsetInviteOnly(User &user, const Channel &ch) {
@@ -399,8 +412,10 @@ void Command::unsetInviteOnly(User &user, const Channel &ch) {
 	}
 	const_cast<Channel &>(ch).unsetMode(Channel::i);
 	std::cout << ch.getName() << " is now unset i mode" << std::endl;
-	this->server_.sendMsgToClient(user.getFd(),
-								  ch.getName() + " is now unset i mode");
+	// this->server_.sendMsgToClient(user.getFd(),
+	// 							  ch.getName() + " is now unset i mode");
+	this->server_.sendToChannelUser(ch.getName(),
+									ch.getName() + " is now unset i mode");
 }
 
 // mode "t":Set/remove the restrictions of the TOPIC command to channel
@@ -437,8 +452,10 @@ void Command::handleTopicOnlyOperator(const ModeAction mode_action, User &user,
 		}
 		const_cast<Channel &>(ch).setMode(Channel::t);
 		std::cout << ch.getName() << " is now set t mode" << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  ch.getName() + " is now set t mode");
+		// this->server_.sendMsgToClient(user.getFd(),
+		// 							  ch.getName() + " is now set t mode");
+		this->server_.sendToChannelUser(ch.getName(),
+										ch.getName() + " is now set t mode");
 	} else {
 		if (!ch.hasMode(Channel::t)) {
 			std::cerr << ch.getName() << " is already not set t mode"
@@ -449,8 +466,10 @@ void Command::handleTopicOnlyOperator(const ModeAction mode_action, User &user,
 		}
 		const_cast<Channel &>(ch).unsetMode(Channel::t);
 		std::cout << ch.getName() << " is now unset t mode" << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  ch.getName() + " is now unset t mode");
+		// this->server_.sendMsgToClient(user.getFd(),
+		// 							  ch.getName() + " is now unset t mode");
+		this->server_.sendToChannelUser(ch.getName(),
+										ch.getName() + " is now unset t mode");
 	}
 }
 
