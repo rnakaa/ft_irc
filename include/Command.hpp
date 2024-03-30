@@ -139,6 +139,7 @@ class Command {
 	void PRIVMSG(User &user, std::vector<std::string> &arg);
 	void sendMessage(User &user, const std::string &dsn,
 					 const std::string &msg);
+	std::vector<std::string> splitByComma(const std::string &input);
 	// mode 'i'
 	void handleInviteOnly(const ModeAction mode_action, User &user,
 						  const Channel &ch);
@@ -151,6 +152,10 @@ class Command {
 
 	// PING
 	void PING(User &user, std::vector<std::string> &arg);
+
+	// PART
+	void PART(User &user, std::vector<std::string> &arg);
+	void partChannel(User &user, std::string &msg, std::string &ch_name);
 };
 
 #endif

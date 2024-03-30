@@ -238,6 +238,24 @@ void Server::nicknameInsertLog(std::string nickname) {
 	this->nickname_log_.insert(nickname);
 }
 
+void Server::sendToChannelUser(const User &user, std::string &ch_name,
+							   const std::string &msg) const {
+	std::cout << "start sendToChannelUser" << std::endl;
+	if (!hasChannelName(ch_name))
+		return;
+	const Channel &ch = getChannel(ch_name);
+	std::map<int, User *>::const_iterator iter =
+		const_cast<Channel &>(ch).getMapBeginIterator();
+	while (iter != const_cast<Channel &>(ch).getMapEndIterator()) {
+		if (user.getFd() == iter->second->getFd()) {
+			++iter;
+			continue;
+		}
+		sendMsgToClient(iter->second->getFd(), msg);
+		++iter;
+	}
+}
+
 void Server::sendToChannelUser(std::string &ch_name,
 							   const std::string &msg) const {
 	std::cout << "start sendToChannelUser" << std::endl;

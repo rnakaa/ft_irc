@@ -14,6 +14,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["OPER"] = &Command::OPER;
 	this->commands_map_["KILL"] = &Command::KILL;
 	this->commands_map_["PING"] = &Command::PING;
+	this->commands_map_["PART"] = &Command::PART;
 	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
 	this->mode_map_['o'] = &Command::handleChannelOperator;
 	this->mode_map_['k'] = &Command::handleChannelKey;

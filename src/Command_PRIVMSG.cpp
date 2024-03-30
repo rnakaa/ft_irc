@@ -1,6 +1,6 @@
 #include "Command.hpp"
 
-std::vector<std::string> splitByComma(const std::string &input) {
+std::vector<std::string> Command::splitByComma(const std::string &input) {
 	std::vector<std::string> result;
 	std::istringstream iss(input);
 	std::string token;
@@ -49,7 +49,7 @@ void Command::PRIVMSG(User &user, std::vector<std::string> &arg) {
 	for (size_t i = 0; i < dsn.size(); i++) {
 		if (dsn.at(i)[0] == '!' || dsn.at(i)[0] == '+' || dsn.at(i)[0] == '&' ||
 			dsn.at(i)[0] == '#') {
-			server_.sendToChannelUser(dsn.at(i),
+			server_.sendToChannelUser(user, dsn.at(i),
 									  ":" + user.getNickName() + "!" +
 										  user.getUserName() + "ft_ircserver" +
 										  " PRIVMSG " + dsn.at(i) + " " + msg);
