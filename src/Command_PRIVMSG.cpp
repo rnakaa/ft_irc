@@ -49,10 +49,7 @@ void Command::PRIVMSG(User &user, std::vector<std::string> &arg) {
 	for (size_t i = 0; i < dsn.size(); i++) {
 		if (dsn.at(i)[0] == '!' || dsn.at(i)[0] == '+' || dsn.at(i)[0] == '&' ||
 			dsn.at(i)[0] == '#') {
-			server_.sendToChannelUser(dsn.at(i), user,
-									  ":" + user.getNickName() + "!" +
-										  user.getUserName() + "ft_ircserver" +
-										  " PRIVMSG " + dsn.at(i) + " " + msg);
+			server_.sendToChannelUser(dsn.at(i), user, msg);
 		} else {
 			sendMessage(user, dsn.at(i), msg);
 		}
