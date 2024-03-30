@@ -273,6 +273,10 @@ void Server::sendToChannelUser(const std::string &ch_name, const User &user,
 	std::map<int, User *>::const_iterator iter =
 		const_cast<Channel &>(ch).getMapBeginIterator();
 	while (iter != const_cast<Channel &>(ch).getMapEndIterator()) {
+		if (user.getFd() == iter->second->getFd()) {
+			++iter;
+			continue;
+		}
 		sendMsgToClient(iter->second->getFd(), send_msg);
 		++iter;
 	}
