@@ -53,6 +53,8 @@ class Server {
 	void removePollfd(const int fd);
 
 	void sendToChannelUser(std::string &ch_name, const std::string &msg) const;
+	void sendToChannelUser(const User &user, std::string &ch_name,
+						   const std::string &msg) const;
 
   private:
 	void checkValidArgc(const int argc) const;
