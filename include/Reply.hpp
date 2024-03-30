@@ -3,6 +3,7 @@
 
 #include <arpa/inet.h>
 #include <cerrno>
+#include <ctime>
 #include <iostream>
 #include <map>
 #include <poll.h>
@@ -10,7 +11,6 @@
 #include <string>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <vector>
 
 class Reply {
   public:
