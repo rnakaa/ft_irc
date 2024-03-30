@@ -13,6 +13,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["TOPIC"] = &Command::TOPIC;
 	this->commands_map_["OPER"] = &Command::OPER;
 	this->commands_map_["KILL"] = &Command::KILL;
+	this->commands_map_["kill"] = &Command::KILL;
 	this->commands_map_["PING"] = &Command::PING;
 	this->commands_map_["PART"] = &Command::PART;
 	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
