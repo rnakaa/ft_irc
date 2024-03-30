@@ -7,6 +7,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["USER"] = &Command::USER;
 	this->commands_map_["QUIT"] = &Command::QUIT;
 	this->commands_map_["JOIN"] = &Command::JOIN;
+	this->commands_map_["KICK"] = &Command::KICK;
 	this->commands_map_["MODE"] = &Command::MODE;
 	this->commands_map_["PRIVMSG"] = &Command::PRIVMSG;
 	this->commands_map_["INVITE"] = &Command::INVITE;

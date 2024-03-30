@@ -106,6 +106,9 @@ class Command {
 	// KILL
 	void KILL(User &user, std::vector<std::string> &arg);
 
+	// KICK
+	void KICK(User &user, std::vector<std::string> &arg);
+
 	// MODE
 	void MODE(User &user, std::vector<std::string> &arg);
 	void handleChannelMode(User &user, std::vector<std::string> &arg);
