@@ -17,9 +17,7 @@ void Command::partChannel(User &user, std::string &msg, std::string &ch_name) {
 	if (left_ch.isChannelOperator(user.getFd())) {
 		const_cast<Channel &>(left_ch).removeChannelOperator(user.getFd());
 	}
-	server_.sendToChannelUser(ch_name, ":" + user.getNickName() + "!" +
-										   user.getUserName() + "ft_ircserver" +
-										   " PART " + ch_name + " :" + msg);
+	server_.sendToChannelUser(ch_name, user, msg);
 	const_cast<Channel &>(left_ch).removeUser(user.getFd());
 	if (left_ch.getJoinedUserCount() == 0) {
 		this->server_.removeChannel(left_ch.getName());
@@ -48,7 +46,7 @@ void Command::PART(User &user, std::vector<std::string> &arg) {
 	}
 
 	if (msg[0] == ':') {
-		msg.substr(1); // メッセージの先頭に:がついていたら削除する
+		msg = msg.substr(1); // メッセージの先頭に:がついていたら削除する
 	}
 
 	for (size_t i = 0; i < dsn.size(); i++) {

@@ -75,7 +75,6 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 		server_.nicknameInsertLog(arg.at(0));
 		user.setNickname(arg.at(0));
 		if (user.getAuthFlags() == User::ALL_AUTH) {
-			this->server_.sendMsgToClient(user.getFd(), "NICK rename success");
 			return;
 		} else if (user.getAuthFlags() == User::USER_AUTH) {
 			user.setAuthFlags(User::ALL_AUTH);
@@ -84,7 +83,6 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 				reply_.RPL_WELCOME(user.getNickName(), user.getUserName()));
 		} else {
 			user.setAuthFlags(User::NICK_AUTH);
-			server_.sendMsgToClient(user.getFd(), "NICK name success");
 		}
 		std::cout << user.getAuthFlags() << std::endl;
 	}
