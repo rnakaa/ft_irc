@@ -1,6 +1,6 @@
 #include "Command.hpp"
 
-std::vector<std::string> splitByComma(const std::string &input) {
+std::vector<std::string> Command::splitByComma(const std::string &input) {
 	std::vector<std::string> result;
 	std::istringstream iss(input);
 	std::string token;
