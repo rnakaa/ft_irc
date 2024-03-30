@@ -46,6 +46,10 @@ class Reply {
 	std::string RPL_NOTOPIC(const std::string &ch_name) const;
 	std::string RPL_TOPIC(const std::string &ch_name,
 						  const std::string &topic_str) const;
+	std::string RPL_YOUREOPER() const;
+	std::string RPL_KILL(const std::string &nick,
+						 const std::string &killed_user,
+						 const std::string &kill_str) const;
 };
 
 #endif

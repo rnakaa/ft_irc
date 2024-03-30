@@ -59,6 +59,10 @@ void User::setMode(const enum User::UserMode mode) {
 	this->mode_ = (enum UserMode)(this->mode_ | mode);
 }
 
+void User::unsetMode(const enum User::UserMode mode) {
+	this->mode_ = static_cast<enum UserMode>(this->mode_ - mode);
+}
+
 void User::setNickname(const std::string &nickname) {
 	this->nick_name_ = nickname;
 }

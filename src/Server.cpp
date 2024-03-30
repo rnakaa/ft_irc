@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server(const int argc, const char **argv) {
+Server::Server(const int argc, const char **argv) : oper_pass_("password") {
 	try {
 		checkValidArgc(argc);
 		checkValidPort(argv[1]);
@@ -146,9 +146,6 @@ std::string Server::recvCmdFromClient(const size_t i) {
 				  << std::endl;
 		return ("ERROR: received message exceeds 510 characters limit");
 	} else if (recv_size == -1) {
-		if (errno == EAGAIN) {
-			throw std::runtime_error("not yet finished sending from client");
-		}
 		close(this->pollfd_vec_[i].fd);
 		close(this->server_sockfd_);
 		exit_error("recv", strerror(errno));
@@ -177,7 +174,7 @@ void Server::sendMsgToClient(const int fd, const std::string &send_str) const {
 		std::strcpy(send_msg, send_str.c_str());
 	}
 	std::strcat(send_msg, "\n");
-	int send_size = send(fd, &send_msg, std::strlen(send_msg), 0);
+	int send_size = send(fd, &send_msg, std::strlen(send_msg), MSG_DONTWAIT);
 	if (send_size == -1) {
 		exit_error("send", strerror(errno));
 	}
@@ -223,6 +220,8 @@ const User &Server::getUser(const std::string &nickname) const {
 const std::string &Server::getUserNickName(const int user_fd) const {
 	return user_map_.find(user_fd)->second.getNickName();
 }
+
+const std::string &Server::getOperPass() const { return this->oper_pass_; }
 
 void Server::setChannel(const std::string &ch_name, const Channel &ch) {
 	this->ch_map_.insert(std::make_pair(ch_name, ch));
