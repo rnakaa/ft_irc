@@ -49,6 +49,7 @@ void Command::INVITE(User &user, std::vector<std::string> &arg) {
 		return;
 	}
 	const_cast<Channel &>(invite_ch).setInvitedUser(invite_user.getFd());
+	const_cast<User &>(invite_user).setInvitedChannel(invite_ch.getName());
 	std::cout << invite_ch.getName() << " " << invite_user.getNickName()
 			  << std::endl;
 	this->server_.sendMsgToClient(user.getFd(), invite_ch.getName() + " " +

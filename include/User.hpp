@@ -43,12 +43,15 @@ class User {
 	const std::string &getRealName() const;
 	const std::string &getUserName() const;
 	size_t getJoinedChannelCount() const;
+	size_t getInvitedChannelCount() const;
 	const std::set<std::string> &getJoinedChannels() const;
+	const std::vector<std::string> &getInvitedChannel() const;
 	enum UserMode getMode() const;
 	void setAuthFlags(const AuthFlags &flags);
 	void setNickname(const std::string &nickname);
 	void setUsername(const std::string &username);
 	void setRealName(const std::string &real_name);
+	void setInvitedChannel(const std::string &ch_name);
 	bool isUsernameSet() const;
 	void setMode(const enum UserMode mode);
 	void unsetMode(const enum UserMode mode);
@@ -60,6 +63,7 @@ class User {
 	void printJoinChannel() const;
 
 	void removeChannel(const std::string &ch_name);
+	void removeInvitedChannel(const std::string &ch_name);
 
   private:
 	const int fd_;
@@ -69,6 +73,7 @@ class User {
 	std::string user_name_;
 	std::string real_name_;
 	std::set<std::string> ch_set_;
+	std::vector<std::string> invited_ch_;
 	// std::map<std::string, Channel> ch_map_;
 };
 

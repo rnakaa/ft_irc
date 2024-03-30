@@ -41,7 +41,14 @@ const std::vector<int> &Channel::getChannelOperators() const {
 
 size_t Channel::getJoinedUserCount() const { return (this->ch_users_.size()); }
 
-const std::string &Channel::getCreatedUser() const {
+size_t Channel::getInvitedUsersCount() const {
+	return (this->invited_users_.size());
+}
+
+const std::string Channel::getCreatedUser() const {
+	if (created_user_fd_ == -1) {
+		return "there is already no channel created user";
+	}
 	const User *user = this->ch_users_.at(this->created_user_fd_);
 	return user->getNickName();
 }
@@ -81,6 +88,10 @@ void Channel::setInvitedUser(const int user_fd) {
 }
 
 void Channel::setTopicStr(const std::string &str) { this->topic_str_ = str; }
+
+void Channel::setChannelCreater(const int user_fd) {
+	this->created_user_fd_ = user_fd;
+}
 
 void Channel::removeChannelOperator(const int user_fd) {
 	for (std::vector<int>::iterator it = this->ch_operators_.begin();
@@ -160,6 +171,10 @@ bool Channel::isChannelUser(const int user_fd) const {
 bool Channel::isInvitedUser(const int user_fd) const {
 	return std::find(this->invited_users_.begin(), this->invited_users_.end(),
 					 user_fd) != invited_users_.end();
+}
+
+bool Channel::isChannelCreater(const int user_fd) const {
+	return this->created_user_fd_ == user_fd;
 }
 
 void Channel::removeInvitedUser(const int user_fd) {
