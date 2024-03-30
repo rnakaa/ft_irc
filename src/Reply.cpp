@@ -68,7 +68,7 @@ std::string Reply::RPL_WELCOME(const std::string &nickname,
 							   const std::string &username) const {
 	std::string result;
 	char dateStr[100];
-	std::time_t t = std::time(nullptr);
+	std::time_t t = std::time(NULL);
 	std::strftime(dateStr, sizeof(dateStr), "%b %d", std::localtime(&t));
 
 	std::ostringstream ss;
