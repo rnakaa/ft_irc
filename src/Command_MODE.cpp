@@ -125,9 +125,6 @@ void Command::joinStrFromVector(std::string &join_str, const Channel &ch,
 	std::cout << "start joinStrFromVector" << std::endl;
 	std::vector<std::string> vec = ch.getChannelOperatorsNickName();
 	for (size_t i = 0; i < vec.size(); ++i) {
-		std::cout << vec[i] << std::endl;
-	}
-	for (size_t i = 0; i < vec.size(); ++i) {
 		join_str += vec.at(i);
 		if (i < vec.size() - 1) {
 			join_str += delimiter;
@@ -447,12 +444,12 @@ void Command::handleInviteOnly(const ModeAction mode_action, User &user,
 }
 
 void Command::queryInviteOnly(User &user, const Channel &ch) {
-	const std::vector<int> &invited_user = ch.getInvitedUsers();
-	if (invited_user.empty()) {
+	if (ch.getInvitedUsersCount() == 0) {
 		std::cerr << "no invited users" << std::endl;
 		this->server_.sendMsgToClient(user.getFd(), "no invited users");
 		return;
 	}
+	const std::vector<int> &invited_user = ch.getInvitedUsers();
 	std::ostringstream oss;
 	oss << ch.getName() << " invited users: ";
 	for (size_t i = 0; i < invited_user.size(); ++i) {

@@ -12,6 +12,10 @@ User::AuthFlags User::getAuthFlags() const { return (this->auth_flag_); }
 
 size_t User::getJoinedChannelCount() const { return (this->ch_set_.size()); }
 
+size_t User::getInvitedChannelCount() const {
+	return (this->invited_ch_.size());
+}
+
 const std::set<std::string> &User::getJoinedChannels() const {
 	return (this->ch_set_);
 }
@@ -51,6 +55,10 @@ const std::string &User::getRealName() const { return this->real_name_; }
 
 const std::string &User::getUserName() const { return this->user_name_; }
 
+const std::vector<std::string> &User::getInvitedChannels() const {
+	return this->invited_ch_;
+}
+
 bool User::hasMode(const enum User::UserMode mode) const {
 	return (mode & this->mode_) != 0;
 }
@@ -71,6 +79,13 @@ void User::setUsername(const std::string &username) {
 	this->user_name_ = username;
 }
 
+void User::setInvitedChannel(const std::string &ch_name) {
+	std::cout << "start setInvitedChannel(): " << ch_name << std::endl;
+	this->invited_ch_.push_back(ch_name);
+	std::cout << "finish setInvitedChannel(): " << invited_ch_.size()
+			  << std::endl;
+}
+
 void User::setRealName(const std::string &real_name) {
 	this->real_name_ = real_name;
 }
@@ -79,4 +94,13 @@ bool User::isUsernameSet() const { return !this->user_name_.empty(); }
 
 void User::removeChannel(const std::string &ch_name) {
 	this->ch_set_.erase(ch_name);
+}
+
+void User::removeInvitedChannel(const std::string &ch_name) {
+	for (size_t i = 0; i < this->invited_ch_.size(); ++i) {
+		if (this->invited_ch_.at(i) == ch_name) {
+			this->invited_ch_.erase(this->invited_ch_.begin() + i);
+			return;
+		}
+	}
 }

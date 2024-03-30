@@ -31,6 +31,7 @@ void Command::KILL(User &user, std::vector<std::string> &arg) {
 	this->server_.sendMsgToClient(fd, reply_.RPL_KILL(user.getNickName(),
 													  kill_user.getNickName(),
 													  kill_comment));
+	removeAllInvitedChannels(const_cast<User &>(kill_user));
 	quitAllChannels(const_cast<User &>(kill_user), kill_comment);
 	this->server_.removeUser(fd);
 	this->server_.removePollfd(fd);

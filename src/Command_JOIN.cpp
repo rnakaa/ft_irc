@@ -88,6 +88,7 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 	const_cast<Channel &>(join_ch).setUser(user);
 	if (join_ch.isInvitedUser(user.getFd())) {
 		const_cast<Channel &>(join_ch).removeInvitedUser(user.getFd());
+		user.removeInvitedChannel(join_ch.getName());
 	}
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
@@ -158,7 +159,7 @@ void Command::exitAllChannels(User &user) {
 		}
 		this->server_.sendToChannelAllUser(left_ch_const.getName(), user,
 										   user.getNickName() +
-											" has left this channel");
+											   " has left this channel");
 		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());
@@ -181,6 +182,7 @@ void Command::JOIN(User &user, std::vector<std::string> &arg) {
 	}
 	if (arg.at(0) == "0") {
 		exitAllChannels(user);
+		removeAllInvitedChannels(user);
 		std::cout << "finish JOIN 0 command" << std::endl;
 		user.printJoinChannel();
 		this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN 0 Command");

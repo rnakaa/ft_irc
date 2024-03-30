@@ -25,6 +25,7 @@ class Command {
 	Command(Server &server);
 	void handleCommand(User &user, std::string &message);
 	void quitAllChannels(User &user, std::string broadcast_msg);
+	void removeAllInvitedChannels(User &user);
 
   private:
 	enum ModeAction { setMode, unsetMode, queryMode };

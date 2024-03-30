@@ -12,6 +12,9 @@ void Command::quitAllChannels(User &user, std::string broadcast_msg) {
 			const_cast<Channel &>(left_ch_const)
 				.removeChannelOperator(user.getFd());
 		}
+		if (left_ch_const.isChannelCreater(user.getFd())) {
+			const_cast<Channel &>(left_ch_const).setChannelCreater(-1);
+		}
 		// remove from all invite lists
 		// send broadcast_msg to all channel members
 		this->server_.sendToChannelAllUser(left_ch_const.getName(), user,
@@ -20,6 +23,19 @@ void Command::quitAllChannels(User &user, std::string broadcast_msg) {
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());
 		}
+	}
+}
+
+void Command::removeAllInvitedChannels(User &user) {
+	if (user.getInvitedChannelCount() == 0) {
+		return;
+	}
+	const std::vector<std::string> &invited_ch = user.getInvitedChannels();
+	for (std::vector<std::string>::const_iterator it = invited_ch.begin();
+		 it != invited_ch.end(); ++it) {
+		const std::string &ch_name = *it;
+		const Channel &ch = this->server_.getChannel(ch_name);
+		const_cast<Channel &>(ch).removeInvitedUser(user.getFd());
 	}
 }
 
@@ -37,6 +53,7 @@ void Command::QUIT(User &user, std::vector<std::string> &arg) {
 	} else {
 		broadcast_msg = " QUIT :" + extractAfterColon(1);
 	}
+	removeAllInvitedChannels(user);
 	quitAllChannels(user, broadcast_msg);
 	const int fd = user.getFd();
 	this->server_.removeUser(fd);

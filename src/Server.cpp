@@ -155,6 +155,7 @@ std::string Server::recvCmdFromClient(const size_t i) {
 		Command cmd(*this);
 		User &user = user_map_[this->pollfd_vec_[i].fd];
 		const int fd = user.getFd();
+		cmd.removeAllInvitedChannels(user);
 		cmd.quitAllChannels(user,
 							"finish connection from " + user.getNickName());
 		close(fd);
