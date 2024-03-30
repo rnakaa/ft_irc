@@ -51,6 +51,8 @@ void Command::KICK(User &user, std::vector<std::string> &arg) {
 	if (arg.size() >= 3 && arg.at(2)[0] == ':')
 		broadcast_msg += extractAfterColon(3);
 	this->server_.sendToChannelUser(ch.getName(), user, broadcast_msg);
+	if (!ch.isChannelOperator(target_user.getFd()))
+		const_cast<Channel &>(ch).removeChannelOperator(target_user.getFd());
 	const_cast<User &>(target_user).removeChannel(ch.getName());
 	const_cast<Channel &>(ch).removeUser(target_user.getFd());
 	if (ch.getJoinedUserCount() == 0) {
