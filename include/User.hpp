@@ -45,7 +45,7 @@ class User {
 	size_t getJoinedChannelCount() const;
 	size_t getInvitedChannelCount() const;
 	const std::set<std::string> &getJoinedChannels() const;
-	const std::vector<std::string> &getInvitedChannel() const;
+	const std::vector<std::string> &getInvitedChannels() const;
 	enum UserMode getMode() const;
 	void setAuthFlags(const AuthFlags &flags);
 	void setNickname(const std::string &nickname);
