@@ -55,7 +55,7 @@ const std::string &User::getRealName() const { return this->real_name_; }
 
 const std::string &User::getUserName() const { return this->user_name_; }
 
-const std::vector<std::string> &User::getInvitedChannel() const {
+const std::vector<std::string> &User::getInvitedChannels() const {
 	return this->invited_ch_;
 }
 
