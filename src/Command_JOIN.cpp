@@ -92,8 +92,8 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
 	join_ch.printJoinedUser();
-	this->server_.sendToChannelUser(join_ch.getName(), user,
-									user.getNickName() + " has joined");
+	this->server_.sendToChannelAllUser(join_ch.getName(), user,
+									   user.getNickName() + " has joined");
 	this->server_.sendMsgToClient(
 		user.getFd(),
 		":" + user.getNickName() + "!" + user.getUserName() + "ft_ircserver" +
@@ -114,8 +114,8 @@ void Command::createChannel(const std::string &ch_name,
 	ch.printJoinedUser();
 	ch.printChannelOperators();
 	// this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
-	this->server_.sendToChannelUser(new_ch.getName(), user,
-									user.getNickName() + " has joined");
+	this->server_.sendToChannelAllUser(new_ch.getName(), user,
+									   user.getNickName() + " has joined");
 	this->server_.sendMsgToClient(
 		user.getFd(), ":" + user.getNickName() + "!" + user.getUserName() +
 						  "ft_ircserver" + " PRIVMSG " + new_ch.getName() +
@@ -156,9 +156,9 @@ void Command::exitAllChannels(User &user) {
 			const_cast<Channel &>(left_ch_const)
 				.removeChannelOperator(user.getFd());
 		}
-		this->server_.sendToChannelUser(left_ch_const.getName(), user,
-										user.getNickName() +
-											" leave this channel");
+		this->server_.sendToChannelAllUser(left_ch_const.getName(), user,
+										   user.getNickName() +
+											   " leave this channel");
 		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());
