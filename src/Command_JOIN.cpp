@@ -158,7 +158,7 @@ void Command::exitAllChannels(User &user) {
 		}
 		this->server_.sendToChannelAllUser(left_ch_const.getName(), user,
 										   user.getNickName() +
-											   " leave this channel");
+											" has left this channel");
 		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());

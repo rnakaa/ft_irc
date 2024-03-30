@@ -24,7 +24,6 @@ void Command::quitAllChannels(User &user, std::string broadcast_msg) {
 }
 
 void Command::QUIT(User &user, std::vector<std::string> &arg) {
-	// close?
 	std::string broadcast_msg;
 
 	if (user.getAuthFlags() != User::ALL_AUTH) {
@@ -37,10 +36,8 @@ void Command::QUIT(User &user, std::vector<std::string> &arg) {
 		broadcast_msg = " QUIT :" + arg.at(0);
 	} else {
 		broadcast_msg = " QUIT :" + extractAfterColon(1);
-		std::cout << "broadcast_msg" << broadcast_msg << std::endl; // debug
 	}
 	quitAllChannels(user, broadcast_msg);
-	// send error message to client?
 	const int fd = user.getFd();
 	this->server_.removeUser(fd);
 	this->server_.removePollfd(fd);
