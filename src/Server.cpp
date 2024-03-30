@@ -152,8 +152,13 @@ std::string Server::recvCmdFromClient(const size_t i) {
 	} else if (recv_size == 0) {
 		std::cout << "finish connection from client[" << this->pollfd_vec_[i].fd
 				  << "]" << std::endl;
-		close(this->pollfd_vec_[i].fd);
-		this->user_map_.erase(pollfd_vec_[i].fd);
+		Command cmd(*this);
+		User &user = user_map_[this->pollfd_vec_[i].fd];
+		const int fd = user.getFd();
+		cmd.quitAllChannels(user,
+							"finish connection from " + user.getNickName());
+		close(fd);
+		this->user_map_.erase(fd);
 		this->pollfd_vec_.erase(this->pollfd_vec_.begin() + i);
 		throw std::runtime_error("finish connection from client");
 	}
@@ -212,6 +217,10 @@ const User &Server::getUser(const std::string &nickname) const {
 	throw std::runtime_error("cannot find user");
 }
 
+const std::string &Server::getUserNickName(const int user_fd) const {
+	return user_map_.find(user_fd)->second.getNickName();
+}
+
 const std::string &Server::getOperPass() const { return this->oper_pass_; }
 
 void Server::setChannel(const std::string &ch_name, const Channel &ch) {
@@ -238,11 +247,28 @@ void Server::nicknameInsertLog(std::string nickname) {
 	this->nickname_log_.insert(nickname);
 }
 
-void Server::sendToChannelUser(const User &user, std::string &ch_name,
+void Server::sendToChannelUser(const std::string &ch_name,
 							   const std::string &msg) const {
 	std::cout << "start sendToChannelUser" << std::endl;
 	if (!hasChannelName(ch_name))
 		return;
+	const Channel &ch = getChannel(ch_name);
+	std::map<int, User *>::const_iterator iter =
+		const_cast<Channel &>(ch).getMapBeginIterator();
+	while (iter != const_cast<Channel &>(ch).getMapEndIterator()) {
+		sendMsgToClient(iter->second->getFd(), msg);
+		++iter;
+	}
+}
+
+void Server::sendToChannelUser(const std::string &ch_name, const User &user,
+							   const std::string &msg) const {
+	std::cout << "start sendToChannelUser" << std::endl;
+	if (!hasChannelName(ch_name))
+		return;
+	const std::string send_msg = ":" + user.getNickName() + "!" +
+								 user.getUserName() + "ft_ircserver" +
+								 " PRIVMSG " + ch_name + " :" + msg;
 	const Channel &ch = getChannel(ch_name);
 	std::map<int, User *>::const_iterator iter =
 		const_cast<Channel &>(ch).getMapBeginIterator();
@@ -251,21 +277,7 @@ void Server::sendToChannelUser(const User &user, std::string &ch_name,
 			++iter;
 			continue;
 		}
-		sendMsgToClient(iter->second->getFd(), msg);
-		++iter;
-	}
-}
-
-void Server::sendToChannelUser(std::string &ch_name,
-							   const std::string &msg) const {
-	std::cout << "start sendToChannelUser" << std::endl;
-	if (!hasChannelName(ch_name))
-		return;
-	const Channel &ch = getChannel(ch_name);
-	std::map<int, User *>::const_iterator iter =
-		const_cast<Channel &>(ch).getMapBeginIterator();
-	while (iter != const_cast<Channel &>(ch).getMapEndIterator()) {
-		sendMsgToClient(iter->second->getFd(), msg);
+		sendMsgToClient(iter->second->getFd(), send_msg);
 		++iter;
 	}
 }

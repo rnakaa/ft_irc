@@ -43,7 +43,7 @@ class Channel {
 	const std::vector<int> &getChannelOperators() const;
 	size_t getJoinedUserCount() const;
 	const std::vector<std::string> getChannelOperatorsNickName() const;
-	const std::vector<std::string> getInvitedUsersNickName() const;
+	const std::vector<int> &getInvitedUsers() const;
 	const std::string &getCreatedUser() const;
 	const ssize_t &getMaxUsers() const;
 	const std::string &getTopicStr() const;
@@ -66,6 +66,7 @@ class Channel {
 	bool isChannelOperator(const int user_fd) const;
 	bool isChannelUser(const int user_fd) const;
 	bool isInvitedUser(const int user_fd) const;
+	void removeInvitedUser(const int user_fd);
 
   private:
 	std::string ch_name_;

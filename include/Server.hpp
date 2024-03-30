@@ -36,6 +36,7 @@ class Server {
 	const std::string &getPass() const;
 	const Channel &getChannel(const std::string &ch_name) const;
 	const User &getUser(const std::string &nickname) const;
+	const std::string &getUserNickName(const int user_fd) const;
 	const std::string &getOperPass() const;
 	void printChannelName() const;
 
@@ -53,8 +54,9 @@ class Server {
 	void removeUser(const int fd);
 	void removePollfd(const int fd);
 
-	void sendToChannelUser(std::string &ch_name, const std::string &msg) const;
-	void sendToChannelUser(const User &user, std::string &ch_name,
+	void sendToChannelUser(const std::string &ch_name,
+						   const std::string &msg) const;
+	void sendToChannelUser(const std::string &ch_name, const User &user,
 						   const std::string &msg) const;
 
   private:

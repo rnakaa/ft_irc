@@ -55,13 +55,8 @@ const std::vector<std::string> Channel::getChannelOperatorsNickName() const {
 	return ch_operators_nick;
 }
 
-const std::vector<std::string> Channel::getInvitedUsersNickName() const {
-	std::vector<std::string> invited_users_nick;
-	for (size_t i = 0; i < this->invited_users_.size(); ++i) {
-		invited_users_nick.push_back(
-			this->ch_users_.at(this->invited_users_.at(i))->getNickName());
-	}
-	return invited_users_nick;
+const std::vector<int> &Channel::getInvitedUsers() const {
+	return this->invited_users_;
 }
 
 const ssize_t &Channel::getMaxUsers() const { return this->max_users_; }
@@ -165,4 +160,13 @@ bool Channel::isChannelUser(const int user_fd) const {
 bool Channel::isInvitedUser(const int user_fd) const {
 	return std::find(this->invited_users_.begin(), this->invited_users_.end(),
 					 user_fd) != invited_users_.end();
+}
+
+void Channel::removeInvitedUser(const int user_fd) {
+	for (size_t i = 0; i < this->invited_users_.size(); ++i) {
+		if (this->invited_users_.at(i) == user_fd) {
+			this->invited_users_.erase(this->invited_users_.begin() + i);
+			return;
+		}
+	}
 }

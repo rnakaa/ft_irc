@@ -57,9 +57,8 @@ bool Command::checkValidChannel(const std::string &ch_name) {
 
 void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 						  User &user) {
-	const Channel &join_ch_const = this->server_.getChannel(ch_name);
-	join_ch_const.printJoinedUser();
-	Channel &join_ch = const_cast<Channel &>(join_ch_const);
+	const Channel &join_ch = this->server_.getChannel(ch_name);
+	join_ch.printJoinedUser();
 	if (user.isMemberOfChannel(join_ch.getName())) {
 		std::cerr << "client already join channel received from message"
 				  << std::endl;
@@ -86,11 +85,20 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 		return;
 	}
 	user.setChannel(join_ch);
-	join_ch.setUser(user);
+	const_cast<Channel &>(join_ch).setUser(user);
+	if (join_ch.isInvitedUser(user.getFd())) {
+		const_cast<Channel &>(join_ch).removeInvitedUser(user.getFd());
+	}
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
 	join_ch.printJoinedUser();
-	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+	this->server_.sendToChannelUser(join_ch.getName(), user,
+									user.getNickName() + " has joined");
+	this->server_.sendMsgToClient(
+		user.getFd(),
+		":" + user.getNickName() + "!" + user.getUserName() + "ft_ircserver" +
+			" PRIVMSG " + join_ch.getName() + " " +
+			reply_.RPL_TOPIC(join_ch.getName(), join_ch.getTopicStr()));
 }
 
 void Command::createChannel(const std::string &ch_name,
@@ -105,7 +113,13 @@ void Command::createChannel(const std::string &ch_name,
 	const Channel ch = this->server_.getChannel(ch_name);
 	ch.printJoinedUser();
 	ch.printChannelOperators();
-	this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+	// this->server_.sendMsgToClient(user.getFd(), "SUCCESS: JOIN Command");
+	this->server_.sendToChannelUser(new_ch.getName(), user,
+									user.getNickName() + " has joined");
+	this->server_.sendMsgToClient(
+		user.getFd(), ":" + user.getNickName() + "!" + user.getUserName() +
+						  "ft_ircserver" + " PRIVMSG " + new_ch.getName() +
+						  " " + reply_.RPL_NOTOPIC(new_ch.getName()));
 }
 
 void Command::handleChannelRequests(std::queue<std::string> &ch_queue,
@@ -142,6 +156,9 @@ void Command::exitAllChannels(User &user) {
 			const_cast<Channel &>(left_ch_const)
 				.removeChannelOperator(user.getFd());
 		}
+		this->server_.sendToChannelUser(left_ch_const.getName(), user,
+										user.getNickName() +
+											" leave this channel");
 		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());

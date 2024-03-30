@@ -14,7 +14,8 @@ void Command::quitAllChannels(User &user, std::string broadcast_msg) {
 		}
 		// remove from all invite lists
 		// send broadcast_msg to all channel members
-		(void)broadcast_msg;
+		this->server_.sendToChannelUser(left_ch_const.getName(), user,
+										broadcast_msg);
 		const_cast<Channel &>(left_ch_const).removeUser(user.getFd());
 		if (left_ch_const.getJoinedUserCount() == 0) {
 			this->server_.removeChannel(left_ch_const.getName());
