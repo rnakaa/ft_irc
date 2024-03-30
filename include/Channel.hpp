@@ -66,6 +66,7 @@ class Channel {
 	bool isChannelOperator(const int user_fd) const;
 	bool isChannelUser(const int user_fd) const;
 	bool isInvitedUser(const int user_fd) const;
+	void removeInvitedUser(const int user_fd);
 
   private:
 	std::string ch_name_;

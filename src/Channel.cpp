@@ -161,3 +161,12 @@ bool Channel::isInvitedUser(const int user_fd) const {
 	return std::find(this->invited_users_.begin(), this->invited_users_.end(),
 					 user_fd) != invited_users_.end();
 }
+
+void Channel::removeInvitedUser(const int user_fd) {
+	for (size_t i = 0; i < this->invited_users_.size(); ++i) {
+		if (this->invited_users_.at(i) == user_fd) {
+			this->invited_users_.erase(this->invited_users_.begin() + i);
+			return;
+		}
+	}
+}

@@ -57,9 +57,8 @@ bool Command::checkValidChannel(const std::string &ch_name) {
 
 void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 						  User &user) {
-	const Channel &join_ch_const = this->server_.getChannel(ch_name);
-	join_ch_const.printJoinedUser();
-	Channel &join_ch = const_cast<Channel &>(join_ch_const);
+	const Channel &join_ch = this->server_.getChannel(ch_name);
+	join_ch.printJoinedUser();
 	if (user.isMemberOfChannel(join_ch.getName())) {
 		std::cerr << "client already join channel received from message"
 				  << std::endl;
@@ -86,7 +85,10 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 		return;
 	}
 	user.setChannel(join_ch);
-	join_ch.setUser(user);
+	const_cast<Channel &>(join_ch).setUser(user);
+	if (join_ch.isInvitedUser(user.getFd())) {
+		const_cast<Channel &>(join_ch).removeInvitedUser(user.getFd());
+	}
 	std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
 	join_ch.printJoinedUser();
