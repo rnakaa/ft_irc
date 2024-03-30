@@ -36,6 +36,7 @@ class Server {
 	const std::string &getPass() const;
 	const Channel &getChannel(const std::string &ch_name) const;
 	const User &getUser(const std::string &nickname) const;
+	const std::string &getUserNickName(const int user_fd) const;
 	void printChannelName() const;
 
 	void setChannel(const std::string &ch_name, const Channel &ch);
