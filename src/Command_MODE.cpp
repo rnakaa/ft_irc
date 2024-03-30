@@ -1,7 +1,7 @@
 #include "Command.hpp"
 
 void Command::MODE(User &user, std::vector<std::string> &arg) {
-	std::cout << "start MODE command" << std::endl;
+	// std::cout << "start MODE command" << std::endl;
 	if (user.getAuthFlags() != User::ALL_AUTH) {
 		std::cerr << "client cannot authenticate" << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
@@ -91,7 +91,7 @@ void Command::handleChannelMode(User &user, std::vector<std::string> &arg) {
 	if (mode_action == Command::setMode || mode_action == Command::unsetMode) {
 		i++;
 	}
-	std::cout << "start handleChannelMode: " << mode_action << std::endl;
+	// std::cout << "start handleChannelMode: " << mode_action << std::endl;
 	for (; i < mode_str.size(); ++i) {
 		char mode_type = mode_str[i];
 		ModeFunction mode_func = this->mode_map_[mode_type];
@@ -122,7 +122,7 @@ Command::checkModeAction(const std::string &mode_str) const {
 
 void Command::joinStrFromVector(std::string &join_str, const Channel &ch,
 								const std::string delimiter) {
-	std::cout << "start joinStrFromVector" << std::endl;
+	// std::cout << "start joinStrFromVector" << std::endl;
 	std::vector<std::string> vec = ch.getChannelOperatorsNickName();
 	for (size_t i = 0; i < vec.size(); ++i) {
 		join_str += vec.at(i);
@@ -342,7 +342,7 @@ void Command::handleLimitedQueryMode(User &user, const Channel &ch) {
 	}
 	std::ostringstream oss_joined_user_num;
 	oss_joined_user_num << ch.getJoinedUserCount();
-	std::cout << "getMaxUsers(): " << ch.getMaxUsers() << std::endl;
+	// std::cout << "getMaxUsers(): " << ch.getMaxUsers() << std::endl;
 	if (ch.getMaxUsers() == -1) {
 		std::cout << ch.getName() << " has not a limit of users" << std::endl;
 		this->server_.sendMsgToClient(
@@ -389,9 +389,6 @@ void Command::handleLimitedSetMode(User &user, const Channel &ch) {
 	const_cast<Channel &>(ch).setMaxUsers(static_cast<int>(max_users));
 	std::cout << ch.getName() << " set max number of users to "
 			  << ch.getMaxUsers() << std::endl;
-	// this->server_.sendToChannelAllUser(
-	// 	ch.getName(),
-	// 	ch.getName() + " set max number of users to " + iss.str());
 	this->server_.sendToChannelAllUser(
 		ch.getName(), user,
 		ch.getName() + " set max number of users to " + iss.str());

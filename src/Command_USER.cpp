@@ -61,6 +61,6 @@ void Command::USER(User &user, std::vector<std::string> &arg) {
 		} else {
 			user.setAuthFlags(User::USER_AUTH);
 		}
-		std::cout << user.getAuthFlags() << std::endl;
+		// std::cout << user.getAuthFlags() << std::endl;
 	}
 }

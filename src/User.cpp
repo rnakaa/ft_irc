@@ -80,10 +80,10 @@ void User::setUsername(const std::string &username) {
 }
 
 void User::setInvitedChannel(const std::string &ch_name) {
-	std::cout << "start setInvitedChannel(): " << ch_name << std::endl;
+	// std::cout << "start setInvitedChannel(): " << ch_name << std::endl;
 	this->invited_ch_.push_back(ch_name);
-	std::cout << "finish setInvitedChannel(): " << invited_ch_.size()
-			  << std::endl;
+	// std::cout << "finish setInvitedChannel(): " << invited_ch_.size()
+	// << std::endl;
 }
 
 void User::setRealName(const std::string &real_name) {
