@@ -20,6 +20,5 @@ void Command::PASS(User &user, std::vector<std::string> &arg) {
 		user.setAuthFlags(User::PASS_AUTH);
 		std::cout << "SUCCESS: PASS Command client[" << user.getFd()
 				  << "], auth_flag_: " << user.getAuthFlags() << std::endl;
-		server_.sendMsgToClient(user.getFd(), "PASS success");
 	}
 }

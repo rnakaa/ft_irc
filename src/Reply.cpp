@@ -74,9 +74,11 @@ std::string Reply::RPL_WELCOME(const std::string &nickname,
 	std::ostringstream ss;
 	ss << "001 " << nickname << " :Welcome to the Internet Relay Network "
 	   << nickname << "!" << username << "@localhost\r\n"
-	   << "002 Your host is localhost, running version 2.0\r\n"
-	   << "003 This server was created " << dateStr << "\r\n"
-	   << "004 localhost 2.0 aiwroOs aimnqpsrtklbeI\r\n";
+	   << "002 " << nickname
+	   << " :Your host is localhost, running version 2.0\r\n"
+	   << "003 " << nickname << " :This server was created " << dateStr
+	   << "\r\n"
+	   << "004 " << nickname << " :localhost 2.0 aiwroOs aimnqpsrtklbeI\r\n";
 	result = ss.str();
 	return result;
 }

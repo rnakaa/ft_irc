@@ -43,7 +43,7 @@ void Command::PRIVMSG(User &user, std::vector<std::string> &arg) {
 	}
 
 	if (msg[0] == ':') {
-		msg.substr(1); // メッセージの先頭に:がついていたら削除する
+		msg = msg.substr(1); // メッセージの先頭に:がついていたら削除する
 	}
 
 	for (size_t i = 0; i < dsn.size(); i++) {
