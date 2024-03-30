@@ -44,13 +44,17 @@ void Command::PRIVMSG(User &user, std::vector<std::string> &arg) {
 	std::string msg = arg.at(1);
 	std::vector<std::string> dsn = splitByComma(arg1);
 
+	if (msg[0] == ':') {
+		msg.substr(1); // メッセージの先頭に:がついていたら削除する
+	}
+
 	for (size_t i = 0; i < dsn.size(); i++) {
 		if (dsn.at(i)[0] == '!' || dsn.at(i)[0] == '+' || dsn.at(i)[0] == '&' ||
 			dsn.at(i)[0] == '#') {
 			server_.sendToChannelUser(dsn.at(i),
 									  ":" + user.getNickName() + "!" +
 										  user.getUserName() + "ft_ircserver" +
-										  " PRIVMSG " + dsn.at(i) + " :" + msg);
+										  " PRIVMSG " + dsn.at(i) + " " + msg);
 		} else {
 			sendMessage(user, dsn.at(i), msg);
 		}

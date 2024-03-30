@@ -6,6 +6,7 @@
 #include "User.hpp"
 #include <arpa/inet.h>
 #include <cerrno>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <poll.h>

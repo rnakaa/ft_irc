@@ -96,15 +96,19 @@ void Server::handlPollEvents() {
 					this->recv_msg_ = recvCmdFromClient(i);
 					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
 							  << this->recv_msg_ << "\"" << std::endl;
-					Command cmd(*this);
 					if (this->user_map_.find(this->pollfd_vec_[i].fd) ==
 						this->user_map_.end()) {
 						std::cout << "Warning: fd " << this->pollfd_vec_[i].fd
 								  << " not found in user_map_" << std::endl;
 					}
-					cmd.handleCommand(this->user_map_[this->pollfd_vec_[i].fd],
-									  this->recv_msg_);
-					// sendMsgToClient(i, this->recv_msg_);
+					std::istringstream iss(recv_msg_);
+
+					while (std::getline(iss, this->recv_msg_)) {
+						Command cmd(*this);
+						cmd.handleCommand(
+							this->user_map_[this->pollfd_vec_[i].fd],
+							this->recv_msg_);
+					}
 				} catch (const std::exception &e) {
 					continue;
 				}
