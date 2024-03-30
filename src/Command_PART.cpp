@@ -17,7 +17,7 @@ void Command::partChannel(User &user, std::string &msg, std::string &ch_name) {
 	if (left_ch.isChannelOperator(user.getFd())) {
 		const_cast<Channel &>(left_ch).removeChannelOperator(user.getFd());
 	}
-	server_.sendToChannelUser(ch_name, user, msg);
+	server_.sendToChannelAllUser(ch_name, user, msg);
 	const_cast<Channel &>(left_ch).removeUser(user.getFd());
 	if (left_ch.getJoinedUserCount() == 0) {
 		this->server_.removeChannel(left_ch.getName());
