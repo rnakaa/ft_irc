@@ -13,6 +13,7 @@ Command::Command(Server &server) : server_(server) {
 	this->commands_map_["TOPIC"] = &Command::TOPIC;
 	this->commands_map_["OPER"] = &Command::OPER;
 	this->commands_map_["KILL"] = &Command::KILL;
+	this->commands_map_["PING"] = &Command::PING;
 	this->mode_map_['O'] = &Command::handleChannelOriginOperator;
 	this->mode_map_['o'] = &Command::handleChannelOperator;
 	this->mode_map_['k'] = &Command::handleChannelKey;
@@ -27,6 +28,7 @@ void Command::handleCommand(User &user, std::string &message) {
 	// std::cout << "start handleCommand" << std::endl;
 	try {
 		this->recv_message_ = message;
+		std::cout << "comand handl " << message << std::endl;
 		parseClientMessage(message);
 		CommandFunction func = this->commands_map_[this->command_name_];
 		if (!func) {

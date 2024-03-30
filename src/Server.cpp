@@ -96,15 +96,19 @@ void Server::handlPollEvents() {
 					this->recv_msg_ = recvCmdFromClient(i);
 					std::cout << "client[" << this->pollfd_vec_[i].fd << "]: \""
 							  << this->recv_msg_ << "\"" << std::endl;
-					Command cmd(*this);
 					if (this->user_map_.find(this->pollfd_vec_[i].fd) ==
 						this->user_map_.end()) {
 						std::cout << "Warning: fd " << this->pollfd_vec_[i].fd
 								  << " not found in user_map_" << std::endl;
 					}
-					cmd.handleCommand(this->user_map_[this->pollfd_vec_[i].fd],
-									  this->recv_msg_);
-					// sendMsgToClient(i, this->recv_msg_);
+					std::istringstream iss(recv_msg_);
+
+					while (std::getline(iss, this->recv_msg_)) {
+						Command cmd(*this);
+						cmd.handleCommand(
+							this->user_map_[this->pollfd_vec_[i].fd],
+							this->recv_msg_);
+					}
 				} catch (const std::exception &e) {
 					continue;
 				}
@@ -142,9 +146,6 @@ std::string Server::recvCmdFromClient(const size_t i) {
 				  << std::endl;
 		return ("ERROR: received message exceeds 510 characters limit");
 	} else if (recv_size == -1) {
-		if (errno == EAGAIN) {
-			throw std::runtime_error("not yet finished sending from client");
-		}
 		close(this->pollfd_vec_[i].fd);
 		close(this->server_sockfd_);
 		exit_error("recv", strerror(errno));
@@ -168,7 +169,7 @@ void Server::sendMsgToClient(const int fd, const std::string &send_str) const {
 		std::strcpy(send_msg, send_str.c_str());
 	}
 	std::strcat(send_msg, "\n");
-	int send_size = send(fd, &send_msg, std::strlen(send_msg), 0);
+	int send_size = send(fd, &send_msg, std::strlen(send_msg), MSG_DONTWAIT);
 	if (send_size == -1) {
 		exit_error("send", strerror(errno));
 	}

@@ -64,6 +64,22 @@ std::string Reply::ERR_NOSUCHNICK(const std::string &nick) const {
 	return nick + " :No such nick";
 }
 
+std::string Reply::RPL_WELCOME(const std::string &nickname,
+							   const std::string &username) const {
+	std::string result;
+	char dateStr[100];
+	std::time_t t = std::time(nullptr);
+	std::strftime(dateStr, sizeof(dateStr), "%b %d", std::localtime(&t));
+
+	std::ostringstream ss;
+	ss << "001 " << nickname << " :Welcome to the Internet Relay Network "
+	   << nickname << "!" << username << "@localhost\r\n"
+	   << "002 Your hst is localhost, running version 2.0\r\n"
+	   << "003 This server was created " << dateStr << "\r\n"
+	   << "004 localhost 2.0 aiwroOs aimnqpsrtklbeI\r\n";
+	result = ss.str();
+	return result;
+}
 std::string Reply::ERR_CHANNELISFULL(const std::string &ch_name) const {
 	return ch_name + " :Cannot join channel (+l)";
 }
@@ -81,11 +97,6 @@ std::string Reply::ERR_NOTONCHANNEL(const std::string &ch_name) const {
 }
 
 // RPL
-
-std::string Reply::RPL_WELCOME(const std::string &nick,
-							   const std::string &user) const {
-	return "Welcome to the Internet Relay Network " + nick + "!" + user + "@";
-}
 
 std::string Reply::RPL_NOTOPIC(const std::string &ch_name) const {
 	return ch_name + " :No topic is set";
