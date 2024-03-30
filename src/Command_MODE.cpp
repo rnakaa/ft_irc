@@ -13,14 +13,99 @@ void Command::MODE(User &user, std::vector<std::string> &arg) {
 									  reply_.ERR_NEEDMOREPARAMS("MODE"));
 		return;
 	}
-	if (this->server_.hasChannelName(arg.at(0))) {
-		handleChannelMode(user, arg, this->server_.getChannel(arg.at(0)));
+	if (startWithChannelChar(arg.at(0))) {
+		handleChannelMode(user, arg);
 	} else {
-		// handleUserMode(user, arg);
-		std::cerr << reply_.ERR_NOSUCHCHANNEL("MODE") << std::endl;
+		handleUserMode(user, arg);
+	}
+}
+
+void Command::handleUserMode(User &user, std::vector<std::string> &arg) {
+	if (!this->server_.isUser(arg.at(0))) {
+		std::cerr << reply_.ERR_NOSUCHNICK(arg.at(0)) << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
-									  reply_.ERR_NOSUCHCHANNEL("MODE"));
+									  reply_.ERR_NOSUCHNICK(arg.at(0)));
 		return;
+	}
+	const User &mode_user = this->server_.getUser(arg.at(0));
+	std::string mode_str = arg.at(1);
+	if (mode_str != "-o") {
+		std::cerr << reply_.ERR_UMODEUNKNOWNFLAG(mode_str) << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  reply_.ERR_UMODEUNKNOWNFLAG(mode_str));
+		return;
+	} else if (arg.size() < 2) {
+		std::cerr << reply_.ERR_NEEDMOREPARAMS(mode_str) << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  reply_.ERR_NEEDMOREPARAMS(mode_str));
+		return;
+	} else if (arg.size() > 2) {
+		std::cerr << reply_.ERR_TOOMANYPARAMS(mode_str) << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  reply_.ERR_TOOMANYPARAMS(mode_str));
+		return;
+	} else if (user.getFd() != mode_user.getFd()) {
+		std::cerr << reply_.ERR_NOPRIVILEGES() << std::endl;
+		this->server_.sendMsgToClient(user.getFd(), reply_.ERR_NOPRIVILEGES());
+		return;
+	} else if (!mode_user.hasMode(User::o)) {
+		std::cerr << mode_user.getNickName()
+				  << " is already not an IRC operator" << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  mode_user.getNickName() +
+										  " is already not an IRC operator");
+		return;
+	}
+	const_cast<User &>(mode_user).unsetMode(User::o);
+	std::cout << mode_user.getNickName() << " is now not an IRC operator"
+			  << std::endl;
+	this->server_.sendMsgToClient(
+		user.getFd(), mode_user.getNickName() + " is now not an IRC operator");
+}
+
+void Command::handleChannelMode(User &user, std::vector<std::string> &arg) {
+	if (!this->server_.hasChannelName(arg.at(0))) {
+		std::cerr << reply_.ERR_NOSUCHCHANNEL(arg.at(0)) << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  reply_.ERR_NOSUCHCHANNEL(arg.at(0)));
+		return;
+	}
+	const Channel &ch = this->server_.getChannel(arg.at(0));
+	std::string mode_str = arg.at(1);
+	if (!checkInvalidSignsCount(mode_str)) {
+		std::cerr << reply_.ERR_UMODEUNKNOWNFLAG(mode_str) << std::endl;
+		this->server_.sendMsgToClient(user.getFd(),
+									  reply_.ERR_UMODEUNKNOWNFLAG(mode_str));
+		return;
+	}
+	ModeAction mode_action = checkModeAction(mode_str);
+	if ((mode_action == Command::setMode ||
+		 mode_action == Command::unsetMode) &&
+		!ch.isChannelOperator(user.getFd())) {
+		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
+		this->server_.sendMsgToClient(
+			user.getFd(), reply_.ERR_CHANOPRIVSNEEDED(ch.getName()));
+		return;
+	}
+	size_t i = 0;
+	if (mode_action == Command::setMode || mode_action == Command::unsetMode) {
+		i++;
+	}
+	std::cout << "start handleChannelMode: " << mode_action << std::endl;
+	for (; i < mode_str.size(); ++i) {
+		char mode_type = mode_str[i];
+		ModeFunction mode_func = this->mode_map_[mode_type];
+		if (!mode_func) {
+			std::cerr << reply_.ERR_UNKNOWNMODE(std::string(1, mode_type),
+												ch.getName())
+					  << std::endl;
+			this->server_.sendMsgToClient(
+				user.getFd(), reply_.ERR_UNKNOWNMODE(std::string(1, mode_type),
+													 ch.getName()));
+			continue;
+		}
+		std::cout << "mode_type: " << mode_type << std::endl;
+		(this->*mode_func)(mode_action, user, ch);
 	}
 }
 
@@ -465,44 +550,4 @@ bool Command::checkInvalidSignsCount(const std::string &mode_str) {
 		}
 	}
 	return true;
-}
-
-void Command::handleChannelMode(User &user, std::vector<std::string> &arg,
-								const Channel &ch) {
-	size_t i = 0;
-	std::string mode_str = arg.at(1);
-	if (!checkInvalidSignsCount(mode_str)) {
-		std::cerr << reply_.ERR_UMODEUNKNOWNFLAG(mode_str) << std::endl;
-		this->server_.sendMsgToClient(user.getFd(),
-									  reply_.ERR_UMODEUNKNOWNFLAG(mode_str));
-		return;
-	}
-	ModeAction mode_action = checkModeAction(mode_str);
-	if ((mode_action == Command::setMode ||
-		 mode_action == Command::unsetMode) &&
-		!ch.isChannelOperator(user.getFd())) {
-		std::cerr << reply_.ERR_CHANOPRIVSNEEDED(ch.getName()) << std::endl;
-		this->server_.sendMsgToClient(
-			user.getFd(), reply_.ERR_CHANOPRIVSNEEDED(ch.getName()));
-		return;
-	}
-	if (mode_action == Command::setMode || mode_action == Command::unsetMode) {
-		i++;
-	}
-	std::cout << "start handleChannelMode: " << mode_action << std::endl;
-	for (; i < mode_str.size(); ++i) {
-		char mode_type = mode_str[i];
-		ModeFunction mode_func = this->mode_map_[mode_type];
-		if (!mode_func) {
-			std::cerr << reply_.ERR_UNKNOWNMODE(std::string(1, mode_type),
-												ch.getName())
-					  << std::endl;
-			this->server_.sendMsgToClient(
-				user.getFd(), reply_.ERR_UNKNOWNMODE(std::string(1, mode_type),
-													 ch.getName()));
-			continue;
-		}
-		std::cout << "mode_type: " << mode_type << std::endl;
-		(this->*mode_func)(mode_action, user, ch);
-	}
 }

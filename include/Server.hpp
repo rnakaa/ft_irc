@@ -36,6 +36,7 @@ class Server {
 	const std::string &getPass() const;
 	const Channel &getChannel(const std::string &ch_name) const;
 	const User &getUser(const std::string &nickname) const;
+	const std::string &getOperPass() const;
 	void printChannelName() const;
 
 	void setChannel(const std::string &ch_name, const Channel &ch);
@@ -74,6 +75,7 @@ class Server {
 	std::map<int, User> user_map_;
 	std::map<std::string, Channel> ch_map_;
 	std::set<std::string> nickname_log_;
+	const std::string oper_pass_;
 };
 
 #endif
