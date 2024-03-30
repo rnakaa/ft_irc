@@ -23,7 +23,7 @@ bool Command::setArgToVec(const std::vector<std::string> &arg,
 
 	while (std::getline(ch_iss, ch_token, ',')) {
 		if (!startWithChannelChar(ch_token)) {
-			std::cout << "false" << std::endl;
+			// std::cout << "false" << std::endl;
 			return false;
 		}
 		ch_queue.push(ch_token);
@@ -90,7 +90,7 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 		const_cast<Channel &>(join_ch).removeInvitedUser(user.getFd());
 		user.removeInvitedChannel(join_ch.getName());
 	}
-	std::cout << "finish JOIN command" << std::endl;
+	// std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
 	join_ch.printJoinedUser();
 	this->server_.sendToChannelAllUser(join_ch.getName(), user,
@@ -109,7 +109,7 @@ void Command::createChannel(const std::string &ch_name,
 	new_ch.setChannelOperator(user.getFd());
 	this->server_.setChannel(new_ch.getName(), new_ch);
 	user.setChannel(new_ch);
-	std::cout << "finish JOIN command" << std::endl;
+	// std::cout << "finish JOIN command" << std::endl;
 	user.printJoinChannel();
 	const Channel ch = this->server_.getChannel(ch_name);
 	ch.printJoinedUser();
@@ -169,7 +169,7 @@ void Command::exitAllChannels(User &user) {
 }
 
 void Command::JOIN(User &user, std::vector<std::string> &arg) {
-	std::cout << "start JOIN command" << std::endl;
+	// std::cout << "start JOIN command" << std::endl;
 	if (user.getAuthFlags() != User::ALL_AUTH) {
 		std::cerr << "client cannot authenticate" << std::endl;
 		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");

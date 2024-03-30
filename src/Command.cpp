@@ -1,7 +1,7 @@
 #include "Command.hpp"
 
 Command::Command(Server &server) : server_(server) {
-	this->commands_map_["TEST"] = &Command::TEST;
+	// this->commands_map_["TEST"] = &Command::TEST;
 	this->commands_map_["PASS"] = &Command::PASS;
 	this->commands_map_["NICK"] = &Command::NICK;
 	this->commands_map_["USER"] = &Command::USER;
@@ -31,7 +31,7 @@ void Command::handleCommand(User &user, std::string &message) {
 	// std::cout << "start handleCommand" << std::endl;
 	try {
 		this->recv_message_ = message;
-		std::cout << "comand handl " << message << std::endl;
+		// std::cout << "comand handl " << message << std::endl;
 		parseClientMessage(message);
 		CommandFunction func = this->commands_map_[this->command_name_];
 		if (!func) {

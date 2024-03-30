@@ -1,7 +1,7 @@
 #include "Command.hpp"
 
 void Command::PASS(User &user, std::vector<std::string> &arg) {
-	std::cout << "start pass " << user.getFd() << std::endl;
+	// std::cout << "start pass " << user.getFd() << std::endl;
 	if (user.getAuthFlags() == User::PASS_AUTH) {
 		std::cerr << reply_.ERR_ALREADYREGISTRED() << std::endl;
 		server_.sendMsgToClient(user.getFd(), reply_.ERR_ALREADYREGISTRED());

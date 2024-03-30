@@ -26,7 +26,7 @@ void Command::partChannel(User &user, std::string &msg, std::string &ch_name) {
 }
 
 void Command::PART(User &user, std::vector<std::string> &arg) {
-	std::cout << "start part " << user.getFd() << std::endl;
+	// std::cout << "start part " << user.getFd() << std::endl;
 	if (user.getAuthFlags() != User::ALL_AUTH) {
 		std::cerr << "client cannot authenticate" << std::endl;
 		server_.sendMsgToClient(user.getFd(), "client cannot authenticate");

@@ -250,7 +250,7 @@ void Server::nicknameInsertLog(std::string nickname) {
 
 void Server::sendToChannelAllUser(const std::string &ch_name, const User &user,
 								  const std::string &msg) const {
-	std::cout << "start sendToChannelAllUser" << std::endl;
+	// std::cout << "start sendToChannelAllUser" << std::endl;
 	if (!hasChannelName(ch_name))
 		return;
 	const std::string send_msg = ":" + user.getNickName() + "!" +
@@ -267,7 +267,7 @@ void Server::sendToChannelAllUser(const std::string &ch_name, const User &user,
 
 void Server::sendToChannelUser(const std::string &ch_name, const User &user,
 							   const std::string &msg) const {
-	std::cout << "start sendToChannelUser" << std::endl;
+	// std::cout << "start sendToChannelUser" << std::endl;
 	if (!hasChannelName(ch_name))
 		return;
 	const std::string send_msg = ":" + user.getNickName() + "!" +

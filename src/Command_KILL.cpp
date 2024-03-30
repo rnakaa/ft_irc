@@ -22,7 +22,7 @@ void Command::KILL(User &user, std::vector<std::string> &arg) {
 			kill_comment += " ";
 		}
 	}
-	std::cout << "kill_comment: " << kill_comment << std::endl;
+	// std::cout << "kill_comment: " << kill_comment << std::endl;
 	const User &kill_user = this->server_.getUser(arg.at(0));
 	const int fd = kill_user.getFd();
 	std::cout << reply_.RPL_KILL(user.getNickName(), kill_user.getNickName(),
