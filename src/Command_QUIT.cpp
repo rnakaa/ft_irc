@@ -30,7 +30,7 @@ void Command::removeAllInvitedChannels(User &user) {
 	if (user.getInvitedChannelCount() == 0) {
 		return;
 	}
-	const std::vector<std::string> &invited_ch = user.getInvitedChannel();
+	const std::vector<std::string> &invited_ch = user.getInvitedChannels();
 	for (std::vector<std::string>::const_iterator it = invited_ch.begin();
 		 it != invited_ch.end(); ++it) {
 		const std::string &ch_name = *it;
