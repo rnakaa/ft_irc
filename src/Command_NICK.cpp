@@ -1,8 +1,8 @@
 #include "Command.hpp"
 
 bool isSpecial(const char &c) {
-	return c != '[' && c != ']' && c != '\\' && c != '^' && c != '_' &&
-		   c != '`' && c != '{' && c != '|' && c != '}';
+	return c == '[' || c == ']' || c == '\\' || c == '^' || c == '_' ||
+		   c == '`' || c == '{' || c == '|' || c == '}';
 }
 
 bool checkStringValidity(const std::string &str) {
