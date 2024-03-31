@@ -34,8 +34,10 @@ std::string Reply::ERR_NOSUCHCHANNEL(const std::string &ch_name) const {
 	return ch_name + " :No such channel";
 }
 
-std::string Reply::ERR_BADCHANNELKEY(const std::string &ch_name) const {
-	return ch_name + " :Cannot join channel (+k)";
+std::string Reply::ERR_BADCHANNELKEY(const std::string &nick_name,
+									 const std::string &ch_name) const {
+	return ":localhost 475 " + nick_name + " " + ch_name +
+		   " :Cannot join channel (+k)";
 }
 
 std::string Reply::ERR_CHANOPRIVSNEEDED(const std::string &ch_name) const {
