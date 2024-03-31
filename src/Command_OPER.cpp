@@ -32,10 +32,10 @@ void Command::OPER(User &user, std::vector<std::string> &arg) {
 		return;
 	}
 	const_cast<User &>(oper_user).setMode(User::o);
-	std::cout << reply_.RPL_YOUREOPER() << std::endl;
+	std::cout << reply_.RPL_YOUREOPER(oper_user.getNickName()) << std::endl;
 	if (user.getFd() != oper_user.getFd()) {
 		this->server_.sendMsgToClient(oper_user.getFd(),
-									  reply_.RPL_YOUREOPER());
+									  reply_.RPL_YOUREOPER(oper_user.getNickName()));
 	}
 	this->server_.sendMsgToClient(user.getFd(), oper_user.getNickName() +
 													" is now an IRC operator");

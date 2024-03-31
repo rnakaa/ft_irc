@@ -110,16 +110,16 @@ std::string Reply::ERR_NOTONCHANNEL(const std::string &ch_name) const {
 // RPL
 
 std::string Reply::RPL_NOTOPIC(const std::string &ch_name) const {
-	return ":localhost 331 " + ch_name + " :No topic is set";
+	return ch_name + " :No topic is set";
 }
 
 std::string Reply::RPL_TOPIC(const std::string &ch_name,
 							 const std::string &topic_str) const {
-	return ":localhost 332 " + ch_name + " :" + topic_str;
+	return ch_name + " :" + topic_str;
 }
 
-std::string Reply::RPL_YOUREOPER() const {
-	return ":localhost 381 :You are now an IRC operator";
+std::string Reply::RPL_YOUREOPER(const std::string &you) const {
+	return you + " :You are now an IRC operator";
 }
 
 std::string Reply::RPL_KILL(const std::string &nick,
