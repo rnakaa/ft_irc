@@ -28,7 +28,7 @@ void convertToScandinavian(std::string &str) {
 }
 
 void Command::NICK(User &user, std::vector<std::string> &arg) {
-	std::cout << "start nick " << user.getFd() << std::endl;
+	// std::cout << "start nick " << user.getFd() << std::endl;
 
 	if (user.getAuthFlags() == User::NONE_AUTH) {
 		std::cerr << reply_.ERR_NOTSETPASS() << std::endl;
@@ -80,6 +80,6 @@ void Command::NICK(User &user, std::vector<std::string> &arg) {
 		} else {
 			user.setAuthFlags(User::NICK_AUTH);
 		}
-		std::cout << user.getAuthFlags() << std::endl;
+		// std::cout << user.getAuthFlags() << std::endl;
 	}
 }

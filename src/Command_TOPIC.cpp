@@ -1,7 +1,7 @@
 #include "Command.hpp"
 
 void Command::TOPIC(User &user, std::vector<std::string> &arg) {
-	std::cout << "start TOPIC" << std::endl;
+	// std::cout << "start TOPIC" << std::endl;
 	if (arg.empty()) {
 		std::cerr << reply_.ERR_NEEDMOREPARAMS("TOPIC") << std::endl;
 		this->server_.sendMsgToClient(user.getFd(),
