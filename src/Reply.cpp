@@ -80,7 +80,7 @@ std::string Reply::RPL_WELCOME(const std::string &nickname,
 	   << " :Your host is localhost, running version 2.0\r\n"
 	   << "003 " << nickname << " :This server was created " << dateStr
 	   << "\r\n"
-	   << "004 " << nickname << " :localhost 2.0 aiwroOs aimnqpsrtklbeI\r\n";
+	   << "004 " << nickname << " :localhost 2.0 aiwroOs aimnqpsrtklbeI";
 	result = ss.str();
 	return result;
 }
