@@ -79,9 +79,10 @@ void Command::joinChannel(const std::string &ch_name, const std::string &ch_key,
 								reply_.ERR_CHANNELISFULL(ch_name));
 		return;
 	} else if (join_ch.getPass() != ch_key) {
-		std::cerr << reply_.ERR_BADCHANNELKEY(ch_name) << std::endl;
-		server_.sendMsgToClient(user.getFd(),
-								reply_.ERR_BADCHANNELKEY(ch_name));
+		std::cerr << reply_.ERR_BADCHANNELKEY(user.getNickName(), ch_name)
+				  << std::endl;
+		server_.sendMsgToClient(user.getFd(), reply_.ERR_BADCHANNELKEY(
+												  user.getNickName(), ch_name));
 		return;
 	}
 	user.setChannel(join_ch);
